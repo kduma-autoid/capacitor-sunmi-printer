@@ -9,9 +9,7 @@
   "files": [
     "android/src/main/",
     "android/build.gradle",
-    "dist/",
-    "ios/Plugin/",
-    "KdumaHotspotToolsCapacitorSunmiPrinter.podspec"
+    "dist/"
   ],
   "author": "Krystian Duma",
   "license": "MIT",

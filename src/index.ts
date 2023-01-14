@@ -4,6 +4,7 @@ import type { SunmiPrinterPlugin } from './definitions';
 
 const SunmiPrinter = registerPlugin<SunmiPrinterPlugin>('SunmiPrinter', {
   web: () => import('./web').then(m => new m.SunmiPrinterWeb()),
+  ios: () => import('./web').then(m => new m.SunmiPrinterWeb()),
 });
 
 export * from './definitions';
