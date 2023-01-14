@@ -19,6 +19,9 @@
     "type": "git",
     "url": "git+https://github.com/kduma-hotspot-tools/capacitor-sunmi-printer.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "bugs": {
     "url": "https://github.com/kduma-hotspot-tools/capacitor-sunmi-printer/issues"
   },
