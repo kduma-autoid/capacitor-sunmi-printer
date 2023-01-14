@@ -1,3 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.duma.capacitor.sunmiprinter">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="dev.duma.capacitor.sunmiprinter">
+
+    <queries>
+        <package android:name="woyou.aidlservice.jiuiv5"/>
+    </queries>
+
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 </manifest>

@@ -7,4 +7,8 @@ export class SunmiPrinterWeb extends WebPlugin implements SunmiPrinterPlugin {
     console.log('ECHO', options);
     return options;
   }
+
+  initPrinter(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 }
