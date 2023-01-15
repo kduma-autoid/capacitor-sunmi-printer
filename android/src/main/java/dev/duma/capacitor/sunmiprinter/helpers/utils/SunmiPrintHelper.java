@@ -524,54 +524,6 @@ public class SunmiPrintHelper {
     }
 
     /**
-     * Display text SUNMI,font size is 16 and format is fill
-     * sendLCDFillString(txt, size, fill, callback)
-     * Since the screen pixel height is 40, the font should not exceed 40
-     */
-    public void sendTextToLcd(){
-        if(sunmiPrinterService == null){
-            //TODO Service disconnection processing
-            return;
-        }
-
-        try {
-            sunmiPrinterService.sendLCDFillString("SUNMI", 16, true, new InnerLcdCallback() {
-                @Override
-                public void onRunResult(boolean show) throws RemoteException {
-                    //TODO handle result
-                }
-            });
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Display two lines and one empty line in the middle
-     */
-    public void sendTextsToLcd(){
-        if(sunmiPrinterService == null){
-            //TODO Service disconnection processing
-            return;
-        }
-
-        try {
-            String[] texts = {"SUNMI", null, "SUNMI"};
-            int[] align = {2, 1, 2};
-            sunmiPrinterService.sendLCDMultiString(texts, align, new InnerLcdCallback() {
-                @Override
-                public void onRunResult(boolean show) throws RemoteException {
-                    //TODO handle result
-                }
-            });
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
      * Display one 128x40 pixels and opaque picture
      */
     public void sendPicToLcd(Bitmap pic){
@@ -728,64 +680,85 @@ public class SunmiPrintHelper {
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
     }
 
+
+
+
+
+
+
+
+
+
     /**
-     * Demo printing a label
-     * After printing one label, in order to facilitate the user to tear the paper, call
-     * labelOutput to push the label paper out of the paper hatch
-     * 演示打印一张标签
-     * 打印单张标签后为了方便用户撕纸可调用labelOutput,将标签纸推出纸舱口
+     * Display text SUNMI,font size is 16 and format is fill
+     * sendLCDFillString(txt, size, fill, callback)
+     * Since the screen pixel height is 40, the font should not exceed 40
      */
-    public void printOneLabel() {
+    public void sendTextToLcd(){
+        if(sunmiPrinterService == null){
+            //TODO Service disconnection processing
+            return;
+        }
+
+        try {
+            sunmiPrinterService.sendLCDFillString("SUNMI", 16, true, new InnerLcdCallback() {
+                @Override
+                public void onRunResult(boolean show) throws RemoteException {
+                    //TODO handle result
+                }
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Display two lines and one empty line in the middle
+     */
+    public void sendTextsToLcd(){
+        if(sunmiPrinterService == null){
+            //TODO Service disconnection processing
+            return;
+        }
+
+        try {
+            String[] texts = {"SUNMI", null, "SUNMI"};
+            int[] align = {2, 1, 2};
+            sunmiPrinterService.sendLCDMultiString(texts, align, new InnerLcdCallback() {
+                @Override
+                public void onRunResult(boolean show) throws RemoteException {
+                    //TODO handle result
+                }
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void labelOutput() {
+        if(sunmiPrinterService == null){
+            //TODO Service disconnection processing
+            return ;
+        }
+        try {
+            sunmiPrinterService.labelOutput();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void labelLocate() {
         if(sunmiPrinterService == null){
             //TODO Service disconnection processing
             return ;
         }
         try {
             sunmiPrinterService.labelLocate();
-            printLabelContent();
-            sunmiPrinterService.labelOutput();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Demo printing multi label
-     *
-     After printing multiple labels, choose whether to push the label paper to the paper hatch according to the needs
-     * 演示打印多张标签
-     * 打印多张标签后根据需求选择是否推出标签纸到纸舱口
-     */
-    public void printMultiLabel(int num) {
-        if(sunmiPrinterService == null){
-            //TODO Service disconnection processing
-            return ;
-        }
-        try {
-            for(int i = 0; i < num; i++){
-                sunmiPrinterService.labelLocate();
-                printLabelContent();
-            }
-            sunmiPrinterService.labelOutput();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     *  Custom label ticket content
-     *  In the example, not all labels can be applied. In actual use, please pay attention to adapting the size of the label. You can adjust the font size and content position.
-     *  自定义的标签小票内容
-     *  例子中并不能适用所有标签纸，实际使用时注意要自适配标签纸大小，可通过调节字体大小，内容位置等方式
-     */
-    private void printLabelContent() throws RemoteException {
-        sunmiPrinterService.setPrinterStyle(WoyouConsts.ENABLE_BOLD, WoyouConsts.ENABLE);
-        sunmiPrinterService.lineWrap(1, null);
-        sunmiPrinterService.setAlignment(0, null);
-        sunmiPrinterService.printText("商品         豆浆\n", null);
-        sunmiPrinterService.printText("到期时间         12-13  14时\n", null);
-        sunmiPrinterService.printBarCode("{C1234567890123456",  8, 90, 2, 2, null);
-        sunmiPrinterService.lineWrap(1, null);
     }
 }
