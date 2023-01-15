@@ -1,5 +1,16 @@
 export interface SunmiPrinterPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
-  echo(options: { value: string }): Promise<{ value: string }>;
+  isLabelMode(): Promise<{ label_mode: boolean }>;
+  labelOutput(): Promise<void>;
+  labelLocate(): Promise<void>;
+  sendTextsToLcd(): Promise<void>;
+  sendTextToLcd(): Promise<void>;
+  controlLcd(): Promise<{ flag: number }>;
+  openCashBox(): Promise<void>;
+  getPrinterVersion(): Promise<{ version: string }>;
+  getPrinterPaper(): Promise<{ paper: string }>;
+  getDeviceModel(): Promise<{ model: string }>;
+  getPrinterSerialNo(): Promise<{ serial: string }>;
+  sendRAWData(options: { data: string }): Promise<void>;
+  setMode(options: { bluetooth: boolean }): Promise<void>;
   initPrinter(): Promise<void>;
 }
