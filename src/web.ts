@@ -7,7 +7,7 @@ export class SunmiPrinterWeb extends WebPlugin implements SunmiPrinterPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
-  controlLcd(): Promise<{ flag: number }> {
+  controlLcd(_options: { flag: number }): Promise<void> {
     throw this.unimplemented('Not implemented on web.');
   }
 

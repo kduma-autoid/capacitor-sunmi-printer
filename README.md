@@ -18,7 +18,7 @@ npx cap sync
 * [`labelLocate()`](#labellocate)
 * [`sendTextsToLcd()`](#sendtextstolcd)
 * [`sendTextToLcd()`](#sendtexttolcd)
-* [`controlLcd()`](#controllcd)
+* [`controlLcd(...)`](#controllcd)
 * [`openCashBox()`](#opencashbox)
 * [`getPrinterVersion()`](#getprinterversion)
 * [`getPrinterPaper()`](#getprinterpaper)
@@ -80,13 +80,15 @@ sendTextToLcd() => Promise<void>
 --------------------
 
 
-### controlLcd()
+### controlLcd(...)
 
 ```typescript
-controlLcd() => Promise<{ flag: number; }>
+controlLcd(options: { flag: number; }) => Promise<void>
 ```
 
-**Returns:** <code>Promise&lt;{ flag: number; }&gt;</code>
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ flag: number; }</code> |
 
 --------------------
 

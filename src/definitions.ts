@@ -4,7 +4,7 @@ export interface SunmiPrinterPlugin {
   labelLocate(): Promise<void>;
   sendTextsToLcd(): Promise<void>;
   sendTextToLcd(): Promise<void>;
-  controlLcd(): Promise<{ flag: number }>;
+  controlLcd(options: { flag: number }): Promise<void>;
   openCashBox(): Promise<void>;
   getPrinterVersion(): Promise<{ version: string }>;
   getPrinterPaper(): Promise<{ paper: string }>;
