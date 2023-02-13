@@ -48,17 +48,36 @@ public class SunmiPrinterPlugin extends Plugin {
 
     @PluginMethod
     public void sendTextToLcd(PluginCall call) {
-        implementation.sendTextToLcd();
+        String text = call.getString("text", "Text");
+        int size = call.getInt("size", 16);
+        Boolean fill = call.getBoolean("fill", true);
+
+        implementation.sendTextToLcd(text, size, fill);
 
         call.resolve();
     }
 
     @PluginMethod
-    public void controlLcd(PluginCall call) {
-        int flag = call.getInt("flag");
+    public void clearLcd(PluginCall call) {
+        implementation.controlLcd(4);
+        call.resolve();
+    }
 
-        implementation.controlLcd(flag);
+    @PluginMethod
+    public void disableLcd(PluginCall call) {
+        implementation.controlLcd(3);
+        call.resolve();
+    }
 
+    @PluginMethod
+    public void enableLcd(PluginCall call) {
+        implementation.controlLcd(2);
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void initLcd(PluginCall call) {
+        implementation.controlLcd(1);
         call.resolve();
     }
 

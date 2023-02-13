@@ -17,8 +17,11 @@ npx cap sync
 * [`labelOutput()`](#labeloutput)
 * [`labelLocate()`](#labellocate)
 * [`sendTextsToLcd()`](#sendtextstolcd)
-* [`sendTextToLcd()`](#sendtexttolcd)
-* [`controlLcd(...)`](#controllcd)
+* [`sendTextToLcd(...)`](#sendtexttolcd)
+* [`clearLcd()`](#clearlcd)
+* [`disableLcd()`](#disablelcd)
+* [`enableLcd()`](#enablelcd)
+* [`initLcd()`](#initlcd)
 * [`openCashBox()`](#opencashbox)
 * [`getPrinterVersion()`](#getprinterversion)
 * [`getPrinterPaper()`](#getprinterpaper)
@@ -71,24 +74,51 @@ sendTextsToLcd() => Promise<void>
 --------------------
 
 
-### sendTextToLcd()
+### sendTextToLcd(...)
 
 ```typescript
-sendTextToLcd() => Promise<void>
+sendTextToLcd(options: { text: string; size?: number; fill?: boolean; }) => Promise<void>
+```
+
+| Param         | Type                                                          |
+| ------------- | ------------------------------------------------------------- |
+| **`options`** | <code>{ text: string; size?: number; fill?: boolean; }</code> |
+
+--------------------
+
+
+### clearLcd()
+
+```typescript
+clearLcd() => Promise<void>
 ```
 
 --------------------
 
 
-### controlLcd(...)
+### disableLcd()
 
 ```typescript
-controlLcd(options: { flag: number; }) => Promise<void>
+disableLcd() => Promise<void>
 ```
 
-| Param         | Type                           |
-| ------------- | ------------------------------ |
-| **`options`** | <code>{ flag: number; }</code> |
+--------------------
+
+
+### enableLcd()
+
+```typescript
+enableLcd() => Promise<void>
+```
+
+--------------------
+
+
+### initLcd()
+
+```typescript
+initLcd() => Promise<void>
+```
 
 --------------------
 

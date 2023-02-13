@@ -694,14 +694,14 @@ public class SunmiPrintHelper {
      * sendLCDFillString(txt, size, fill, callback)
      * Since the screen pixel height is 40, the font should not exceed 40
      */
-    public void sendTextToLcd(){
+    public void sendTextToLcd(String text, int size, boolean fill){
         if(sunmiPrinterService == null){
             //TODO Service disconnection processing
             return;
         }
 
         try {
-            sunmiPrinterService.sendLCDFillString("SUNMI", 16, true, new InnerLcdCallback() {
+            sunmiPrinterService.sendLCDFillString(text, size, fill, new InnerLcdCallback() {
                 @Override
                 public void onRunResult(boolean show) throws RemoteException {
                     //TODO handle result

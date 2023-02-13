@@ -15,13 +15,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kduma-hotspot-tools/capacitor-sunmi-printer.git"
+    "url": "git+https://github.com/kduma-sunmi/capacitor-sunmi-printer.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "bugs": {
-    "url": "https://github.com/kduma-hotspot-tools/capacitor-sunmi-printer/issues"
+    "url": "https://github.com/kduma-sunmi/capacitor-sunmi-printer/issues"
   },
   "keywords": [
     "capacitor",
@@ -69,9 +69,6 @@
     "extends": "@ionic/eslint-config/recommended"
   },
   "capacitor": {
-    "ios": {
-      "src": "ios"
-    },
     "android": {
       "src": "android"
     }

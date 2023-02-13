@@ -34,8 +34,8 @@ public class SunmiPrinter {
         SunmiPrintHelper.getInstance().sendTextsToLcd();
     }
 
-    public void sendTextToLcd() { //todo
-        SunmiPrintHelper.getInstance().sendTextToLcd();
+    public void sendTextToLcd(String text, int size, boolean fill) {
+        SunmiPrintHelper.getInstance().sendTextToLcd(text, size, fill);
     }
 
     public void controlLcd(int flag) {
