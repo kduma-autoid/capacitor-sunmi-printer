@@ -1,11 +1,11 @@
-# @kduma-hotspot-tools/capacitor-sunmi-printer
+# @kduma-sunmi/capacitor-sunmi-printer
 
 Adapter for printing on internal printers of Sunmi POS devices
 
 ## Install
 
 ```bash
-npm install @kduma-hotspot-tools/capacitor-sunmi-printer
+npm install @kduma-sunmi/capacitor-sunmi-printer
 npx cap sync
 ```
 
