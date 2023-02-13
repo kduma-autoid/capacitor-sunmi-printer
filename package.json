@@ -1,6 +1,6 @@
 {
   "name": "@kduma-sunmi/capacitor-sunmi-printer",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Adapter for printing on internal printers of Sunmi POS devices",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
