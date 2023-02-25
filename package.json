@@ -1,5 +1,5 @@
 {
-  "name": "@kduma-sunmi/capacitor-sunmi-printer",
+  "name": "@kduma-autoid/capacitor-sunmi-printer",
   "version": "0.2.0",
   "description": "Adapter for printing on internal printers of Sunmi POS devices",
   "main": "dist/plugin.cjs.js",
@@ -15,10 +15,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kduma-sunmi/capacitor-sunmi-printer.git"
+    "url": "git+https://github.com/kduma-autoid/capacitor-sunmi-printer.git"
   },
   "bugs": {
-    "url": "https://github.com/kduma-sunmi/capacitor-sunmi-printer/issues"
+    "url": "https://github.com/kduma-autoid/capacitor-sunmi-printer/issues"
   },
   "keywords": [
     "capacitor",

@@ -18,7 +18,7 @@
     "@capacitor/core": "latest",
     "@capacitor/ios": "^4.0.0",
     "@capacitor/splash-screen": "latest",
-    "@kduma-sunmi/capacitor-sunmi-printer": "file:..",
+    "@kduma-autoid/capacitor-sunmi-printer": "file:..",
     "locutus": "^2.0.16"
   },
   "devDependencies": {

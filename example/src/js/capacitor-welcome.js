@@ -1,6 +1,6 @@
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Camera } from '@capacitor/camera';
-import {SunmiPrinter} from "@kduma-sunmi/capacitor-sunmi-printer";
+import {SunmiPrinter} from "@kduma-autoid/capacitor-sunmi-printer";
 import base64_decode from "locutus/php/url/base64_decode";
 
 window.customElements.define(
