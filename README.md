@@ -13,19 +13,38 @@ npx cap sync
 
 <docgen-index>
 
+* [`bindService()`](#bindservice)
+* [`unBindService()`](#unbindservice)
+* [`getServiceStatus()`](#getservicestatus)
 * [`printerInit()`](#printerinit)
 * [`printerSelfChecking()`](#printerselfchecking)
 * [`getPrinterSerialNo()`](#getprinterserialno)
-* [`getPrinterModal()`](#getprintermodal)
+* [`getPrinterModel()`](#getprintermodel)
 * [`getPrinterVersion()`](#getprinterversion)
 * [`getDeviceName()`](#getdevicename)
 * [`updatePrinterState()`](#updateprinterstate)
 * [`getServiceVersion()`](#getserviceversion)
 * [`getPrintedLength()`](#getprintedlength)
 * [`getPrinterPaper()`](#getprinterpaper)
-* [`sendRAWData()`](#sendrawdata)
-* [`setPrinterStyle()`](#setprinterstyle)
+* [`sendRAWData(...)`](#sendrawdata)
+* [`sendRAWBase64Data(...)`](#sendrawbase64data)
+* [`setPrinterStyle(...)`](#setprinterstyle)
+* [`setDoubleWidthPrintStyle(...)`](#setdoublewidthprintstyle)
+* [`setDoubleHeightPrintStyle(...)`](#setdoubleheightprintstyle)
+* [`setBoldPrintStyle(...)`](#setboldprintstyle)
+* [`setUnderlinePrintStyle(...)`](#setunderlineprintstyle)
+* [`setAntiWhitePrintStyle(...)`](#setantiwhiteprintstyle)
+* [`setStrikethroughPrintStyle(...)`](#setstrikethroughprintstyle)
+* [`setItalicPrintStyle(...)`](#setitalicprintstyle)
+* [`setInvertPrintStyle(...)`](#setinvertprintstyle)
+* [`setTextRightSpacingPrintStyle(...)`](#settextrightspacingprintstyle)
+* [`setRelativePositionPrintStyle(...)`](#setrelativepositionprintstyle)
+* [`setAbsolutePositionPrintStyle(...)`](#setabsolutepositionprintstyle)
+* [`setLineSpacingPrintStyle(...)`](#setlinespacingprintstyle)
+* [`setLeftSpacingPrintStyle(...)`](#setleftspacingprintstyle)
+* [`setStrikethroughStylePrintStyle(...)`](#setstrikethroughstyleprintstyle)
 * [`getPrinterMode()`](#getprintermode)
+* [`isLabelMode()`](#islabelmode)
 * [`getPrinterBBMDistance()`](#getprinterbbmdistance)
 * [`setAlignment(...)`](#setalignment)
 * [`setFontName(...)`](#setfontname)
@@ -43,7 +62,7 @@ npx cap sync
 * [`print2DCode(...)`](#print2dcode)
 * [`lineWrap(...)`](#linewrap)
 * [`cutPaper()`](#cutpaper)
-* [`getCutPagerTimes()`](#getcutpagertimes)
+* [`getCutPaperTimes()`](#getcutpapertimes)
 * [`openDrawer()`](#opendrawer)
 * [`getOpenDrawerTimes()`](#getopendrawertimes)
 * [`getDrawerStatus()`](#getdrawerstatus)
@@ -55,18 +74,60 @@ npx cap sync
 * [`getFontName()`](#getfontname)
 * [`getPrinterDensity()`](#getprinterdensity)
 * [`sendLCDCommand(...)`](#sendlcdcommand)
+* [`sendLCDInitializationCommand()`](#sendlcdinitializationcommand)
+* [`sendLCDWakeUpCommand()`](#sendlcdwakeupcommand)
+* [`sendLCDHibernateCommand()`](#sendlcdhibernatecommand)
+* [`sendLCDClearCommand()`](#sendlcdclearcommand)
 * [`sendLCDString(...)`](#sendlcdstring)
 * [`sendLCDDoubleString(...)`](#sendlcddoublestring)
 * [`sendLCDMultiString(...)`](#sendlcdmultistring)
 * [`sendLCDFillString(...)`](#sendlcdfillstring)
-* [`sendLCDBitmap(...)`](#sendlcdbitmap)
+* [`sendLCDBase64Bitmap(...)`](#sendlcdbase64bitmap)
+* [`sendLCDAsciiBitmap(...)`](#sendlcdasciibitmap)
+* [`sendLCDBarcode(...)`](#sendlcdbarcode)
 * [`labelLocate()`](#labellocate)
 * [`labelOutput()`](#labeloutput)
+* [Enums](#enums)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### bindService()
+
+```typescript
+bindService() => Promise<void>
+```
+
+bind print service
+
+--------------------
+
+
+### unBindService()
+
+```typescript
+unBindService() => Promise<void>
+```
+
+unbind print service
+
+--------------------
+
+
+### getServiceStatus()
+
+```typescript
+getServiceStatus() => Promise<{ status: ServiceStatusEnum; }>
+```
+
+Get the print service current status
+
+**Returns:** <code>Promise&lt;{ status: <a href="#servicestatusenum">ServiceStatusEnum</a>; }&gt;</code>
+
+--------------------
+
 
 ### printerInit()
 
@@ -105,10 +166,10 @@ Get the printer’s serial no.
 --------------------
 
 
-### getPrinterModal()
+### getPrinterModel()
 
 ```typescript
-getPrinterModal() => Promise<{ model: string; }>
+getPrinterModel() => Promise<{ model: string; }>
 ```
 
 Get the interface of printer model
@@ -147,13 +208,15 @@ Device name
 ### updatePrinterState()
 
 ```typescript
-updatePrinterState() => Promise<{ status: number; }>
+updatePrinterState() => Promise<{ status: PrinterStatusEnum; code: number; }>
 ```
 
 Get the printer’s latest status
 
 1 → Printer is under normal operation
-2 → Printer is under preparation 3 → Communication is abnormal 4 → Out of paper
+2 → Printer is under preparation
+3 → Communication is abnormal
+4 → Out of paper
 5 → Overheated
 6 → Cover is open
 7 → Cutter error
@@ -166,7 +229,7 @@ Note 1: these return values are applicable to all SUNMI devices, but some status
 
 Note 2: V1 devices currently can’t support this interface; you can also get it asynchronously by registering broadcast apart from getting status proactively
 
-**Returns:** <code>Promise&lt;{ status: number; }&gt;</code>
+**Returns:** <code>Promise&lt;{ status: <a href="#printerstatusenum">PrinterStatusEnum</a>; code: number; }&gt;</code>
 
 --------------------
 
@@ -218,23 +281,40 @@ Note 2: currently, desktop device T1 model with versions above v2.4.0 supports t
 --------------------
 
 
-### sendRAWData()
+### sendRAWData(...)
 
 ```typescript
-sendRAWData() => Promise<{ data: string; }>
+sendRAWData(options: { data: string; }) => Promise<void>
 ```
 
 Commands of printing ESC/POS format
 
-**Returns:** <code>Promise&lt;{ data: string; }&gt;</code>
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ data: string; }</code> |
 
 --------------------
 
 
-### setPrinterStyle()
+### sendRAWBase64Data(...)
 
 ```typescript
-setPrinterStyle() => Promise<{ key: number; value: number; }>
+sendRAWBase64Data(options: { data: string; }) => Promise<void>
+```
+
+Commands of printing ESC/POS format encoded in Base64
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ data: string; }</code> |
+
+--------------------
+
+
+### setPrinterStyle(...)
+
+```typescript
+setPrinterStyle(options: { key: PrinterStyleKeysEnum; value: number | PrinterStyleValuesEnum; }) => Promise<void>
 ```
 
 Set printer style
@@ -249,7 +329,219 @@ Set the detailed size for SET_XXX attribute.
 
 Note: this interface is available for the printing service with versions above v4.2.22.
 
-**Returns:** <code>Promise&lt;{ key: number; value: number; }&gt;</code>
+| Param         | Type                                                                                                                                                           |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ key: <a href="#printerstylekeysenum">PrinterStyleKeysEnum</a>; value: number \| <a href="#printerstylevaluesenum">PrinterStyleValuesEnum</a>; }</code> |
+
+--------------------
+
+
+### setDoubleWidthPrintStyle(...)
+
+```typescript
+setDoubleWidthPrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets double-width print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setDoubleHeightPrintStyle(...)
+
+```typescript
+setDoubleHeightPrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets double-height print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setBoldPrintStyle(...)
+
+```typescript
+setBoldPrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets bold print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setUnderlinePrintStyle(...)
+
+```typescript
+setUnderlinePrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets underline print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setAntiWhitePrintStyle(...)
+
+```typescript
+setAntiWhitePrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets anti-white print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setStrikethroughPrintStyle(...)
+
+```typescript
+setStrikethroughPrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets strikethrough print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setItalicPrintStyle(...)
+
+```typescript
+setItalicPrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets italic print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setInvertPrintStyle(...)
+
+```typescript
+setInvertPrintStyle(options: { enable: boolean; }) => Promise<void>
+```
+
+Sets inverted print style
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ enable: boolean; }</code> |
+
+--------------------
+
+
+### setTextRightSpacingPrintStyle(...)
+
+```typescript
+setTextRightSpacingPrintStyle(options: { value: number; }) => Promise<void>
+```
+
+Sets text right spacing print style
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: number; }</code> |
+
+--------------------
+
+
+### setRelativePositionPrintStyle(...)
+
+```typescript
+setRelativePositionPrintStyle(options: { value: number; }) => Promise<void>
+```
+
+Sets relative position print style
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: number; }</code> |
+
+--------------------
+
+
+### setAbsolutePositionPrintStyle(...)
+
+```typescript
+setAbsolutePositionPrintStyle(options: { value: number; }) => Promise<void>
+```
+
+Sets absolute position print style
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: number; }</code> |
+
+--------------------
+
+
+### setLineSpacingPrintStyle(...)
+
+```typescript
+setLineSpacingPrintStyle(options: { value: number; }) => Promise<void>
+```
+
+Sets line spacing print style
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: number; }</code> |
+
+--------------------
+
+
+### setLeftSpacingPrintStyle(...)
+
+```typescript
+setLeftSpacingPrintStyle(options: { value: number; }) => Promise<void>
+```
+
+Sets left spacing print style
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: number; }</code> |
+
+--------------------
+
+
+### setStrikethroughStylePrintStyle(...)
+
+```typescript
+setStrikethroughStylePrintStyle(options: { value: number; }) => Promise<void>
+```
+
+Sets strikethrough style print style
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: number; }</code> |
 
 --------------------
 
@@ -257,7 +549,7 @@ Note: this interface is available for the printing service with versions above v
 ### getPrinterMode()
 
 ```typescript
-getPrinterMode() => Promise<{ mode: number; }>
+getPrinterMode() => Promise<{ mode: PrinterModeEnum; code: number; }>
 ```
 
 Get printer mode
@@ -270,7 +562,20 @@ Return value:
 
 Note: black mark mode currently is available for SUNMI T1, T2 desktop terminals; Label mode currently is available for SUNMI V2, V2 Pro handheld terminals.
 
-**Returns:** <code>Promise&lt;{ mode: number; }&gt;</code>
+**Returns:** <code>Promise&lt;{ mode: <a href="#printermodeenum">PrinterModeEnum</a>; code: number; }&gt;</code>
+
+--------------------
+
+
+### isLabelMode()
+
+```typescript
+isLabelMode() => Promise<{ label_mode: boolean; }>
+```
+
+Checks whether the printer is in label mode
+
+**Returns:** <code>Promise&lt;{ label_mode: boolean; }&gt;</code>
 
 --------------------
 
@@ -295,18 +600,16 @@ Note: only available for T1, T2 devices.
 ### setAlignment(...)
 
 ```typescript
-setAlignment(options: { alignment: number; }) => Promise<void>
+setAlignment(options: { alignment: AlignmentModeEnum; }) => Promise<void>
 ```
 
 Set alignment mode.
 
-alignment → alignment mode: 0 → left, 1 → center, 2 → right
-
 Note: global method may influence the subsequent print implementation, and you can cancel the related settings when initializing the printer.
 
-| Param         | Type                                |
-| ------------- | ----------------------------------- |
-| **`options`** | <code>{ alignment: number; }</code> |
+| Param         | Type                                                                            |
+| ------------- | ------------------------------------------------------------------------------- |
+| **`options`** | <code>{ alignment: <a href="#alignmentmodeenum">AlignmentModeEnum</a>; }</code> |
 
 --------------------
 
@@ -426,7 +729,7 @@ Note: the text is printed according to the vector text width, which means that e
 ### printColumnsText(...)
 
 ```typescript
-printColumnsText(options: { colsTextArr: string[]; colsWidthArr: number[]; colsAlign: number[]; }) => Promise<void>
+printColumnsText(options: { lines: { text: string; width: number; align: AlignmentModeEnum; }[]; }) => Promise<void>
 ```
 
 Print a column of a table (Arabic characters are not supported)
@@ -437,9 +740,9 @@ colsAlign → Alignment mode of each column: 0: left; 1: center; 2: right.
 
 Note: the array length of the above three parameters should be consistent. If the width of colsText[i] is larger than that of colsWidth[i], the text will be changed to another line, and Arabic characters are not supported.
 
-| Param         | Type                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------ |
-| **`options`** | <code>{ colsTextArr: string[]; colsWidthArr: number[]; colsAlign: number[]; }</code> |
+| Param         | Type                                                                                                                   |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ lines: { text: string; width: number; align: <a href="#alignmentmodeenum">AlignmentModeEnum</a>; }[]; }</code> |
 
 --------------------
 
@@ -447,7 +750,7 @@ Note: the array length of the above three parameters should be consistent. If th
 ### printColumnsString(...)
 
 ```typescript
-printColumnsString(options: { colsTextArr: string[]; colsWidthArr: number[]; colsAlign: number[]; }) => Promise<void>
+printColumnsString(options: { lines: { text: string; proportion: number; align: AlignmentModeEnum; }[]; }) => Promise<void>
 ```
 
 Print a column of a table, and you can specify the column width and alignment mode.
@@ -458,9 +761,9 @@ colsAlign → Alignment mode of each column: 0: left; 1: center; 2: right.
 
 Note: the array length of the above three parameters should be consistent. If the width of colsText[i] is larger than that of colsWidth[i], the text will be changed to another line.
 
-| Param         | Type                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------ |
-| **`options`** | <code>{ colsTextArr: string[]; colsWidthArr: number[]; colsAlign: number[]; }</code> |
+| Param         | Type                                                                                                                        |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ lines: { text: string; proportion: number; align: <a href="#alignmentmodeenum">AlignmentModeEnum</a>; }[]; }</code> |
 
 --------------------
 
@@ -510,7 +813,7 @@ Versions supported: v3.2.0 above for P1; v1.2.0 above for P14g; v3.2.0 above for
 ### printBarCode(...)
 
 ```typescript
-printBarCode(options: { data: string; symbology: number; height: number; width: number; text_position: number; }) => Promise<void>
+printBarCode(options: { content: string; symbology: BarcodeSymbologyEnum; height: number; width: number; text_position: BarcodeTextPositionEnum; }) => Promise<void>
 ```
 
 Print a 1D barcode.
@@ -559,9 +862,9 @@ Three types for Code128:
 - Type C: pure digits, plural characters, and the last digit is ignored if it is a singular digit;
 The interface adopts type B code by default. To use type A and C codes, you need to add“{A” and “{C” before the content, for example, “{A2344A”，”{C123123”，”{A1A{B13B{C12”.
 
-| Param         | Type                                                                                                    |
-| ------------- | ------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ data: string; symbology: number; height: number; width: number; text_position: number; }</code> |
+| Param         | Type                                                                                                                                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ content: string; symbology: <a href="#barcodesymbologyenum">BarcodeSymbologyEnum</a>; height: number; width: number; text_position: <a href="#barcodetextpositionenum">BarcodeTextPositionEnum</a>; }</code> |
 
 --------------------
 
@@ -569,7 +872,7 @@ The interface adopts type B code by default. To use type A and C codes, you need
 ### printQRCode(...)
 
 ```typescript
-printQRCode(options: { data: string; size: number; error_correction: number; }) => Promise<void>
+printQRCode(options: { content: string; size: number; error_correction?: number; }) => Promise<void>
 ```
 
 Print a QR code.
@@ -584,9 +887,9 @@ errorlevel → barcode error correction level (0-3):
 
 Note: the printing content will be directly output after calling this method under normal printing status, and each barcode has 4 pixels (if the pixels are less than 4, the barcode scanning may fail). A maximum version19 (93*93) mode is supported.
 
-| Param         | Type                                                                   |
-| ------------- | ---------------------------------------------------------------------- |
-| **`options`** | <code>{ data: string; size: number; error_correction: number; }</code> |
+| Param         | Type                                                                       |
+| ------------- | -------------------------------------------------------------------------- |
+| **`options`** | <code>{ content: string; size: number; error_correction?: number; }</code> |
 
 --------------------
 
@@ -594,7 +897,7 @@ Note: the printing content will be directly output after calling this method und
 ### print2DCode(...)
 
 ```typescript
-print2DCode(options: { data: string; symbology: number; size: number; error_correction: number; }) => Promise<void>
+print2DCode(options: { content: string; symbology: Barcode2DSymbologyEnum; size: number; error_correction: number; }) => Promise<void>
 ```
 
 Print a 2D barcode.
@@ -615,9 +918,9 @@ DataMatrix: ECC200 auto error correction is adopted by default, and it cannot be
 
 Note: the printing content will be directly output after calling this method under normal printing status; this interface is available for versions above v4.1.2.
 
-| Param         | Type                                                                                      |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ data: string; symbology: number; size: number; error_correction: number; }</code> |
+| Param         | Type                                                                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ content: string; symbology: <a href="#barcode2dsymbologyenum">Barcode2DSymbologyEnum</a>; size: number; error_correction: number; }</code> |
 
 --------------------
 
@@ -654,10 +957,10 @@ Note: Only available for desktop terminals with cutter function.
 --------------------
 
 
-### getCutPagerTimes()
+### getCutPaperTimes()
 
 ```typescript
-getCutPagerTimes() => Promise<{ times: number; }>
+getCutPaperTimes() => Promise<{ times: number; }>
 ```
 
 Get the cutter’s cumulative cutting times
@@ -700,7 +1003,7 @@ Note: Only available for desktop terminals with cash drawer function.
 ### getDrawerStatus()
 
 ```typescript
-getDrawerStatus() => Promise<{ status: number; }>
+getDrawerStatus() => Promise<{ opened: boolean; }>
 ```
 
 Get the current status of the cash drawer
@@ -709,7 +1012,7 @@ Note 1: you can get the cash drawer status of some models with cash drawer funct
 
 Note 2: this interface is only available for device models of S2, T2, and T2mini with versions above v4.0.0.
 
-**Returns:** <code>Promise&lt;{ status: number; }&gt;</code>
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
 
 --------------------
 
@@ -792,14 +1095,14 @@ Note: currently, these interfaces, except ‘get print density’ interface, are
 ### getFontName()
 
 ```typescript
-getFontName() => Promise<{ font: string; }>
+getFontName() => Promise<{ font: number; }>
 ```
 
 Get current font used
 
 Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
 
-**Returns:** <code>Promise&lt;{ font: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ font: number; }&gt;</code>
 
 --------------------
 
@@ -820,7 +1123,7 @@ Get print density
 ### sendLCDCommand(...)
 
 ```typescript
-sendLCDCommand(options: { flag: number; }) => Promise<void>
+sendLCDCommand(options: { command: LcdCommandEnum; }) => Promise<void>
 ```
 
 Send control commands
@@ -829,9 +1132,53 @@ parameter: flag → 1. Initialization; 2. Wake up LCD; 3. LCD hibernation; 4. Cl
 
 Note: only available for desktop terminals of mini series with customer display function.
 
-| Param         | Type                           |
-| ------------- | ------------------------------ |
-| **`options`** | <code>{ flag: number; }</code> |
+| Param         | Type                                                                    |
+| ------------- | ----------------------------------------------------------------------- |
+| **`options`** | <code>{ command: <a href="#lcdcommandenum">LcdCommandEnum</a>; }</code> |
+
+--------------------
+
+
+### sendLCDInitializationCommand()
+
+```typescript
+sendLCDInitializationCommand() => Promise<void>
+```
+
+Send initialization command
+
+--------------------
+
+
+### sendLCDWakeUpCommand()
+
+```typescript
+sendLCDWakeUpCommand() => Promise<void>
+```
+
+Send wake up command
+
+--------------------
+
+
+### sendLCDHibernateCommand()
+
+```typescript
+sendLCDHibernateCommand() => Promise<void>
+```
+
+Send hibernation command
+
+--------------------
+
+
+### sendLCDClearCommand()
+
+```typescript
+sendLCDClearCommand() => Promise<void>
+```
+
+Send clear command
 
 --------------------
 
@@ -878,7 +1225,7 @@ Note: only available for desktop terminals of mini series with customer display 
 ### sendLCDMultiString(...)
 
 ```typescript
-sendLCDMultiString(options: { text: string[]; align: number[]; }) => Promise<void>
+sendLCDMultiString(options: { lines: { text: string; proportion: number; }[]; }) => Promise<void>
 ```
 
 Send multiple lines text, and each line’s content will be automatically sized based on its weight
@@ -888,9 +1235,9 @@ align → The weight ratio of the area occupied by each line of text, and the si
 
 Note: only available for desktop terminals of mini series with customer display function, with versions above v4.0.0. It won’t be displayed if the text is too long.
 
-| Param         | Type                                              |
-| ------------- | ------------------------------------------------- |
-| **`options`** | <code>{ text: string[]; align: number[]; }</code> |
+| Param         | Type                                                             |
+| ------------- | ---------------------------------------------------------------- |
+| **`options`** | <code>{ lines: { text: string; proportion: number; }[]; }</code> |
 
 --------------------
 
@@ -916,10 +1263,10 @@ Note: only available for desktop terminals of mini series with customer display 
 --------------------
 
 
-### sendLCDBitmap(...)
+### sendLCDBase64Bitmap(...)
 
 ```typescript
-sendLCDBitmap(options: { bitmap: string; }) => Promise<void>
+sendLCDBase64Bitmap(options: { bitmap: string; }) => Promise<void>
 ```
 
 Send bitmap image
@@ -931,6 +1278,36 @@ Note: only available for desktop terminals of mini series with customer display 
 | Param         | Type                             |
 | ------------- | -------------------------------- |
 | **`options`** | <code>{ bitmap: string; }</code> |
+
+--------------------
+
+
+### sendLCDAsciiBitmap(...)
+
+```typescript
+sendLCDAsciiBitmap(options: { bitmap: string; }) => Promise<void>
+```
+
+Send ascii bitmap image
+
+| Param         | Type                             |
+| ------------- | -------------------------------- |
+| **`options`** | <code>{ bitmap: string; }</code> |
+
+--------------------
+
+
+### sendLCDBarcode(...)
+
+```typescript
+sendLCDBarcode(options: { content: string; format?: LcdBarcodeFormatEnum; }) => Promise<void>
+```
+
+Prints barcode on the customer display
+
+| Param         | Type                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ content: string; format?: <a href="#lcdbarcodeformatenum">LcdBarcodeFormatEnum</a>; }</code> |
 
 --------------------
 
@@ -967,5 +1344,143 @@ labelOutput() => Promise<void>
 Output the label to the paper cutting position
 
 --------------------
+
+
+### Enums
+
+
+#### ServiceStatusEnum
+
+| Members             | Value                       |
+| ------------------- | --------------------------- |
+| **`NO_PRINTER`**    | <code>"NoPrinter"</code>    |
+| **`CHECK_PRINTER`** | <code>"CheckPrinter"</code> |
+| **`FOUND_PRINTER`** | <code>"FoundPrinter"</code> |
+| **`LOST_PRINTER`**  | <code>"LostPrinter"</code>  |
+
+
+#### PrinterStatusEnum
+
+| Members                       | Value                                |
+| ----------------------------- | ------------------------------------ |
+| **`NORMAL_OPERATION`**        | <code>"NormalOperation"</code>       |
+| **`UNDER_PREPARATION`**       | <code>"UnderPreparation"</code>      |
+| **`ABNORMAL_COMMUNICATION`**  | <code>"AbnormalCommunication"</code> |
+| **`OUT_OF_PAPER`**            | <code>"OutOfPaper"</code>            |
+| **`OVERHEATED`**              | <code>"Overheated"</code>            |
+| **`COVER_IS_OPEN`**           | <code>"CoverIsOpen"</code>           |
+| **`CUTTER_ERROR`**            | <code>"CutterError"</code>           |
+| **`CUTTER_RECOVERED`**        | <code>"CutterRecovered"</code>       |
+| **`BLACK_MARK_NOT_DETECTED`** | <code>"BlackMarkNotDetected"</code>  |
+| **`PRINTER_NOT_DETECTED`**    | <code>"PrinterNotDetected"</code>    |
+| **`FIRMWARE_UPDATE_FAILED`**  | <code>"FirmwareUpdateFailed"</code>  |
+| **`UNKNOWN`**                 | <code>"Unknown"</code>               |
+
+
+#### PrinterStyleKeysEnum
+
+| Members                       | Value                                |
+| ----------------------------- | ------------------------------------ |
+| **`ENABLE_DOUBLE_WIDTH`**     | <code>"EnableDoubleWidth"</code>     |
+| **`ENABLE_DOUBLE_HEIGHT`**    | <code>"EnableDoubleHeight"</code>    |
+| **`ENABLE_BOLD`**             | <code>"EnableBold"</code>            |
+| **`ENABLE_UNDERLINE`**        | <code>"EnableUnderline"</code>       |
+| **`ENABLE_ANTI_WHITE`**       | <code>"EnableAntiWhite"</code>       |
+| **`ENABLE_STRIKETHROUGH`**    | <code>"EnableStrikethrough"</code>   |
+| **`ENABLE_ITALIC`**           | <code>"EnableItalic"</code>          |
+| **`ENABLE_INVERT`**           | <code>"EnableInvert"</code>          |
+| **`SET_TEXT_RIGHT_SPACING`**  | <code>"SetTextRightSpacing"</code>   |
+| **`SET_RELATIVE_POSITION`**   | <code>"SetRelativePosition"</code>   |
+| **`SET_ABSOLUTE_POSITION`**   | <code>"SetAbsolutePosition"</code>   |
+| **`SET_LINE_SPACING`**        | <code>"SetLineSpacing"</code>        |
+| **`SET_LEFT_SPACING`**        | <code>"SetLeftSpacing"</code>        |
+| **`SET_STRIKETHROUGH_STYLE`** | <code>"SetStrikethroughStyle"</code> |
+
+
+#### PrinterStyleValuesEnum
+
+| Members       | Value                  |
+| ------------- | ---------------------- |
+| **`ENABLE`**  | <code>"Enable"</code>  |
+| **`DISABLE`** | <code>"Disable"</code> |
+
+
+#### PrinterModeEnum
+
+| Members          | Value                    |
+| ---------------- | ------------------------ |
+| **`GENERAL`**    | <code>"General"</code>   |
+| **`BLACK_MARK`** | <code>"BlackMark"</code> |
+| **`LABEL`**      | <code>"Label"</code>     |
+| **`UNKNOWN`**    | <code>"Unknown"</code>   |
+
+
+#### AlignmentModeEnum
+
+| Members      | Value                 |
+| ------------ | --------------------- |
+| **`LEFT`**   | <code>"left"</code>   |
+| **`CENTER`** | <code>"center"</code> |
+| **`RIGHT`**  | <code>"right"</code>  |
+
+
+#### BarcodeSymbologyEnum
+
+| Members        | Value                   |
+| -------------- | ----------------------- |
+| **`UPC_A`**    | <code>"UPC_A"</code>    |
+| **`UPC_E`**    | <code>"UPC_E"</code>    |
+| **`EAN_13`**   | <code>"EAN_13"</code>   |
+| **`EAN_8`**    | <code>"EAN_8"</code>    |
+| **`CODE_39`**  | <code>"CODE_39"</code>  |
+| **`ITF`**      | <code>"ITF"</code>      |
+| **`CODABAR`**  | <code>"CODABAR"</code>  |
+| **`CODE_93`**  | <code>"CODE_93"</code>  |
+| **`CODE_128`** | <code>"CODE_128"</code> |
+
+
+#### BarcodeTextPositionEnum
+
+| Members               | Value                        |
+| --------------------- | ---------------------------- |
+| **`NO_TEXT`**         | <code>"NoText"</code>        |
+| **`ABOVE`**           | <code>"Above"</code>         |
+| **`BELOW`**           | <code>"Below"</code>         |
+| **`ABOVE_AND_BELOW`** | <code>"AboveAndBelow"</code> |
+
+
+#### Barcode2DSymbologyEnum
+
+| Members          | Value                      |
+| ---------------- | -------------------------- |
+| **`QR_CODE`**    | <code>"QR_CODE"</code>     |
+| **`PDF417`**     | <code>"PDF417"</code>      |
+| **`DataMatrix`** | <code>"DATA_MATRIX"</code> |
+
+
+#### LcdCommandEnum
+
+| Members              | Value                         |
+| -------------------- | ----------------------------- |
+| **`INITIALIZATION`** | <code>"Initialization"</code> |
+| **`WAKE_UP`**        | <code>"WakeUp"</code>         |
+| **`HIBERNATE`**      | <code>"Hibernate"</code>      |
+| **`CLEAR`**          | <code>"Clear"</code>          |
+
+
+#### LcdBarcodeFormatEnum
+
+| Members        | Value                   |
+| -------------- | ----------------------- |
+| **`UPC_A`**    | <code>"UPC_A"</code>    |
+| **`UPC_E`**    | <code>"UPC_E"</code>    |
+| **`EAN_13`**   | <code>"EAN_13"</code>   |
+| **`EAN_8`**    | <code>"EAN_8"</code>    |
+| **`CODE_39`**  | <code>"CODE_39"</code>  |
+| **`ITF`**      | <code>"ITF"</code>      |
+| **`CODABAR`**  | <code>"CODABAR"</code>  |
+| **`CODE_93`**  | <code>"CODE_93"</code>  |
+| **`CODE_128`** | <code>"CODE_128"</code> |
+| **`QR_CODE`**  | <code>"QR_CODE"</code>  |
 
 </docgen-api>
