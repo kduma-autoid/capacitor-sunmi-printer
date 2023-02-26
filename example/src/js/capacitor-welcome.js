@@ -2,7 +2,13 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Camera } from '@capacitor/camera';
 import {SunmiPrinter} from "@kduma-autoid/capacitor-sunmi-printer";
 import base64_decode from "locutus/php/url/base64_decode";
-import {AlignmentModeEnum, LcdCommandEnum, PrinterStyleKeysEnum, PrinterStyleValuesEnum} from "../../../src";
+import {
+    AlignmentModeEnum,
+    LcdBarcodeFormatEnum,
+    LcdCommandEnum,
+    PrinterStyleKeysEnum,
+    PrinterStyleValuesEnum
+} from "../../../src";
 
 window.customElements.define(
   'capacitor-welcome',
@@ -182,6 +188,9 @@ window.customElements.define(
           <button class="button" id="sendLCDFillString">sendLCDFillString()</button>
           <button class="button" id="sendLCDBase64Bitmap">sendLCDBase64Bitmap()</button>
           <button class="button" id="sendLCDAsciiBitmap">sendLCDAsciiBitmap()</button>
+          <button class="button" id="sendLCDBarcodeQR">sendLCDBarcode(QR)</button>
+          <button class="button" id="sendLCDBarcodeURL">sendLCDBarcode(URL)</button>
+          <button class="button" id="sendLCDBarcodeC128">sendLCDBarcode(C128)</button>
           
           <hr>
           <strong>1.2.16 Label printing instructions</strong>
@@ -783,18 +792,17 @@ window.customElements.define(
         self.shadowRoot.querySelector('#sendLCDMultiString').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
             try {
-                const response = await SunmiPrinter.sendLCDMultiString({ lines: [ { text: "Line 1", proportion: 5 }, { text: "Line 2", proportion: 3 }, { text: "Line 3", proportion: 2 } ] });
+                const response = await SunmiPrinter.sendLCDMultiString({ lines: [ { text: "Items count: 25", proportion: 2 }, { text: "9.99 USD", proportion: 5 }, { text: "Payment total", proportion: 3 } ] });
                 output.innerHTML = "<b>sendLCDMultiString(Line 1, Line 2, Line 3):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
             } catch (e) {
                 output.innerHTML = "<b>sendLCDMultiString(Line 1, Line 2, Line 3) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
 
-
         self.shadowRoot.querySelector('#sendLCDFillString').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
             try {
-                const response = await SunmiPrinter.sendLCDFillString({ text: "LCD Text", size: 5, fill: false });
+                const response = await SunmiPrinter.sendLCDFillString({ text: "LCD Text", size: 25, fill: true });
                 output.innerHTML = "<b>sendLCDFillString(LCD Text, 5, false):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
             } catch (e) {
                 output.innerHTML = "<b>sendLCDFillString(LCD Text, 5, false) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
@@ -818,6 +826,36 @@ window.customElements.define(
                 output.innerHTML = "<b>sendLCDAsciiBitmap():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
             } catch (e) {
                 output.innerHTML = "<b>sendLCDAsciiBitmap() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDBarcodeQR').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDBarcode({ content: "Text in Quick Response (QR) code", format: LcdBarcodeFormatEnum.QR_CODE });
+                output.innerHTML = "<b>sendLCDBarcode(QR):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDBarcode(QR) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDBarcodeC128').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDBarcode({ content: "TextC128", format: LcdBarcodeFormatEnum.CODE_128 });
+                output.innerHTML = "<b>sendLCDBarcode(C128):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDBarcode(C128) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDBarcodeURL').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDBarcode({ content: "https://www.google.com/search?q=QR+Code", format: LcdBarcodeFormatEnum.QR_CODE });
+                output.innerHTML = "<b>sendLCDBarcode(URL):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDBarcode(URL) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
 

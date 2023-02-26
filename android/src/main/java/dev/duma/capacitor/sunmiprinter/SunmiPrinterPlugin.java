@@ -11,6 +11,7 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.google.zxing.BarcodeFormat;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.sunmi.peripheral.printer.WoyouConsts;
 
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 import dev.duma.capacitor.sunmiprinter.internals.AsciiBitmapConverter;
+import dev.duma.capacitor.sunmiprinter.internals.BarcodeUtil;
 
 @CapacitorPlugin(name = "SunmiPrinter")
 public class SunmiPrinterPlugin extends Plugin {
@@ -1011,7 +1013,7 @@ public class SunmiPrinterPlugin extends Plugin {
                     if (isSuccess) {
                          call.resolve();
                     } else {
-                        call.reject("Opening drawer failed");
+                        call.reject("Displaying bitmap failed");
                     }
                 })
             );
@@ -1034,9 +1036,47 @@ public class SunmiPrinterPlugin extends Plugin {
                     if (isSuccess) {
                          call.resolve();
                     } else {
-                        call.reject("Opening drawer failed");
+                        call.reject("Displaying bitmap failed");
                     }
                 })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDBarcode(PluginCall call) {
+        String content = call.getString("content", "");
+
+        String format = call.getString("format", "QR_CODE");
+        int formatInt = 9;
+        switch (format) {
+            case "UPC_A": formatInt = 0; break;
+            case "UPC_E": formatInt = 1; break;
+            case "EAN_13": formatInt = 2; break;
+            case "EAN_8": formatInt = 3; break;
+            case "CODE_39": formatInt = 4; break;
+            case "ITF": formatInt = 5; break;
+            case "CODABAR": formatInt = 6; break;
+            case "CODE_93": formatInt = 7; break;
+            case "CODE_128": formatInt = 8; break;
+            case "QR_CODE": formatInt = 9; break;
+        }
+
+        Bitmap bitmap = BarcodeUtil.generateBitmap(content.trim(), formatInt, 128, 40);
+
+        try {
+            implementation.customerDisplay.sendLCDBitmap(
+                    bitmap,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Displaying barcode failed");
+                        }
+                    })
             );
             call.resolve();
         } catch (RuntimeException e) {

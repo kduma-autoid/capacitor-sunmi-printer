@@ -745,6 +745,11 @@ export interface SunmiPrinterPlugin {
   sendLCDAsciiBitmap(options: { bitmap: string }): Promise<void>;
 
   /**
+   * Prints barcode on the customer display
+   */
+  sendLCDBarcode(options: { content: string, format?: LcdBarcodeFormatEnum }): Promise<void>;
+
+  /**
    * Locate the next label
    *
    * You can only implement the location output operation specific to the label by calling the label interfaces, while the label content needs to be customized by yourself according to your own needs, like the operation of thermal printing.
@@ -852,4 +857,17 @@ export enum LcdCommandEnum {
   WAKE_UP = "WakeUp",
   HIBERNATE = "Hibernate",
   CLEAR = "Clear",
+}
+
+export enum LcdBarcodeFormatEnum {
+  UPC_A = "UPC_A",
+  UPC_E = "UPC_E",
+  EAN_13 = "EAN_13",
+  EAN_8 = "EAN_8",
+  CODE_39 = "CODE_39",
+  ITF = "ITF",
+  CODABAR = "CODABAR",
+  CODE_93 = "CODE_93",
+  CODE_128 = "CODE_128",
+  QR_CODE = "QR_CODE",
 }
