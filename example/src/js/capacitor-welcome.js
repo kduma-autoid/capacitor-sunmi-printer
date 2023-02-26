@@ -3,7 +3,7 @@ import { Camera } from '@capacitor/camera';
 import {SunmiPrinter} from "@kduma-autoid/capacitor-sunmi-printer";
 import base64_decode from "locutus/php/url/base64_decode";
 import {
-    AlignmentModeEnum,
+    AlignmentModeEnum, Barcode2DSymbologyEnum, BarcodeSymbologyEnum, BarcodeTextPositionEnum,
     LcdBarcodeFormatEnum,
     LcdCommandEnum,
     PrinterStyleKeysEnum,
@@ -145,11 +145,15 @@ window.customElements.define(
 <!--          <hr>-->
 <!--          <strong>1.2.8 Print an image</strong>-->
 <!--          <br>-->
-<!--          -->
-<!--          <hr>-->
-<!--          <strong>1.2.9 Print a 1D/2D barcode</strong>-->
-<!--          <br>-->
-<!--          -->
+          
+          <hr>
+          <strong>1.2.9 Print a 1D/2D barcode</strong>
+          <br>
+          <button class="button" id="printBarCode">printBarCode()</button>
+          <button class="button" id="printQRCode">printQRCode()</button>
+          <button class="button" id="print2DCode">print2DCode(PDF417)</button>
+          <button class="button" id="print2DCodeDM">print2DCode(DataMatrix)</button>
+          
 <!--          <hr>-->
 <!--          <strong>1.2.10 Transaction printing</strong>-->
 <!--          <br>-->
@@ -172,9 +176,16 @@ window.customElements.define(
           <button class="button" id="getOpenDrawerTimes">getOpenDrawerTimes()</button>
           <button class="button" id="getDrawerStatus">getDrawerStatus()</button>
           
-<!--          <hr>-->
-<!--          <strong>1.2.14 Get global attributes</strong>-->
-<!--          <br>-->
+          <hr>
+          <strong>1.2.14 Get global attributes</strong>
+          <br>
+          <button class="button" id="getForcedDouble">getForcedDouble()</button>
+          <button class="button" id="isForcedAntiWhite">isForcedAntiWhite()</button>
+          <button class="button" id="isForcedBold">isForcedBold()</button>
+          <button class="button" id="isForcedUnderline">isForcedUnderline()</button>
+          <button class="button" id="getForcedRowHeight">getForcedRowHeight()</button>
+          <button class="button" id="getFontName">getFontName()</button>
+          <button class="button" id="getPrinterDensity">getPrinterDensity()</button>
           
           <hr>
           <strong>1.2.15 Customer display interface description</strong>
@@ -260,6 +271,7 @@ window.customElements.define(
             }
         });
 
+
         // 1.2.1 Printer initialization and setting
         self.shadowRoot.querySelector('#printerInit').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
@@ -280,6 +292,7 @@ window.customElements.define(
                 output.innerHTML = "<b>printerSelfChecking() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
+
 
         // 1.2.2 Get device and printer information
         self.shadowRoot.querySelector('#getPrinterSerialNo').addEventListener('click', async function (e) {
@@ -362,6 +375,7 @@ window.customElements.define(
             }
         });
 
+
         // 1.2.3 ESC/POS commands
         self.shadowRoot.querySelector('#sendRAWData').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
@@ -396,6 +410,7 @@ window.customElements.define(
                 output.innerHTML = "<b>sendRAWBase64Data(label) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
+
 
         // 1.2.4 Instruction for printer style setting interface
         self.shadowRoot.querySelector('#setPrinterStyle').addEventListener('click', async function (e) {
@@ -548,6 +563,7 @@ window.customElements.define(
             }
         });
 
+
         // 1.2.5 Change print mode
         self.shadowRoot.querySelector('#getPrinterMode').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
@@ -578,6 +594,7 @@ window.customElements.define(
                 output.innerHTML = "<b>getPrinterBBMDistance() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
+
 
         // 1.2.6 Text printing
         self.shadowRoot.querySelector('#setAlignment').addEventListener('click', async function (e) {
@@ -650,6 +667,7 @@ window.customElements.define(
             }
         });
 
+
         // 1.2.7 Print a table
         self.shadowRoot.querySelector('#printColumnsText').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
@@ -673,8 +691,51 @@ window.customElements.define(
 
 
         // 1.2.8 Print an image
+
         // 1.2.9 Print a 1D/2D barcode
+        self.shadowRoot.querySelector('#printBarCode').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.printBarCode({ content: "1234567890", symbology: BarcodeSymbologyEnum.CODE_128, height: 100, width: 2, text_position: BarcodeTextPositionEnum.ABOVE_AND_BELOW });
+                output.innerHTML = "<b>printBarCode(1234567890, CODE_128):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>printBarCode(1234567890, CODE_128) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#printQRCode').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.printQRCode({ content: "https://www.google.com/search?q=QR+Code", error_correction: 3, size: 10 });
+                output.innerHTML = "<b>printQRCode(URL):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>printQRCode(URL) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#print2DCode').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.print2DCode({ content: "1234567890", symbology: Barcode2DSymbologyEnum.PDF417, size: 3, error_correction: 3 });
+                output.innerHTML = "<b>print2DCode(PDF417):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>print2DCode(PDF417) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#print2DCodeDM').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.print2DCode({ content: "1234567890", symbology: Barcode2DSymbologyEnum.DataMatrix, size:10, error_correction: 3 });
+                output.innerHTML = "<b>print2DCode(DataMatrix):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>print2DCode(DataMatrix) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+
         // 1.2.10 Transaction printing
+
 
         // 1.2.11 Paper moving related
         self.shadowRoot.querySelector('#lineWrap').addEventListener('click', async function (e) {
@@ -686,6 +747,7 @@ window.customElements.define(
                 output.innerHTML = "<b>lineWrap(5) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
+
 
         // 1.2.12 Cutter (paper cutting) related
         self.shadowRoot.querySelector('#cutPaper').addEventListener('click', async function (e) {
@@ -707,6 +769,7 @@ window.customElements.define(
                 output.innerHTML = "<b>getCutPaperTimes() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
+
 
         // 1.2.13 Cash drawer related
         self.shadowRoot.querySelector('#openDrawer').addEventListener('click', async function (e) {
@@ -739,7 +802,78 @@ window.customElements.define(
             }
         });
 
+
         // 1.2.14 Get global attributes
+        self.shadowRoot.querySelector('#getForcedDouble').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getForcedDouble();
+                output.innerHTML = "<b>getForcedDouble():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getForcedDouble() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#isForcedAntiWhite').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.isForcedAntiWhite();
+                output.innerHTML = "<b>isForcedAntiWhite():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>isForcedAntiWhite() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#isForcedBold').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.isForcedBold();
+                output.innerHTML = "<b>isForcedBold():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>isForcedBold() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#isForcedUnderline').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.isForcedUnderline();
+                output.innerHTML = "<b>isForcedUnderline():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>isForcedUnderline() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#getForcedRowHeight').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getForcedRowHeight();
+                output.innerHTML = "<b>getForcedRowHeight():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getForcedRowHeight() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#getFontName').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getFontName();
+                output.innerHTML = "<b>getFontName():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getFontName() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#getPrinterDensity').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getPrinterDensity();
+                output.innerHTML = "<b>getPrinterDensity():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getPrinterDensity() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
 
         // 1.2.15 Customer display interface description
         self.shadowRoot.querySelector('#sendLCDCommand').addEventListener('click', async function (e) {
@@ -881,6 +1015,7 @@ window.customElements.define(
                 output.innerHTML = "<b>sendLCDBarcode(URL) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
+
 
         // 1.2.16 Label printing instructions
         self.shadowRoot.querySelector('#labelLocate').addEventListener('click', async function (e) {

@@ -25,8 +25,14 @@ import dev.duma.capacitor.sunmiprinter.internals.BarcodeUtil;
 
 @CapacitorPlugin(name = "SunmiPrinter")
 public class SunmiPrinterPlugin extends Plugin {
-
     private final SunmiPrinter implementation = new SunmiPrinter();
+
+    @Override
+    public void load() {
+        super.load();
+
+        implementation.connector.bindService(getContext());
+    }
 
     @PluginMethod
     public void bindService(PluginCall call) {
@@ -785,12 +791,126 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
 
+
     // 1.2.8 Print an image
 
 
 
 
     // 1.2.9 Print a 1D/2D barcode
+    @PluginMethod
+    public void printBarCode(PluginCall call) {
+        String content = call.getString("content", "");
+
+        String symbology = call.getString("symbology", "CODE_128");
+        int symbologyInt = 8;
+        switch (symbology) {
+            case "UPC_A": symbologyInt = 0; break;
+            case "UPC_E": symbologyInt = 1; break;
+            case "EAN_13": symbologyInt = 2; break;
+            case "EAN_8": symbologyInt = 3; break;
+            case "CODE_39": symbologyInt = 4; break;
+            case "ITF": symbologyInt = 5; break;
+            case "CODABAR": symbologyInt = 6; break;
+            case "CODE_93": symbologyInt = 7; break;
+            case "CODE_128": symbologyInt = 8; break;
+            default: call.reject("Invalid barcode symbology"); return;
+        }
+
+        String textPosition = call.getString("text_position", "Below");
+        int textPositionInt = 2;
+        switch (textPosition) {
+            case "NoText": textPositionInt = 0; break;
+            case "Above": textPositionInt = 1; break;
+            case "Below": textPositionInt = 2; break;
+            case "AboveAndBelow": textPositionInt = 3; break;
+        }
+
+        int height = call.getInt("height");
+        int width = call.getInt("width");
+
+        try {
+            implementation.barcodePrinting.printBarCode(
+                    content,
+                    symbologyInt,
+                    height,
+                    width,
+                    textPositionInt,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Displaying barcode failed");
+                        }
+                    })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void printQRCode(PluginCall call) {
+        String content = call.getString("content", "");
+
+        int size = call.getInt("size");
+        int error_correction = call.getInt("error_correction", 3);
+
+        try {
+            implementation.barcodePrinting.printQRCode(
+                    content,
+                    size,
+                    error_correction,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Displaying barcode failed");
+                        }
+                    })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void print2DCode(PluginCall call) {
+        String content = call.getString("content", "");
+
+        String symbology = call.getString("symbology", "QR_CODE");
+        int symbologyInt = 1;
+        switch (symbology) {
+            case "QR_CODE": symbologyInt = 1; break;
+            case "PDF417": symbologyInt = 2; break;
+            case "DATA_MATRIX": symbologyInt = 3; break;
+            default: call.reject("Invalid barcode symbology"); return;
+        }
+
+        int size = call.getInt("size");
+        int error_correction = call.getInt("error_correction");
+
+        try {
+            implementation.barcodePrinting.print2DCode(
+                    content,
+                    symbologyInt,
+                    size,
+                    error_correction,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Displaying barcode failed");
+                        }
+                    })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 
@@ -910,6 +1030,96 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.14 Get global attributes
+    @PluginMethod
+    public void getForcedDouble(PluginCall call) {
+        try {
+            int status = implementation.getGlobalAttributes.getForcedDouble();
+
+            JSObject ret = new JSObject();
+            ret.put("status", status);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void isForcedAntiWhite(PluginCall call) {
+        try {
+            boolean status = implementation.getGlobalAttributes.isForcedAntiWhite();
+
+            JSObject ret = new JSObject();
+            ret.put("status", status);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void isForcedBold(PluginCall call) {
+        try {
+            boolean status = implementation.getGlobalAttributes.isForcedBold();
+
+            JSObject ret = new JSObject();
+            ret.put("status", status);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void isForcedUnderline(PluginCall call) {
+        try {
+            boolean status = implementation.getGlobalAttributes.isForcedUnderline();
+
+            JSObject ret = new JSObject();
+            ret.put("status", status);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getForcedRowHeight(PluginCall call) {
+        try {
+            int height = implementation.getGlobalAttributes.getForcedRowHeight();
+
+            JSObject ret = new JSObject();
+            ret.put("height", height);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getFontName(PluginCall call) {
+        try {
+            int font = implementation.getGlobalAttributes.getFontName();
+
+            JSObject ret = new JSObject();
+            ret.put("font", font);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getPrinterDensity(PluginCall call) {
+        try {
+            int density = implementation.getGlobalAttributes.getPrinterDensity();
+
+            JSObject ret = new JSObject();
+            ret.put("density", density);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 
@@ -1179,90 +1389,5 @@ public class SunmiPrinterPlugin extends Plugin {
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
-    }
-
-
-
-
-
-
-    // Old methods
-
-    @Override
-    public void load() {
-        super.load();
-
-//        implementation.init(this.getContext());
-    }
-
-    @PluginMethod
-    public void sendTextsToLcd(PluginCall call) {
-        implementation.sendTextsToLcd();
-
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void sendTextToLcd(PluginCall call) {
-        String text = call.getString("text", "Text");
-        int size = call.getInt("size", 16);
-        Boolean fill = call.getBoolean("fill", true);
-
-        implementation.sendTextToLcd(text, size, fill);
-
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void clearLcd(PluginCall call) {
-        implementation.controlLcd(4);
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void disableLcd(PluginCall call) {
-        implementation.controlLcd(3);
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void enableLcd(PluginCall call) {
-        implementation.controlLcd(2);
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void initLcd(PluginCall call) {
-        implementation.controlLcd(1);
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void openCashBox(PluginCall call) {
-        implementation.openCashBox();
-
-        call.resolve();
-    }
-
-
-    @PluginMethod
-    public void getDeviceModel(PluginCall call) {
-        JSObject ret = new JSObject();
-        ret.put("model", implementation.getDeviceModel());
-        call.resolve(ret);
-    }
-
-    @PluginMethod
-    public void setMode(PluginCall call) {
-        boolean bluetooth = Boolean.TRUE.equals(call.getBoolean("bluetooth"));
-        implementation.setMode(bluetooth);
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void initPrinter(PluginCall call) {
-        implementation.initPrinter();
-
-        call.resolve();
     }
 }

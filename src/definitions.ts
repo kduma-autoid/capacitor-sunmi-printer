@@ -450,11 +450,9 @@ export interface SunmiPrinterPlugin {
    * - Type C: pure digits, plural characters, and the last digit is ignored if it is a singular digit;
    * The interface adopts type B code by default. To use type A and C codes, you need to add“{A” and “{C” before the content, for example, “{A2344A”，”{C123123”，”{A1A{B13B{C12”.
    *
-   * @TODO
-   *
    * @see 1.2.9 Print a 1D/2D barcode
    */
-  printBarCode(options: { data: string, symbology: number, height: number, width: number, text_position: number }): Promise<void>;
+  printBarCode(options: { content: string, symbology: BarcodeSymbologyEnum, height: number, width: number, text_position: BarcodeTextPositionEnum }): Promise<void>;
 
   /**
    * Print a QR code.
@@ -469,11 +467,9 @@ export interface SunmiPrinterPlugin {
    *
    * Note: the printing content will be directly output after calling this method under normal printing status, and each barcode has 4 pixels (if the pixels are less than 4, the barcode scanning may fail). A maximum version19 (93*93) mode is supported.
    *
-   * @TODO
-   *
    * @see 1.2.9 Print a 1D/2D barcode
    */
-  printQRCode(options: { data: string, size: number, error_correction: number }): Promise<void>;
+  printQRCode(options: { content: string, size: number, error_correction?: number }): Promise<void>;
 
   /**
    * Print a 2D barcode.
@@ -494,11 +490,9 @@ export interface SunmiPrinterPlugin {
    *
    * Note: the printing content will be directly output after calling this method under normal printing status; this interface is available for versions above v4.1.2.
    *
-   * @TODO
-   *
    * @see 1.2.9 Print a 1D/2D barcode
    */
-  print2DCode(options: { data: string, symbology: number, size: number, error_correction: number }): Promise<void>;
+  print2DCode(options: { content: string, symbology: Barcode2DSymbologyEnum, size: number, error_correction: number }): Promise<void>;
 
   // TODO: Transaction Printing
 
@@ -565,8 +559,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
    *
-   * @TODO
-   *
    * @see 1.2.14 Get global attributes
    */
   getForcedDouble(): Promise<{ status: number }>;
@@ -575,8 +567,6 @@ export interface SunmiPrinterPlugin {
    * Get global font anti-white style enabled
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
-   *
-   * @TODO
    *
    * @see 1.2.14 Get global attributes
    */
@@ -587,8 +577,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
    *
-   * @TODO
-   *
    * @see 1.2.14 Get global attributes
    */
   isForcedBold(): Promise<{ status: boolean }>;
@@ -597,8 +585,6 @@ export interface SunmiPrinterPlugin {
    * Get global font underline style enabled
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
-   *
-   * @TODO
    *
    * @see 1.2.14 Get global attributes
    */
@@ -609,8 +595,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
    *
-   * @TODO
-   *
    * @see 1.2.14 Get global attributes
    */
   getForcedRowHeight(): Promise<{ height: number }>;
@@ -620,16 +604,12 @@ export interface SunmiPrinterPlugin {
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
    *
-   * @TODO
-   *
    * @see 1.2.14 Get global attributes
    */
-  getFontName(): Promise<{ font: string }>;
+  getFontName(): Promise<{ font: number }>;
 
   /**
    * Get print density
-   *
-   * @TODO
    *
    * @see 1.2.14 Get global attributes
    */
@@ -866,4 +846,29 @@ export enum LcdBarcodeFormatEnum {
   CODE_93 = "CODE_93",
   CODE_128 = "CODE_128",
   QR_CODE = "QR_CODE",
+}
+
+export enum BarcodeSymbologyEnum {
+  UPC_A = "UPC_A",
+  UPC_E = "UPC_E",
+  EAN_13 = "EAN_13",
+  EAN_8 = "EAN_8",
+  CODE_39 = "CODE_39",
+  ITF = "ITF",
+  CODABAR = "CODABAR",
+  CODE_93 = "CODE_93",
+  CODE_128 = "CODE_128",
+}
+
+export enum BarcodeTextPositionEnum {
+  NO_TEXT = "NoText",
+  ABOVE = "Above",
+  BELOW = "Below",
+  ABOVE_AND_BELOW = "AboveAndBelow",
+}
+
+export enum Barcode2DSymbologyEnum {
+  QR_CODE = "QR_CODE",
+  PDF417 = "PDF417",
+  DataMatrix = "DATA_MATRIX",
 }

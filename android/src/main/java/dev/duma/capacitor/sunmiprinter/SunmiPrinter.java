@@ -5,12 +5,14 @@ import android.content.Context;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.BluetoothUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.ESCUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.SunmiPrintHelper;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterBarcodePrinting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCashDrawerRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterChangePrintMode;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCustomerDisplay;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCuttingRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterEscPosCommands;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetDeviceAndPrinterInformation;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetGlobalAttributes;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInitializationAndSettings;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInstructionForPrinterStyleSetting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterLabelPrintingInstructions;
@@ -45,8 +47,13 @@ public class SunmiPrinter {
     public final SunmiPrinterTablePrinting tablePrinting = new SunmiPrinterTablePrinting(connector, callbackHelper);
 
     // 1.2.8 Print an image
+
+
     // 1.2.9 Print a 1D/2D barcode
+    public final SunmiPrinterBarcodePrinting barcodePrinting = new SunmiPrinterBarcodePrinting(connector, callbackHelper);
+
     // 1.2.10 Transaction printing
+
 
     // 1.2.11 Paper moving related
     public final SunmiPrinterPaperMovingRelated paperMovingRelated = new SunmiPrinterPaperMovingRelated(connector, callbackHelper);
@@ -58,6 +65,7 @@ public class SunmiPrinter {
     public final SunmiPrinterCashDrawerRelated cashDrawerRelated = new SunmiPrinterCashDrawerRelated(connector, callbackHelper);
 
     // 1.2.14 Get global attributes
+    public final SunmiPrinterGetGlobalAttributes getGlobalAttributes = new SunmiPrinterGetGlobalAttributes(connector, callbackHelper);
 
     // 1.2.15 Customer display interface description
     public final SunmiPrinterCustomerDisplay customerDisplay = new SunmiPrinterCustomerDisplay(connector, callbackHelper);
