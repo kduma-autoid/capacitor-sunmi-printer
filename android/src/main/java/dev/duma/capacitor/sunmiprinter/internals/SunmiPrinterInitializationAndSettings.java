@@ -1,8 +1,11 @@
-package dev.duma.capacitor.sunmiprinter;
+package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.os.RemoteException;
 
 import com.sunmi.peripheral.printer.SunmiPrinterService;
+
+import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
+import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterInitializationAndSettings {
     private final SunmiPrintServiceConnector connector;

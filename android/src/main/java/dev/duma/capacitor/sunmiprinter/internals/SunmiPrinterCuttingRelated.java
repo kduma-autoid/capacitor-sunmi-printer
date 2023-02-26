@@ -1,8 +1,11 @@
-package dev.duma.capacitor.sunmiprinter;
+package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.os.RemoteException;
 
 import com.sunmi.peripheral.printer.SunmiPrinterService;
+
+import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
+import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterCuttingRelated {
     private final SunmiPrintServiceConnector connector;
@@ -26,7 +29,7 @@ public class SunmiPrinterCuttingRelated {
         }
     }
 
-    int getCutPaperTimes() throws RuntimeException {
+    public int getCutPaperTimes() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");

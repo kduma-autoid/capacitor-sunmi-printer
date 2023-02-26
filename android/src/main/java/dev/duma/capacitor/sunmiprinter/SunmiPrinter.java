@@ -1,17 +1,14 @@
 package dev.duma.capacitor.sunmiprinter;
 
 import android.content.Context;
-import android.util.Log;
-
-import com.sunmi.peripheral.printer.InnerPrinterCallback;
-import com.sunmi.peripheral.printer.InnerPrinterException;
-import com.sunmi.peripheral.printer.InnerPrinterManager;
-import com.sunmi.peripheral.printer.SunmiPrinterService;
 
 import dev.duma.capacitor.sunmiprinter.helpers.utils.BluetoothUtil;
-import dev.duma.capacitor.sunmiprinter.helpers.utils.BytesUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.ESCUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.SunmiPrintHelper;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCuttingRelated;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterEscPosCommands;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetDeviceAndPrinterInformation;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInitializationAndSettings;
 
 public class SunmiPrinter {
 
@@ -28,8 +25,14 @@ public class SunmiPrinter {
     public final SunmiPrinterEscPosCommands escPosCommands = new SunmiPrinterEscPosCommands(connector, callbackHelper);
 
     // 1.2.4 Instruction for printer style setting interface
+    public final SunmiPrinterInstructionForPrinterStyleSetting instructionForPrinterStyleSetting = new SunmiPrinterInstructionForPrinterStyleSetting(connector, callbackHelper);
+
     // 1.2.5 Change print mode
+    public final SunmiPrinterChangePrintMode changePrintMode = new SunmiPrinterChangePrintMode(connector, callbackHelper);
+
     // 1.2.6 Text printing
+    public final SunmiPrinterTextPrinting textPrinting = new SunmiPrinterTextPrinting(connector, callbackHelper);
+
     // 1.2.7 Print a table
     // 1.2.8 Print an image
     // 1.2.9 Print a 1D/2D barcode

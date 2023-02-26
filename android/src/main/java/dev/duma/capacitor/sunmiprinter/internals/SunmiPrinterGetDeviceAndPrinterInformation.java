@@ -1,9 +1,12 @@
-package dev.duma.capacitor.sunmiprinter;
+package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.os.Build;
 import android.os.RemoteException;
 
 import com.sunmi.peripheral.printer.SunmiPrinterService;
+
+import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
+import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterGetDeviceAndPrinterInformation {
     private final SunmiPrintServiceConnector connector;
@@ -14,7 +17,7 @@ public class SunmiPrinterGetDeviceAndPrinterInformation {
         this.callbackHelper = callbackHelper;
     }
 
-    String getPrinterSerialNo() throws RuntimeException {
+    public String getPrinterSerialNo() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");
@@ -27,7 +30,7 @@ public class SunmiPrinterGetDeviceAndPrinterInformation {
         }
     }
 
-    String getPrinterModel() throws RuntimeException {
+    public String getPrinterModel() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");
@@ -40,7 +43,7 @@ public class SunmiPrinterGetDeviceAndPrinterInformation {
         }
     }
 
-    String getPrinterVersion() throws RuntimeException {
+    public String getPrinterVersion() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");
@@ -53,11 +56,11 @@ public class SunmiPrinterGetDeviceAndPrinterInformation {
         }
     }
 
-    String getDeviceName() throws RuntimeException {
+    public String getDeviceName() throws RuntimeException {
         return Build.MODEL;
     }
 
-    int updatePrinterState() throws RuntimeException {
+    public int updatePrinterState() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");
@@ -70,7 +73,7 @@ public class SunmiPrinterGetDeviceAndPrinterInformation {
         }
     }
 
-    String getServiceVersion() throws RuntimeException {
+    public String getServiceVersion() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");
@@ -83,7 +86,7 @@ public class SunmiPrinterGetDeviceAndPrinterInformation {
         }
     }
 
-    void getPrintedLength(SunmiCallbackHelper.Callback callback) throws RuntimeException {
+    public void getPrintedLength(SunmiCallbackHelper.Callback callback) throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");
@@ -96,7 +99,7 @@ public class SunmiPrinterGetDeviceAndPrinterInformation {
         }
     }
 
-    int getPrinterPaper() throws RuntimeException {
+    public int getPrinterPaper() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");

@@ -1,8 +1,11 @@
-package dev.duma.capacitor.sunmiprinter;
+package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.os.RemoteException;
 
 import com.sunmi.peripheral.printer.SunmiPrinterService;
+
+import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
+import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterEscPosCommands {
     private final SunmiPrintServiceConnector connector;
@@ -13,7 +16,7 @@ public class SunmiPrinterEscPosCommands {
         this.callbackHelper = callbackHelper;
     }
 
-    void sendRAWData(byte[] data, SunmiCallbackHelper.Callback callback) throws RuntimeException {
+    public void sendRAWData(byte[] data, SunmiCallbackHelper.Callback callback) throws RuntimeException {
         SunmiPrinterService service = connector.getService();
         if(service == null) {
             throw new RuntimeException("Printer service is not initialized");
