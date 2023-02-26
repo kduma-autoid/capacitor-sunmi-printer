@@ -137,11 +137,107 @@ export interface SunmiPrinterPlugin {
    *
    * Note: this interface is available for the printing service with versions above v4.2.22.
    *
-   * @TODO
-   *
    * @see 1.2.4 Instruction for printer style setting interface
    */
-  setPrinterStyle(): Promise<{ key: number, value: number }>;
+  setPrinterStyle(options: { key: PrinterStyleKeysEnum, value: number|PrinterStyleValuesEnum }): Promise<void>;
+
+  /**
+   * Sets double-width print style
+   *
+   * @see setPrinterStyle
+   */
+  setDoubleWidthPrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets double-height print style
+   *
+   * @see setPrinterStyle
+   */
+  setDoubleHeightPrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets bold print style
+   *
+   * @see setPrinterStyle
+   */
+  setBoldPrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets underline print style
+   *
+   * @see setPrinterStyle
+   */
+  setUnderlinePrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets anti-white print style
+   *
+   * @see setPrinterStyle
+   */
+  setAntiWhitePrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets strikethrough print style
+   *
+   * @see setPrinterStyle
+   */
+  setStrikethroughPrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets italic print style
+   *
+   * @see setPrinterStyle
+   */
+  setItalicPrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets inverted print style
+   *
+   * @see setPrinterStyle
+   */
+  setInvertPrintStyle(options: { enable: boolean }): Promise<void>;
+
+  /**
+   * Sets text right spacing print style
+   *
+   * @see setPrinterStyle
+   */
+  setTextRightSpacingPrintStyle(options: { value: number }): Promise<void>;
+
+  /**
+   * Sets relative position print style
+   *
+   * @see setPrinterStyle
+   */
+  setRelativePositionPrintStyle(options: { value: number }): Promise<void>;
+
+  /**
+   * Sets absolute position print style
+   *
+   * @see setPrinterStyle
+   */
+  setAbsolutePositionPrintStyle(options: { value: number }): Promise<void>;
+
+  /**
+   * Sets line spacing print style
+   *
+   * @see setPrinterStyle
+   */
+  setLineSpacingPrintStyle(options: { value: number }): Promise<void>;
+
+  /**
+   * Sets left spacing print style
+   *
+   * @see setPrinterStyle
+   */
+  setLeftSpacingPrintStyle(options: { value: number }): Promise<void>;
+
+  /**
+   * Sets strikethrough style print style
+   *
+   * @see setPrinterStyle
+   */
+  setStrikethroughStylePrintStyle(options: { value: number }): Promise<void>;
 
   /**
    * Get printer mode
@@ -154,11 +250,16 @@ export interface SunmiPrinterPlugin {
    *
    * Note: black mark mode currently is available for SUNMI T1, T2 desktop terminals; Label mode currently is available for SUNMI V2, V2 Pro handheld terminals.
    *
-   * @TODO
-   *
    * @see 1.2.5 Change print mode
    */
-  getPrinterMode(): Promise<{ mode: number }>;
+  getPrinterMode(): Promise<{ mode: PrinterModeEnum, code: number }>;
+
+  /**
+   * Checks whether the printer is in label mode
+   *
+   * @see getPrinterMode
+   */
+  isLabelMode(): Promise<{ label_mode: boolean }>;
 
   /**
    * Get paper moving distance set under black mark mode
@@ -167,8 +268,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: only available for T1, T2 devices.
    *
-   * @TODO
-   *
    * @see 1.2.5 Change print mode
    */
   getPrinterBBMDistance(): Promise<{ distance: number }>;
@@ -176,15 +275,11 @@ export interface SunmiPrinterPlugin {
   /**
    * Set alignment mode.
    *
-   * alignment → alignment mode: 0 → left, 1 → center, 2 → right
-   *
    * Note: global method may influence the subsequent print implementation, and you can cancel the related settings when initializing the printer.
-   *
-   * @TODO
    *
    * @see 1.2.6 Text printing
    */
-  setAlignment(options: { alignment: number }): Promise<void>;
+  setAlignment(options: { alignment: AlignmentModeEnum }): Promise<void>;
 
   /**
    * Set custom print font.
@@ -195,9 +290,9 @@ export interface SunmiPrinterPlugin {
    *
    * Note 2: this interface is available for the printing service with versions above v4.14.0.
    *
-   * @TODO
-   *
    * @see 1.2.6 Text printing
+   *
+   * @TODO Probably not working
    */
   setFontName(options: { typeface: string }): Promise<void>;
 
@@ -206,16 +301,12 @@ export interface SunmiPrinterPlugin {
    *
    * Note: global method may influence the subsequent printing, and you can cancel this setting using printer initialization. The font size adopts the printing method exceeding the standard international commands, and the adjustment of font size may affect the character width, which leads to the change to the number of each line’s characters. So typography of monospaced fonts can be confusing some time.
    *
-   * @TODO
-   *
    * @see 1.2.6 Text printing
    */
   setFontSize(options: { size: number }): Promise<void>;
 
   /**
    * Set bold
-   *
-   * @TODO
    *
    * @see 1.2.6 Text printing
    */
@@ -227,8 +318,6 @@ export interface SunmiPrinterPlugin {
    * text → text to be printed; automatic linefeed will be implemented when the text width exceeds one line, and the forced newline character "\n" shall be added at the end of one line when the text width is less than one line or exceeds one line but not meeting one line before being printed, or it will be cached.
    *
    * Note: if you need to change the style of print text, such as alignment mode, font size, bold, etc., please set it before calling printText method.
-   *
-   * @TODO
    *
    * @see 1.2.6 Text printing
    */
@@ -243,8 +332,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: the font setting of this interface is available for the printing service with versions above v4.14.0.
    *
-   * @TODO
-   *
    * @see 1.2.6 Text printing
    */
   printTextWithFont(options: { text: string, typeface: string, size: number }): Promise<void>;
@@ -255,8 +342,6 @@ export interface SunmiPrinterPlugin {
    * text → text to be printed; automatic linefeed will be implemented when the text width exceeds one line, and the forced newline character "\n" shall be added at the end of one line when the text width is less than one line or exceeds one line but not meeting one line before being printed, or it will be cached.
    *
    * Note: the text is printed according to the vector text width, which means that each character is not monospaced.
-   *
-   * @TODO
    *
    * @see 1.2.6 Text printing
    */
@@ -714,4 +799,39 @@ export enum ServiceStatusEnum {
   CHECK_PRINTER = "CheckPrinter",
   FOUND_PRINTER = "FoundPrinter",
   LOST_PRINTER = "LostPrinter",
+}
+
+export enum AlignmentModeEnum {
+  LEFT = "left",
+  CENTER = "center",
+  RIGHT = "right",
+}
+
+export enum PrinterModeEnum {
+  GENERAL = "General",
+  BLACK_MARK = "BlackMark",
+  LABEL = "Label",
+  UNKNOWN = "Unknown",
+}
+
+export enum PrinterStyleKeysEnum {
+  ENABLE_DOUBLE_WIDTH = "EnableDoubleWidth",
+  ENABLE_DOUBLE_HEIGHT = "EnableDoubleHeight",
+  ENABLE_BOLD = "EnableBold",
+  ENABLE_UNDERLINE = "EnableUnderline",
+  ENABLE_ANTI_WHITE = "EnableAntiWhite",
+  ENABLE_STRIKETHROUGH = "EnableStrikethrough",
+  ENABLE_ITALIC = "EnableItalic",
+  ENABLE_INVERT = "EnableInvert",
+  SET_TEXT_RIGHT_SPACING = "SetTextRightSpacing",
+  SET_RELATIVE_POSITION = "SetRelativePosition",
+  SET_ABSOLUTE_POSITION = "SetAbsolutePosition",
+  SET_LINE_SPACING = "SetLineSpacing",
+  SET_LEFT_SPACING = "SetLeftSpacing",
+  SET_STRIKETHROUGH_STYLE = "SetStrikethroughStyle",
+}
+
+export enum PrinterStyleValuesEnum {
+  ENABLE = "Enable",
+  DISABLE = "Disable",
 }

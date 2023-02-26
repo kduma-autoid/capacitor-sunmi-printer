@@ -2,6 +2,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Camera } from '@capacitor/camera';
 import {SunmiPrinter} from "@kduma-autoid/capacitor-sunmi-printer";
 import base64_decode from "locutus/php/url/base64_decode";
+import {AlignmentModeEnum, PrinterStyleKeysEnum, PrinterStyleValuesEnum} from "../../../src";
 
 window.customElements.define(
   'capacitor-welcome',
@@ -95,34 +96,59 @@ window.customElements.define(
           <hr>
           <strong>1.2.4 Instruction for printer style setting interface</strong>
           <br>
+          <button class="button" id="setPrinterStyle">setPrinterStyle()</button>
+          <button class="button" id="setDoubleWidthPrintStyle">setDoubleWidthPrintStyle()</button>
+          <button class="button" id="setDoubleHeightPrintStyle">setDoubleHeightPrintStyle()</button>
+          <button class="button" id="setBoldPrintStyle">setBoldPrintStyle()</button>
+          <button class="button" id="setUnderlinePrintStyle">setUnderlinePrintStyle()</button>
+          <button class="button" id="setAntiWhitePrintStyle">setAntiWhitePrintStyle()</button>
+          <button class="button" id="setStrikethroughPrintStyle">setStrikethroughPrintStyle()</button>
+          <button class="button" id="setItalicPrintStyle">setItalicPrintStyle()</button>
+          <button class="button" id="setInvertPrintStyle">setInvertPrintStyle()</button>
+          <button class="button" id="setTextRightSpacingPrintStyle">setTextRightSpacingPrintStyle()</button>
+          <button class="button" id="setRelativePositionPrintStyle">setRelativePositionPrintStyle()</button>
+          <button class="button" id="setAbsolutePositionPrintStyle">setAbsolutePositionPrintStyle()</button>
+          <button class="button" id="setLineSpacingPrintStyle">setLineSpacingPrintStyle()</button>
+          <button class="button" id="setLeftSpacingPrintStyle">setLeftSpacingPrintStyle()</button>
+          <button class="button" id="setStrikethroughStylePrintStyle">setStrikethroughStylePrintStyle()</button>
           
           <hr>
           <strong>1.2.5 Change print mode</strong>
           <br>
+          <button class="button" id="getPrinterMode">getPrinterMode()</button>
+          <button class="button" id="isLabelMode">isLabelMode()</button>
+          <button class="button" id="getPrinterBBMDistance">getPrinterBBMDistance()</button>
           
           <hr>
           <strong>1.2.6 Text printing</strong>
           <br>
+          <button class="button" id="setAlignment">setAlignment()</button>
+          <button class="button" id="setFontName">setFontName()</button>
+          <button class="button" id="setFontSize">setFontSize()</button>
+          <button class="button" id="setBold">setBold()</button>
+          <button class="button" id="printText">printText()</button>
+          <button class="button" id="printTextWithFont">printTextWithFont()</button>
+          <button class="button" id="printOriginalText">printOriginalText()</button>
           
-          <hr>
-          <strong>1.2.7 Print a table</strong>
-          <br>
-          
-          <hr>
-          <strong>1.2.8 Print an image</strong>
-          <br>
-          
-          <hr>
-          <strong>1.2.9 Print a 1D/2D barcode</strong>
-          <br>
-          
-          <hr>
-          <strong>1.2.10 Transaction printing</strong>
-          <br>
-          
-          <hr>
-          <strong>1.2.11 Paper moving related</strong>
-          <br>
+<!--          <hr>-->
+<!--          <strong>1.2.7 Print a table</strong>-->
+<!--          <br>-->
+<!--          -->
+<!--          <hr>-->
+<!--          <strong>1.2.8 Print an image</strong>-->
+<!--          <br>-->
+<!--          -->
+<!--          <hr>-->
+<!--          <strong>1.2.9 Print a 1D/2D barcode</strong>-->
+<!--          <br>-->
+<!--          -->
+<!--          <hr>-->
+<!--          <strong>1.2.10 Transaction printing</strong>-->
+<!--          <br>-->
+<!--          -->
+<!--          <hr>-->
+<!--          <strong>1.2.11 Paper moving related</strong>-->
+<!--          <br>-->
           
           <hr>
           <strong>1.2.12 Cutter (paper cutting) related</strong>
@@ -130,21 +156,21 @@ window.customElements.define(
           <button class="button" id="cutPaper">cutPaper()</button>
           <button class="button" id="getCutPaperTimes">getCutPaperTimes()</button>
           
-          <hr>
-          <strong>1.2.13 Cash drawer related</strong>
-          <br>
-          
-          <hr>
-          <strong>1.2.14 Get global attributes</strong>
-          <br>
-          
-          <hr>
-          <strong>1.2.15 Customer display interface description</strong>
-          <br>
-          
-          <hr>
-          <strong>1.2.16 Label printing instructions</strong>
-          <br>
+<!--          <hr>-->
+<!--          <strong>1.2.13 Cash drawer related</strong>-->
+<!--          <br>-->
+<!--          -->
+<!--          <hr>-->
+<!--          <strong>1.2.14 Get global attributes</strong>-->
+<!--          <br>-->
+<!--          -->
+<!--          <hr>-->
+<!--          <strong>1.2.15 Customer display interface description</strong>-->
+<!--          <br>-->
+<!--          -->
+<!--          <hr>-->
+<!--          <strong>1.2.16 Label printing instructions</strong>-->
+<!--          <br>-->
           
           
 <!--          <button class="button" id="getPrinterSerialNo">getPrinterSerialNo()</button>-->
@@ -344,8 +370,258 @@ window.customElements.define(
         });
 
         // 1.2.4 Instruction for printer style setting interface
+        self.shadowRoot.querySelector('#setPrinterStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setPrinterStyle({ key: PrinterStyleKeysEnum.ENABLE_INVERT, value: PrinterStyleValuesEnum.ENABLE });
+                output.innerHTML = "<b>setPrinterStyle(ENABLE_INVERT, ENABLE):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setPrinterStyle(ENABLE_INVERT, ENABLE) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setDoubleWidthPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setDoubleWidthPrintStyle({ enable: true });
+                output.innerHTML = "<b>setDoubleWidthPrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setDoubleWidthPrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setDoubleHeightPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setDoubleHeightPrintStyle({ enable: true });
+                output.innerHTML = "<b>setDoubleHeightPrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setDoubleHeightPrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setBoldPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setBoldPrintStyle({ enable: true });
+                output.innerHTML = "<b>setBoldPrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setBoldPrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setUnderlinePrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setUnderlinePrintStyle({ enable: true });
+                output.innerHTML = "<b>setUnderlinePrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setUnderlinePrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setAntiWhitePrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setAntiWhitePrintStyle({ enable: true });
+                output.innerHTML = "<b>setAntiWhitePrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setAntiWhitePrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setStrikethroughPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setStrikethroughPrintStyle({ enable: true });
+                output.innerHTML = "<b>setStrikethroughPrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setStrikethroughPrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setItalicPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setItalicPrintStyle({ enable: true });
+                output.innerHTML = "<b>setItalicPrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setItalicPrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setInvertPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setInvertPrintStyle({ enable: true });
+                output.innerHTML = "<b>setInvertPrintStyle(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setInvertPrintStyle(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setTextRightSpacingPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setTextRightSpacingPrintStyle({ value: 1 });
+                output.innerHTML = "<b>setTextRightSpacingPrintStyle(1):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setTextRightSpacingPrintStyle(1) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setRelativePositionPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setRelativePositionPrintStyle({ value: 1 });
+                output.innerHTML = "<b>setRelativePositionPrintStyle(1):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setRelativePositionPrintStyle(1) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setAbsolutePositionPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setAbsolutePositionPrintStyle({ value: 1 });
+                output.innerHTML = "<b>setAbsolutePositionPrintStyle(1):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setAbsolutePositionPrintStyle(1) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setLineSpacingPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setLineSpacingPrintStyle({ value: 1 });
+                output.innerHTML = "<b>setLineSpacingPrintStyle(1):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setLineSpacingPrintStyle(1) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setLeftSpacingPrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setLeftSpacingPrintStyle({ value: 1 });
+                output.innerHTML = "<b>setLeftSpacingPrintStyle(1):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setLeftSpacingPrintStyle(1) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setStrikethroughStylePrintStyle').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setStrikethroughStylePrintStyle({ value: 1 });
+                output.innerHTML = "<b>setStrikethroughStylePrintStyle(1):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setStrikethroughStylePrintStyle(1) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
         // 1.2.5 Change print mode
+        self.shadowRoot.querySelector('#getPrinterMode').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getPrinterMode();
+                output.innerHTML = "<b>getPrinterMode():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getPrinterMode() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#isLabelMode').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.isLabelMode();
+                output.innerHTML = "<b>isLabelMode():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>isLabelMode() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#getPrinterBBMDistance').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getPrinterBBMDistance();
+                output.innerHTML = "<b>getPrinterBBMDistance():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getPrinterBBMDistance() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
         // 1.2.6 Text printing
+        self.shadowRoot.querySelector('#setAlignment').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.CENTER });
+                output.innerHTML = "<b>setAlignment(CENTER):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setAlignment(CENTER) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setFontName').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setFontName({ typeface: "test" });
+                output.innerHTML = "<b>setFontName(test):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setFontName(test) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setFontSize').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setFontSize({ size: 10 });
+                output.innerHTML = "<b>setFontSize(10):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setFontSize(10) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#setBold').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.setBold({ enable: true });
+                output.innerHTML = "<b>setBold(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>setBold(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#printText').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.printText({ text: "text\n" });
+                output.innerHTML = "<b>printText(text\\n):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>printText(text\\n) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#printTextWithFont').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.printTextWithFont({ text: "other text\n", typeface: "test", size: 10 });
+                output.innerHTML = "<b>printTextWithFont(other text\\n, test, 15):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>printTextWithFont(other text\\n, test, 15) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#printOriginalText').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.printOriginalText({ text: "original text\n" });
+                output.innerHTML = "<b>printOriginalText(original text\\n):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>printOriginalText(original text\\n) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
         // 1.2.7 Print a table
         // 1.2.8 Print an image
         // 1.2.9 Print a 1D/2D barcode

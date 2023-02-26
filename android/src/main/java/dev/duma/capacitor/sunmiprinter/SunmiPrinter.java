@@ -5,10 +5,13 @@ import android.content.Context;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.BluetoothUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.ESCUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.SunmiPrintHelper;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterChangePrintMode;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCuttingRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterEscPosCommands;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetDeviceAndPrinterInformation;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInitializationAndSettings;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInstructionForPrinterStyleSetting;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTextPrinting;
 
 public class SunmiPrinter {
 
@@ -31,7 +34,7 @@ public class SunmiPrinter {
     public final SunmiPrinterChangePrintMode changePrintMode = new SunmiPrinterChangePrintMode(connector, callbackHelper);
 
     // 1.2.6 Text printing
-    public final SunmiPrinterTextPrinting textPrinting = new SunmiPrinterTextPrinting(connector, callbackHelper);
+    public final SunmiPrinterTextPrinting textPrinting = new SunmiPrinterTextPrinting(connector, callbackHelper, escPosCommands);
 
     // 1.2.7 Print a table
     // 1.2.8 Print an image

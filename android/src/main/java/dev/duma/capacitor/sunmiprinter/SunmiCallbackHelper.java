@@ -19,6 +19,10 @@ public class SunmiCallbackHelper {
         return new SimpleCallback(callback, onPrintResultCallback);
     }
 
+    public SimpleCallback makeWithException(onRunResult callback, onRaiseException onRaiseExceptionCallback) {
+        return new SimpleCallback(callback, onRaiseExceptionCallback);
+    }
+
     public interface Callback {
         @NonNull
         InnerResultCallback getInnerResultCallback();

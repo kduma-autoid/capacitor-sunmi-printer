@@ -1,5 +1,6 @@
 package dev.duma.capacitor.sunmiprinter;
 
+import android.os.RemoteException;
 import android.util.Base64;
 
 import com.getcapacitor.JSObject;
@@ -7,6 +8,10 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.sunmi.peripheral.printer.SunmiPrinterService;
+import com.sunmi.peripheral.printer.WoyouConsts;
+
+import java.util.Objects;
 
 @CapacitorPlugin(name = "SunmiPrinter")
 public class SunmiPrinterPlugin extends Plugin {
@@ -277,15 +282,422 @@ public class SunmiPrinterPlugin extends Plugin {
 
     // 1.2.4 Instruction for printer style setting interface
 
+    @PluginMethod
+    public void setPrinterStyle(PluginCall call){
+        try {
+            String key = call.getString("key", "");
+            int keyId = 0;
+
+            switch (key) {
+                case "EnableDoubleWidth": keyId = WoyouConsts.ENABLE_DOUBLE_WIDTH; break;
+                case "EnableDoubleHeight": keyId = WoyouConsts.ENABLE_DOUBLE_HEIGHT; break;
+                case "EnableBold": keyId = WoyouConsts.ENABLE_BOLD; break;
+                case "EnableUnderline": keyId = WoyouConsts.ENABLE_UNDERLINE; break;
+                case "EnableAntiWhite": keyId = WoyouConsts.ENABLE_ANTI_WHITE; break;
+                case "EnableStrikethrough": keyId = WoyouConsts.ENABLE_STRIKETHROUGH; break;
+                case "EnableItalic": keyId = WoyouConsts.ENABLE_ILALIC; break;
+                case "EnableInvert": keyId = WoyouConsts.ENABLE_INVERT; break;
+                case "SetTextRightSpacing": keyId = WoyouConsts.SET_TEXT_RIGHT_SPACING; break;
+                case "SetRelativePosition": keyId = WoyouConsts.SET_RELATIVE_POSITION; break;
+                case "SetAbsolutePosition": keyId = WoyouConsts.SET_ABSOLUATE_POSITION; break;
+                case "SetLineSpacing": keyId = WoyouConsts.SET_LINE_SPACING; break;
+                case "SetLeftSpacing": keyId = WoyouConsts.SET_LEFT_SPACING; break;
+                case "SetStrikethroughStyle": keyId = WoyouConsts.SET_STRIKETHROUGH_STYLE; break;
+            }
+
+            String value = call.getString("value", "");
+            int valueId = 0;
+
+            switch (value) {
+                case "Enable": valueId = WoyouConsts.ENABLE; break;
+                case "Disable": valueId = WoyouConsts.DISABLE; break;
+                default: valueId = Integer.parseInt(value); break;
+            }
+
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(keyId, valueId);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setDoubleWidthPrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_DOUBLE_WIDTH, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setDoubleHeightPrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_DOUBLE_HEIGHT, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setBoldPrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_BOLD, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setUnderlinePrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_UNDERLINE, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setAntiWhitePrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_ANTI_WHITE, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setStrikethroughPrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_STRIKETHROUGH, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setItalicPrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_ILALIC, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setInvertPrintStyle(PluginCall call){
+        try {
+            boolean enable = call.getBoolean("enable", true);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_INVERT, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setTextRightSpacingPrintStyle(PluginCall call){
+        try {
+            int value = call.getInt("value", 0);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_TEXT_RIGHT_SPACING, value);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setRelativePositionPrintStyle(PluginCall call){
+        try {
+            int value = call.getInt("value", 0);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_RELATIVE_POSITION, value);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setAbsolutePositionPrintStyle(PluginCall call){
+        try {
+            int value = call.getInt("value", 0);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_ABSOLUATE_POSITION, value);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setLineSpacingPrintStyle(PluginCall call){
+        try {
+            int value = call.getInt("value", 0);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_LINE_SPACING, value);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setLeftSpacingPrintStyle(PluginCall call){
+        try {
+            int value = call.getInt("value", 0);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_LEFT_SPACING, value);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setStrikethroughStylePrintStyle(PluginCall call){
+        try {
+            int value = call.getInt("value", 0);
+            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_STRIKETHROUGH_STYLE, value);
+
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
 
 
 
     // 1.2.5 Change print mode
 
+    @PluginMethod
+    public void getPrinterMode(PluginCall call){
+        try {
+            int mode = implementation.changePrintMode.getPrinterMode();
+
+            String modeString = "";
+            switch (mode) {
+                case 0: modeString = "General"; break; // General mode
+                case 1: modeString = "BlackMark"; break; // Black mark mode
+                case 2: modeString = "Label"; break; // Label mode
+                default: modeString = "Unknown"; break;
+            }
+
+            JSObject ret = new JSObject();
+            ret.put("mode", modeString);
+            ret.put("code", mode);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void isLabelMode(PluginCall call){
+        try {
+            JSObject ret = new JSObject();
+            ret.put("label_mode", implementation.changePrintMode.getPrinterMode() == 2);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getPrinterBBMDistance(PluginCall call){
+        try {
+            int distance = implementation.changePrintMode.getPrinterBBMDistance();
+
+            JSObject ret = new JSObject();
+            ret.put("distance", distance);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
 
 
 
     // 1.2.6 Text printing
+
+    @PluginMethod
+    public void setAlignment(PluginCall call) {
+        String alignment = call.getString("alignment", "");
+        int alignmentInt = 0;
+        switch (Objects.requireNonNull(alignment)) {
+            case "left": alignmentInt = 0; break;
+            case "center": alignmentInt = 1; break;
+            case "right": alignmentInt = 2; break;
+        }
+
+        try {
+            implementation.textPrinting.setAlignment(
+                    alignmentInt,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Setting alignment failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setFontName(PluginCall call) {
+        String typeface = call.getString("typeface");
+
+        try {
+            implementation.textPrinting.setFontName(
+                    typeface,
+                    implementation.callbackHelper.makeWithException(isSuccess -> {
+                            if (isSuccess) {
+                                call.resolve();
+                            } else {
+                                call.reject("Setting font name failed");
+                            }
+                        }, (code, msg) -> {
+                            call.reject(msg, String.valueOf(code));
+                        }
+                    )
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setFontSize(PluginCall call) {
+        int size = call.getInt("size", 0);
+
+        try {
+            implementation.textPrinting.setFontSize(
+                    size,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Setting font size failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setBold(PluginCall call) {
+        boolean enable = call.getBoolean("enable", true);
+
+        try {
+            implementation.textPrinting.setBold(
+                    enable,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Setting bold failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void printText(PluginCall call) {
+        String text = call.getString("text");
+
+        try {
+            implementation.textPrinting.printText(
+                    text,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Printing text failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void printTextWithFont(PluginCall call) {
+        String text = call.getString("text");
+        String typeface = call.getString("typeface");
+        int size = call.getInt("size", 0);
+
+        try {
+            implementation.textPrinting.printTextWithFont(
+                    text,
+                    typeface,
+                    size,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Printing text failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void printOriginalText(PluginCall call) {
+        String text = call.getString("text");
+
+        try {
+            implementation.textPrinting.printOriginalText(
+                    text,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Printing text failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 
@@ -378,13 +790,6 @@ public class SunmiPrinterPlugin extends Plugin {
         super.load();
 
 //        implementation.init(this.getContext());
-    }
-
-    @PluginMethod
-    public void isLabelMode(PluginCall call) {
-        JSObject ret = new JSObject();
-        ret.put("label_mode", implementation.isLabelMode());
-        call.resolve(ret);
     }
 
     @PluginMethod
