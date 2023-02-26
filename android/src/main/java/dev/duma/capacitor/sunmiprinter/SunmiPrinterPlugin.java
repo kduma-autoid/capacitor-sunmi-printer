@@ -1,8 +1,11 @@
 package dev.duma.capacitor.sunmiprinter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.RemoteException;
 import android.util.Base64;
 
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -11,7 +14,12 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.sunmi.peripheral.printer.WoyouConsts;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
+
+import dev.duma.capacitor.sunmiprinter.internals.AsciiBitmapConverter;
 
 @CapacitorPlugin(name = "SunmiPrinter")
 public class SunmiPrinterPlugin extends Plugin {
@@ -831,6 +839,210 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.15 Customer display interface description
+    @PluginMethod
+    public void sendLCDCommand(PluginCall call) {
+        String flag = call.getString("command", "");
+        int flagInt = 1;
+        switch (Objects.requireNonNull(flag)) {
+            case "Initialization": flagInt = 1; break;
+            case "WakeUp": flagInt = 2; break;
+            case "Hibernate": flagInt = 3; break;
+            case "Clear": flagInt = 4; break;
+        }
+
+        try {
+            implementation.customerDisplay.sendLCDCommand(flagInt);
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDInitializationCommand(PluginCall call) {
+        try {
+            implementation.customerDisplay.sendLCDCommand(1);
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDWakeUpCommand(PluginCall call) {
+        try {
+            implementation.customerDisplay.sendLCDCommand(2);
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDHibernateCommand(PluginCall call) {
+        try {
+            implementation.customerDisplay.sendLCDCommand(3);
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDClearCommand(PluginCall call) {
+        try {
+            implementation.customerDisplay.sendLCDCommand(4);
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDString(PluginCall call) {
+        String text = call.getString("text", "");
+
+        try {
+            implementation.customerDisplay.sendLCDString(
+                text,
+                implementation.callbackHelper.make(isSuccess -> {
+                    if (isSuccess) {
+                         call.resolve();
+                    } else {
+                        call.reject("Opening drawer failed");
+                    }
+                })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDDoubleString(PluginCall call) {
+        String top = call.getString("top", "");
+        String bottom = call.getString("bottom", "");
+
+        try {
+            implementation.customerDisplay.sendLCDDoubleString(
+                top,
+                bottom,
+                implementation.callbackHelper.make(isSuccess -> {
+                    if (isSuccess) {
+                         call.resolve();
+                    } else {
+                        call.reject("Opening drawer failed");
+                    }
+                })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDMultiString(PluginCall call) throws JSONException {
+        JSArray lines = call.getArray("lines");
+
+        String[] texts = new String[lines.length()];
+        int[] proportions = new int[lines.length()];
+
+        for (int i = 0; i < lines.length(); i++) {
+            JSONObject line = (JSONObject) lines.get(i);
+            texts[i] = line.getString("text");
+            proportions[i] = line.getInt("proportion");
+        }
+
+        try {
+            implementation.customerDisplay.sendLCDMultiString(
+                texts,
+                proportions,
+                implementation.callbackHelper.make(isSuccess -> {
+                    if (isSuccess) {
+                         call.resolve();
+                    } else {
+                        call.reject("Opening drawer failed");
+                    }
+                })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDFillString(PluginCall call) {
+        String text = call.getString("text", "");
+        int size = call.getInt("size", 10);
+        boolean fill = call.getBoolean("fill", true);
+
+        try {
+            implementation.customerDisplay.sendLCDFillString(
+                text,
+                size,
+                fill,
+                implementation.callbackHelper.make(isSuccess -> {
+                    if (isSuccess) {
+                         call.resolve();
+                    } else {
+                        call.reject("Opening drawer failed");
+                    }
+                })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDBase64Bitmap(PluginCall call) {
+        String encodedBitmap = call.getString("bitmap", "");
+        byte[] decoded = Base64.decode(encodedBitmap, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+
+        try {
+            implementation.customerDisplay.sendLCDBitmap(
+                bitmap,
+                implementation.callbackHelper.make(isSuccess -> {
+                    if (isSuccess) {
+                         call.resolve();
+                    } else {
+                        call.reject("Opening drawer failed");
+                    }
+                })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendLCDAsciiBitmap(PluginCall call) {
+        String encodedBitmap = call.getString("bitmap", "");
+
+        Bitmap bitmap = AsciiBitmapConverter.decode(encodedBitmap);
+
+        try {
+            implementation.customerDisplay.sendLCDBitmap(
+                bitmap,
+                implementation.callbackHelper.make(isSuccess -> {
+                    if (isSuccess) {
+                         call.resolve();
+                    } else {
+                        call.reject("Opening drawer failed");
+                    }
+                })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 

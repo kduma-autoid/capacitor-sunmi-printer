@@ -646,11 +646,37 @@ export interface SunmiPrinterPlugin {
    *
    * Note: only available for desktop terminals of mini series with customer display function.
    *
-   * @TODO
-   *
    * @see 1.2.15 Customer display interface description
    */
-  sendLCDCommand(options: { flag: number }): Promise<void>;
+  sendLCDCommand(options: { command: LcdCommandEnum }): Promise<void>;
+
+  /**
+   * Send initialization command
+   *
+   * @see sendLCDCommand
+   */
+  sendLCDInitializationCommand(): Promise<void>;
+
+  /**
+   * Send wake up command
+   *
+   * @see sendLCDCommand
+   */
+  sendLCDWakeUpCommand(): Promise<void>;
+
+  /**
+   * Send hibernation command
+   *
+   * @see sendLCDCommand
+   */
+  sendLCDHibernateCommand(): Promise<void>;
+
+  /**
+   * Send clear command
+   *
+   * @see sendLCDCommand
+   */
+  sendLCDClearCommand(): Promise<void>;
 
   /**
    * Send single line text
@@ -658,8 +684,6 @@ export interface SunmiPrinterPlugin {
    * string → the text to be displayed
    *
    * Note: only available for desktop terminals of mini series with customer display function, and it won’t be displayed if the text is too long.
-   *
-   * @TODO
    *
    * @see 1.2.15 Customer display interface description
    */
@@ -673,8 +697,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: only available for desktop terminals of mini series with customer display function, and it won’t be displayed if the text is too long.
    *
-   * @TODO
-   *
    * @see 1.2.15 Customer display interface description
    */
   sendLCDDoubleString(options: { top: string, bottom: string }): Promise<void>;
@@ -687,11 +709,9 @@ export interface SunmiPrinterPlugin {
    *
    * Note: only available for desktop terminals of mini series with customer display function, with versions above v4.0.0. It won’t be displayed if the text is too long.
    *
-   * @TODO
-   *
    * @see 1.2.15 Customer display interface description
    */
-  sendLCDMultiString(options: { text: string[], align: number[] }): Promise<void>;
+  sendLCDMultiString(options: { lines: { text: string, proportion: number }[] }): Promise<void>;
 
   /**
    * Send single line text (font size and filling method can be customized for the text)
@@ -701,8 +721,6 @@ export interface SunmiPrinterPlugin {
    * fill → whether to magnify the font to fill the display area
    *
    * Note: only available for desktop terminals of mini series with customer display function, with versions above v4.0.0. It won’t be displayed if the text is too long.
-   *
-   * @TODO
    *
    * @see 1.2.15 Customer display interface description
    */
@@ -715,11 +733,16 @@ export interface SunmiPrinterPlugin {
    *
    * Note: only available for desktop terminals of mini series with customer display function, and the customer display can only display the image with the maximum pixel of 128*40.
    *
-   * @TODO
-   *
    * @see 1.2.15 Customer display interface description
    */
-  sendLCDBitmap(options: { bitmap: string }): Promise<void>;
+  sendLCDBase64Bitmap(options: { bitmap: string }): Promise<void>;
+
+  /**
+   * Send ascii bitmap image
+   *
+   * @see sendLCDBase64Bitmap
+   */
+  sendLCDAsciiBitmap(options: { bitmap: string }): Promise<void>;
 
   /**
    * Locate the next label
@@ -822,4 +845,11 @@ export enum PrinterStyleKeysEnum {
 export enum PrinterStyleValuesEnum {
   ENABLE = "Enable",
   DISABLE = "Disable",
+}
+
+export enum LcdCommandEnum {
+  INITIALIZATION = "Initialization",
+  WAKE_UP = "WakeUp",
+  HIBERNATE = "Hibernate",
+  CLEAR = "Clear",
 }

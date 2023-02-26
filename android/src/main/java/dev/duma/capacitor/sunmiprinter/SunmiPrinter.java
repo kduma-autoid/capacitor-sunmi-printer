@@ -7,6 +7,7 @@ import dev.duma.capacitor.sunmiprinter.helpers.utils.ESCUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.SunmiPrintHelper;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCashDrawerRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterChangePrintMode;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCustomerDisplay;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCuttingRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterEscPosCommands;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetDeviceAndPrinterInformation;
@@ -54,7 +55,10 @@ public class SunmiPrinter {
     public final SunmiPrinterCashDrawerRelated cashDrawerRelated = new SunmiPrinterCashDrawerRelated(connector, callbackHelper);
 
     // 1.2.14 Get global attributes
+
     // 1.2.15 Customer display interface description
+    public final SunmiPrinterCustomerDisplay customerDisplay = new SunmiPrinterCustomerDisplay(connector, callbackHelper);
+
     // 1.2.16 Label printing instructions
     public final SunmiPrinterLabelPrintingInstructions labelPrintingInstructions = new SunmiPrinterLabelPrintingInstructions(connector, callbackHelper);
 

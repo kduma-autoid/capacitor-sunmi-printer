@@ -4,6 +4,7 @@ import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 
+import com.sunmi.peripheral.printer.InnerLcdCallback;
 import com.sunmi.peripheral.printer.InnerResultCallback;
 
 public class SunmiCallbackHelper {
@@ -26,6 +27,7 @@ public class SunmiCallbackHelper {
     public interface Callback {
         @NonNull
         InnerResultCallback getInnerResultCallback();
+        InnerLcdCallback getInnerLcdCallback();
     }
 
     public interface onRunResult {
@@ -107,6 +109,17 @@ public class SunmiCallbackHelper {
                 public void onPrintResult(int code, String msg) throws RemoteException {
                     if(onPrintResultCallback != null)
                         onPrintResultCallback.run(code, msg);
+                }
+            };
+        }
+
+        @Override
+        public InnerLcdCallback getInnerLcdCallback() {
+            return new InnerLcdCallback() {
+                @Override
+                public void onRunResult(boolean show) throws RemoteException {
+                    if(onRunResultCallback != null)
+                        onRunResultCallback.run(show);
                 }
             };
         }

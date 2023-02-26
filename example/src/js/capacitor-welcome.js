@@ -2,7 +2,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Camera } from '@capacitor/camera';
 import {SunmiPrinter} from "@kduma-autoid/capacitor-sunmi-printer";
 import base64_decode from "locutus/php/url/base64_decode";
-import {AlignmentModeEnum, PrinterStyleKeysEnum, PrinterStyleValuesEnum} from "../../../src";
+import {AlignmentModeEnum, LcdCommandEnum, PrinterStyleKeysEnum, PrinterStyleValuesEnum} from "../../../src";
 
 window.customElements.define(
   'capacitor-welcome',
@@ -167,10 +167,21 @@ window.customElements.define(
 <!--          <hr>-->
 <!--          <strong>1.2.14 Get global attributes</strong>-->
 <!--          <br>-->
-<!--          -->
-<!--          <hr>-->
-<!--          <strong>1.2.15 Customer display interface description</strong>-->
-<!--          <br>-->
+          
+          <hr>
+          <strong>1.2.15 Customer display interface description</strong>
+          <br>
+          <button class="button" id="sendLCDCommand">sendLCDCommand()</button>
+          <button class="button" id="sendLCDInitializationCommand">sendLCDInitializationCommand()</button>
+          <button class="button" id="sendLCDWakeUpCommand">sendLCDWakeUpCommand()</button>
+          <button class="button" id="sendLCDHibernateCommand">sendLCDHibernateCommand()</button>
+          <button class="button" id="sendLCDClearCommand">sendLCDClearCommand()</button>
+          <button class="button" id="sendLCDString">sendLCDString()</button>
+          <button class="button" id="sendLCDDoubleString">sendLCDDoubleString()</button>
+          <button class="button" id="sendLCDMultiString">sendLCDMultiString()</button>
+          <button class="button" id="sendLCDFillString">sendLCDFillString()</button>
+          <button class="button" id="sendLCDBase64Bitmap">sendLCDBase64Bitmap()</button>
+          <button class="button" id="sendLCDAsciiBitmap">sendLCDAsciiBitmap()</button>
           
           <hr>
           <strong>1.2.16 Label printing instructions</strong>
@@ -697,7 +708,119 @@ window.customElements.define(
         });
 
         // 1.2.14 Get global attributes
+
         // 1.2.15 Customer display interface description
+        self.shadowRoot.querySelector('#sendLCDCommand').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDCommand({ command: LcdCommandEnum.HIBERNATE });
+                output.innerHTML = "<b>sendLCDCommand(HIBERNATE):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDCommand(HIBERNATE) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDInitializationCommand').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDInitializationCommand();
+                output.innerHTML = "<b>sendLCDInitializationCommand():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDInitializationCommand() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDWakeUpCommand').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDWakeUpCommand();
+                output.innerHTML = "<b>sendLCDWakeUpCommand():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDWakeUpCommand() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDHibernateCommand').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDHibernateCommand();
+                output.innerHTML = "<b>sendLCDHibernateCommand():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDHibernateCommand() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDClearCommand').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDClearCommand();
+                output.innerHTML = "<b>sendLCDClearCommand():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDClearCommand() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDString').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDString({ text: "LCD String" });
+                output.innerHTML = "<b>sendLCDString(LCD String):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDString(LCD String) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDDoubleString').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDDoubleString({ top: "Top LCD String", bottom: "Bottom LCD String" });
+                output.innerHTML = "<b>sendLCDDoubleString(Top LCD String, Bottom LCD String):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDDoubleString(Top LCD String, Bottom LCD String) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDMultiString').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDMultiString({ lines: [ { text: "Line 1", proportion: 5 }, { text: "Line 2", proportion: 3 }, { text: "Line 3", proportion: 2 } ] });
+                output.innerHTML = "<b>sendLCDMultiString(Line 1, Line 2, Line 3):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDMultiString(Line 1, Line 2, Line 3) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+
+        self.shadowRoot.querySelector('#sendLCDFillString').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDFillString({ text: "LCD Text", size: 5, fill: false });
+                output.innerHTML = "<b>sendLCDFillString(LCD Text, 5, false):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDFillString(LCD Text, 5, false) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDBase64Bitmap').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDBase64Bitmap({ bitmap: "" });
+                output.innerHTML = "<b>sendLCDBase64Bitmap():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDBase64Bitmap() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#sendLCDAsciiBitmap').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.sendLCDAsciiBitmap({ bitmap: "100000001\n010000010\n001000100\n000101000\n000010000\n000010000\n000101000\n001000100\n010000010\n100000001" });
+                output.innerHTML = "<b>sendLCDAsciiBitmap():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>sendLCDAsciiBitmap() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
         // 1.2.16 Label printing instructions
         self.shadowRoot.querySelector('#labelLocate').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
