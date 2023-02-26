@@ -63,7 +63,6 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.1 Printer initialization and setting
-
     @PluginMethod
     public void printerInit(PluginCall call) {
         try {
@@ -102,7 +101,6 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.2 Get device and printer information
-
     @PluginMethod
     public void getPrinterSerialNo(PluginCall call){
         try {
@@ -234,7 +232,6 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.3 ESC/POS commands
-
     @PluginMethod
     public void sendRAWData(PluginCall call) {
         String value = call.getString("data");
@@ -281,7 +278,6 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.4 Instruction for printer style setting interface
-
     @PluginMethod
     public void setPrinterStyle(PluginCall call){
         try {
@@ -494,7 +490,6 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.5 Change print mode
-
     @PluginMethod
     public void getPrinterMode(PluginCall call){
         try {
@@ -545,7 +540,6 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.6 Text printing
-
     @PluginMethod
     public void setAlignment(PluginCall call) {
         String alignment = call.getString("alignment", "");
@@ -723,12 +717,30 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.11 Paper moving related
+    @PluginMethod
+    public void lineWrap(PluginCall call) {
+        int lines = call.getInt("lines", 0);
+
+        try {
+            implementation.paperMovingRelated.lineWrap(
+                    lines,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Moving paper failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 
 
     // 1.2.12 Cutter (paper cutting) related
-
     @PluginMethod
     public void cutPaper(PluginCall call) {
         try {
@@ -763,6 +775,52 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.13 Cash drawer related
+    @PluginMethod
+    public void openDrawer(PluginCall call) {
+        try {
+            implementation.cashDrawerRelated.openDrawer(
+                implementation.callbackHelper.makeWithException(isSuccess -> {
+                    // ToDo Check why this callback is not called
+                    if (isSuccess) {
+                        // call.resolve();
+                    } else {
+                        call.reject("Opening drawer failed");
+                    }
+                }, (code, msg) -> {
+                    call.reject(msg, String.valueOf(code));
+                })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getOpenDrawerTimes(PluginCall call){
+        try {
+            int times = implementation.cashDrawerRelated.getOpenDrawerTimes();
+
+            JSObject ret = new JSObject();
+            ret.put("times", times);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getDrawerStatus(PluginCall call){
+        try {
+            boolean opened = implementation.cashDrawerRelated.getDrawerStatus();
+
+            JSObject ret = new JSObject();
+            ret.put("opened", opened);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 
@@ -778,6 +836,25 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.16 Label printing instructions
+    @PluginMethod
+    public void labelLocate(PluginCall call) {
+        try {
+            implementation.labelPrintingInstructions.labelLocate();
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void labelOutput(PluginCall call) {
+        try {
+            implementation.labelPrintingInstructions.labelOutput();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
 
 
 
@@ -790,20 +867,6 @@ public class SunmiPrinterPlugin extends Plugin {
         super.load();
 
 //        implementation.init(this.getContext());
-    }
-
-    @PluginMethod
-    public void labelOutput(PluginCall call) {
-        implementation.labelOutput();
-
-        call.resolve();
-    }
-
-    @PluginMethod
-    public void labelLocate(PluginCall call) {
-        implementation.labelLocate();
-
-        call.resolve();
     }
 
     @PluginMethod

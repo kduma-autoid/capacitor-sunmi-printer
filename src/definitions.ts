@@ -511,8 +511,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: forced linefeed is adopted, and the printer will move the paper for n lines after completing the previous printing.
    *
-   * @TODO
-   *
    * @see 1.2.11 Paper moving related
    */
   lineWrap(options: { lines: number }): Promise<void>;
@@ -542,8 +540,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: Only available for desktop terminals with cash drawer function.
    *
-   * @TODO
-   *
    * @see 1.2.13 Cash drawer related
    */
   openDrawer(): Promise<void>;
@@ -552,8 +548,6 @@ export interface SunmiPrinterPlugin {
    * Get the cumulative open times of the cash drawer
    *
    * Note: Only available for desktop terminals with cash drawer function.
-   *
-   * @TODO
    *
    * @see 1.2.13 Cash drawer related
    */
@@ -566,11 +560,9 @@ export interface SunmiPrinterPlugin {
    *
    * Note 2: this interface is only available for device models of S2, T2, and T2mini with versions above v4.0.0.
    *
-   * @TODO
-   *
    * @see 1.2.13 Cash drawer related
    */
-  getDrawerStatus(): Promise<{ status: number }>;
+  getDrawerStatus(): Promise<{ opened: boolean }>;
 
   /**
    * Get global font height and width status
@@ -744,16 +736,12 @@ export interface SunmiPrinterPlugin {
    *
    * Note: You need to locate the label position every time before sending the printing content
    *
-   * @TODO
-   *
    * @see 1.2.16 Label printing instructions
    */
   labelLocate(): Promise<void>;
 
   /**
    * Output the label to the paper cutting position
-   *
-   * @TODO
    *
    * @see 1.2.16 Label printing instructions
    */

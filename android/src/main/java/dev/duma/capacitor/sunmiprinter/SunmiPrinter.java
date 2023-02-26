@@ -5,12 +5,15 @@ import android.content.Context;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.BluetoothUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.ESCUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.SunmiPrintHelper;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCashDrawerRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterChangePrintMode;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCuttingRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterEscPosCommands;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetDeviceAndPrinterInformation;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInitializationAndSettings;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInstructionForPrinterStyleSetting;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterLabelPrintingInstructions;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterPaperMovingRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTextPrinting;
 
 public class SunmiPrinter {
@@ -40,15 +43,20 @@ public class SunmiPrinter {
     // 1.2.8 Print an image
     // 1.2.9 Print a 1D/2D barcode
     // 1.2.10 Transaction printing
+
     // 1.2.11 Paper moving related
+    public final SunmiPrinterPaperMovingRelated paperMovingRelated = new SunmiPrinterPaperMovingRelated(connector, callbackHelper);
 
     // 1.2.12 Cutter (paper cutting) related
     public final SunmiPrinterCuttingRelated cuttingRelated = new SunmiPrinterCuttingRelated(connector, callbackHelper);
 
     // 1.2.13 Cash drawer related
+    public final SunmiPrinterCashDrawerRelated cashDrawerRelated = new SunmiPrinterCashDrawerRelated(connector, callbackHelper);
+
     // 1.2.14 Get global attributes
     // 1.2.15 Customer display interface description
     // 1.2.16 Label printing instructions
+    public final SunmiPrinterLabelPrintingInstructions labelPrintingInstructions = new SunmiPrinterLabelPrintingInstructions(connector, callbackHelper);
 
     public void initPrinter() {
         if(BluetoothUtil.isBlueToothPrinter){

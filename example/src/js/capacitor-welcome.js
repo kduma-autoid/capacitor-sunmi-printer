@@ -145,10 +145,11 @@ window.customElements.define(
 <!--          <hr>-->
 <!--          <strong>1.2.10 Transaction printing</strong>-->
 <!--          <br>-->
-<!--          -->
-<!--          <hr>-->
-<!--          <strong>1.2.11 Paper moving related</strong>-->
-<!--          <br>-->
+          
+          <hr>
+          <strong>1.2.11 Paper moving related</strong>
+          <br>
+          <button class="button" id="lineWrap">lineWrap()</button>
           
           <hr>
           <strong>1.2.12 Cutter (paper cutting) related</strong>
@@ -156,10 +157,13 @@ window.customElements.define(
           <button class="button" id="cutPaper">cutPaper()</button>
           <button class="button" id="getCutPaperTimes">getCutPaperTimes()</button>
           
-<!--          <hr>-->
-<!--          <strong>1.2.13 Cash drawer related</strong>-->
-<!--          <br>-->
-<!--          -->
+          <hr>
+          <strong>1.2.13 Cash drawer related</strong>
+          <br>
+          <button class="button" id="openDrawer">openDrawer()</button>
+          <button class="button" id="getOpenDrawerTimes">getOpenDrawerTimes()</button>
+          <button class="button" id="getDrawerStatus">getDrawerStatus()</button>
+          
 <!--          <hr>-->
 <!--          <strong>1.2.14 Get global attributes</strong>-->
 <!--          <br>-->
@@ -167,10 +171,12 @@ window.customElements.define(
 <!--          <hr>-->
 <!--          <strong>1.2.15 Customer display interface description</strong>-->
 <!--          <br>-->
-<!--          -->
-<!--          <hr>-->
-<!--          <strong>1.2.16 Label printing instructions</strong>-->
-<!--          <br>-->
+          
+          <hr>
+          <strong>1.2.16 Label printing instructions</strong>
+          <br>
+          <button class="button" id="labelLocate">labelLocate()</button>
+          <button class="button" id="labelOutput">labelOutput()</button>
           
           
 <!--          <button class="button" id="getPrinterSerialNo">getPrinterSerialNo()</button>-->
@@ -626,7 +632,17 @@ window.customElements.define(
         // 1.2.8 Print an image
         // 1.2.9 Print a 1D/2D barcode
         // 1.2.10 Transaction printing
+
         // 1.2.11 Paper moving related
+        self.shadowRoot.querySelector('#lineWrap').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.lineWrap({ lines: 5 });
+                output.innerHTML = "<b>lineWrap(5):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>lineWrap(5) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
 
         // 1.2.12 Cutter (paper cutting) related
         self.shadowRoot.querySelector('#cutPaper').addEventListener('click', async function (e) {
@@ -650,9 +666,58 @@ window.customElements.define(
         });
 
         // 1.2.13 Cash drawer related
+        self.shadowRoot.querySelector('#openDrawer').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.openDrawer();
+                output.innerHTML = "<b>openDrawer():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>openDrawer() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#getOpenDrawerTimes').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getOpenDrawerTimes();
+                output.innerHTML = "<b>getOpenDrawerTimes():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getOpenDrawerTimes() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#getDrawerStatus').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getDrawerStatus();
+                output.innerHTML = "<b>getDrawerStatus(5):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getDrawerStatus(5) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
         // 1.2.14 Get global attributes
         // 1.2.15 Customer display interface description
         // 1.2.16 Label printing instructions
+        self.shadowRoot.querySelector('#labelLocate').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.labelLocate();
+                output.innerHTML = "<b>labelLocate():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>labelLocate() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#labelOutput').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.labelOutput();
+                output.innerHTML = "<b>labelOutput():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>labelOutput() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
 
         // self.shadowRoot.querySelector('#sendTextToLcd').addEventListener('click', async function (e) {
         //     const output = self.shadowRoot.querySelector('#output');
