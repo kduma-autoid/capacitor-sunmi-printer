@@ -1,5 +1,20 @@
 export interface SunmiPrinterPlugin {
   /**
+   * bind print service
+   */
+  bindService(): Promise<void>;
+
+  /**
+   * unbind print service
+   */
+  unBindService(): Promise<void>;
+
+  /**
+   * Get the print service current status
+   */
+  getServiceStatus(): Promise<{ status: ServiceStatusEnum }>;
+
+  /**
    * Printer initialization
    *
    * Note: reset the printer's logical program, such as typography, bold, etc., without emptying the cached data, then the unfinished print tasks will continue after resetting.
@@ -19,7 +34,7 @@ export interface SunmiPrinterPlugin {
   /**
    * Get the interface of printer model
    */
-  getPrinterModal(): Promise<{ model: string }>;
+  getPrinterModel(): Promise<{ model: string }>;
 
   /**
    * Get the printer’s firmware version no.
@@ -35,7 +50,9 @@ export interface SunmiPrinterPlugin {
    * Get the printer’s latest status
    *
    * 1 → Printer is under normal operation
-   * 2 → Printer is under preparation 3 → Communication is abnormal 4 → Out of paper
+   * 2 → Printer is under preparation
+   * 3 → Communication is abnormal
+   * 4 → Out of paper
    * 5 → Overheated
    * 6 → Cover is open
    * 7 → Cutter error
@@ -48,7 +65,7 @@ export interface SunmiPrinterPlugin {
    *
    * Note 2: V1 devices currently can’t support this interface; you can also get it asynchronously by registering broadcast apart from getting status proactively
    */
-  updatePrinterState(): Promise<{ status: number }>;
+  updatePrinterState(): Promise<{ status: PrinterStatusEnum, code: number }>;
 
   /**
    * Get the printing service version no.
@@ -75,6 +92,8 @@ export interface SunmiPrinterPlugin {
 
   /**
    * Commands of printing ESC/POS format
+   *
+   * @TODO
    */
   sendRAWData(): Promise<{ data: string }>;
 
@@ -90,6 +109,8 @@ export interface SunmiPrinterPlugin {
    * Set the detailed size for SET_XXX attribute.
    *
    * Note: this interface is available for the printing service with versions above v4.2.22.
+   *
+   * @TODO
    */
   setPrinterStyle(): Promise<{ key: number, value: number }>;
 
@@ -103,6 +124,8 @@ export interface SunmiPrinterPlugin {
    * 2 → Label mode
    *
    * Note: black mark mode currently is available for SUNMI T1, T2 desktop terminals; Label mode currently is available for SUNMI V2, V2 Pro handheld terminals.
+   *
+   * @TODO
    */
   getPrinterMode(): Promise<{ mode: number }>;
 
@@ -112,6 +135,8 @@ export interface SunmiPrinterPlugin {
    * Return value: paper moving distance (number of pixels)
    *
    * Note: only available for T1, T2 devices.
+   *
+   * @TODO
    */
   getPrinterBBMDistance(): Promise<{ distance: number }>;
 
@@ -121,6 +146,8 @@ export interface SunmiPrinterPlugin {
    * alignment → alignment mode: 0 → left, 1 → center, 2 → right
    *
    * Note: global method may influence the subsequent print implementation, and you can cancel the related settings when initializing the printer.
+   *
+   * @TODO
    */
   setAlignment(options: { alignment: number }): Promise<void>;
 
@@ -132,6 +159,8 @@ export interface SunmiPrinterPlugin {
    * Note 1: this interface can expand the default font type in the printer for you to use a custom font. However, you have to adjust the line spacing and line width due to the inconsistent inner width of each font.
    *
    * Note 2: this interface is available for the printing service with versions above v4.14.0.
+   *
+   * @TODO
    */
   setFontName(options: { typeface: string }): Promise<void>;
 
@@ -139,11 +168,15 @@ export interface SunmiPrinterPlugin {
    * Set font size.
    *
    * Note: global method may influence the subsequent printing, and you can cancel this setting using printer initialization. The font size adopts the printing method exceeding the standard international commands, and the adjustment of font size may affect the character width, which leads to the change to the number of each line’s characters. So typography of monospaced fonts can be confusing some time.
+   *
+   * @TODO
    */
   setFontSize(options: { size: number }): Promise<void>;
 
   /**
    * Set bold
+   *
+   * @TODO
    */
   setBold(options: { enable: boolean }): Promise<void>;
 
@@ -153,6 +186,8 @@ export interface SunmiPrinterPlugin {
    * text → text to be printed; automatic linefeed will be implemented when the text width exceeds one line, and the forced newline character "\n" shall be added at the end of one line when the text width is less than one line or exceeds one line but not meeting one line before being printed, or it will be cached.
    *
    * Note: if you need to change the style of print text, such as alignment mode, font size, bold, etc., please set it before calling printText method.
+   *
+   * @TODO
    */
   printText(options: { text: string }): Promise<void>;
 
@@ -164,6 +199,8 @@ export interface SunmiPrinterPlugin {
    * fontSize → font size; only available for this method.
    *
    * Note: the font setting of this interface is available for the printing service with versions above v4.14.0.
+   *
+   * @TODO
    */
   printTextWithFont(options: { text: string, typeface: string, size: number }): Promise<void>;
 
@@ -173,6 +210,8 @@ export interface SunmiPrinterPlugin {
    * text → text to be printed; automatic linefeed will be implemented when the text width exceeds one line, and the forced newline character "\n" shall be added at the end of one line when the text width is less than one line or exceeds one line but not meeting one line before being printed, or it will be cached.
    *
    * Note: the text is printed according to the vector text width, which means that each character is not monospaced.
+   *
+   * @TODO
    */
   printOriginalText(options: { text: string }): Promise<void>;
 
@@ -184,6 +223,8 @@ export interface SunmiPrinterPlugin {
    * colsAlign → Alignment mode of each column: 0: left; 1: center; 2: right.
    *
    * Note: the array length of the above three parameters should be consistent. If the width of colsText[i] is larger than that of colsWidth[i], the text will be changed to another line, and Arabic characters are not supported.
+   *
+   * @TODO
    */
   printColumnsText(options: { colsTextArr: string[], colsWidthArr: number[], colsAlign: number[] }): Promise<void>;
 
@@ -195,6 +236,8 @@ export interface SunmiPrinterPlugin {
    * colsAlign → Alignment mode of each column: 0: left; 1: center; 2: right.
    *
    * Note: the array length of the above three parameters should be consistent. If the width of colsText[i] is larger than that of colsWidth[i], the text will be changed to another line.
+   *
+   * @TODO
    */
   printColumnsString(options: { colsTextArr: string[], colsWidthArr: number[], colsAlign: number[] }): Promise<void>;
 
@@ -202,6 +245,8 @@ export interface SunmiPrinterPlugin {
    * Print an image
    *
    * Note: the maximum pixel size of the image should be less than 2.5 million pixels of width x height, and the width should be set according to the size of paper specification (384 pixels for 58mm paper, and 576 pixels for 80mm paper). If it exceeds the width of the paper, it will not be displayed.
+   *
+   * @TODO
    */
   printBitmap(options: { bitmap: string }): Promise<void>;
 
@@ -217,6 +262,8 @@ export interface SunmiPrinterPlugin {
    * Note: the image resolution is less than 2 million pixels, and the width should be set according to the size of paper specification (384 pixels for 58mm paper, and 576 pixels for 80mm paper). If it exceeds the width of the paper, it will not be displayed.
    *
    * Versions supported: v3.2.0 above for P1; v1.2.0 above for P14g; v3.2.0 above for V1s; v1.0.0 above for V2; v2.4.0 above for T1; v1.0.5 above for T2, S2; v2.4.1 above for T1mini; v1.0.0 above for T2mini.
+   *
+   * @TODO
    */
   printBitmapCustom(options: { bitmap: string, type: number }): Promise<void>;
 
@@ -266,6 +313,8 @@ export interface SunmiPrinterPlugin {
    * - Type B: uppercase letters, lowercase letters, and numbers;
    * - Type C: pure digits, plural characters, and the last digit is ignored if it is a singular digit;
    * The interface adopts type B code by default. To use type A and C codes, you need to add“{A” and “{C” before the content, for example, “{A2344A”，”{C123123”，”{A1A{B13B{C12”.
+   *
+   * @TODO
    */
   printBarCode(options: { data: string, symbology: number, height: number, width: number, text_position: number }): Promise<void>;
 
@@ -281,6 +330,8 @@ export interface SunmiPrinterPlugin {
    * 3 → error correction level H (30%)
    *
    * Note: the printing content will be directly output after calling this method under normal printing status, and each barcode has 4 pixels (if the pixels are less than 4, the barcode scanning may fail). A maximum version19 (93*93) mode is supported.
+   *
+   * @TODO
    */
   printQRCode(options: { data: string, size: number, error_correction: number }): Promise<void>;
 
@@ -302,6 +353,8 @@ export interface SunmiPrinterPlugin {
    * DataMatrix: ECC200 auto error correction is adopted by default, and it cannot be modified.
    *
    * Note: the printing content will be directly output after calling this method under normal printing status; this interface is available for versions above v4.1.2.
+   *
+   * @TODO
    */
   print2DCode(options: { data: string, symbology: number, size: number, error_correction: number }): Promise<void>;
 
@@ -311,6 +364,8 @@ export interface SunmiPrinterPlugin {
    * The printer moves the paper for n lines
    *
    * Note: forced linefeed is adopted, and the printer will move the paper for n lines after completing the previous printing.
+   *
+   * @TODO
    */
   lineWrap(options: { lines: number }): Promise<void>;
 
@@ -320,6 +375,8 @@ export interface SunmiPrinterPlugin {
    * Note: there’s some distance between printhead and cutter, which will be automatically complemented by calling the interface.
    *
    * Note: Only available for desktop terminals with cutter function.
+   *
+   * @TODO
    */
   cutPaper(): Promise<void>;
 
@@ -327,6 +384,8 @@ export interface SunmiPrinterPlugin {
    * Get the cutter’s cumulative cutting times
    *
    * Note: Only available for desktop terminals with cutter function.
+   *
+   * @TODO
    */
   getCutPagerTimes(): Promise<{ times: number }>;
 
@@ -334,6 +393,8 @@ export interface SunmiPrinterPlugin {
    * Open the cash drawer
    *
    * Note: Only available for desktop terminals with cash drawer function.
+   *
+   * @TODO
    */
   openDrawer(): Promise<void>;
 
@@ -341,6 +402,8 @@ export interface SunmiPrinterPlugin {
    * Get the cumulative open times of the cash drawer
    *
    * Note: Only available for desktop terminals with cash drawer function.
+   *
+   * @TODO
    */
   getOpenDrawerTimes(): Promise<{ times: number }>;
 
@@ -350,6 +413,8 @@ export interface SunmiPrinterPlugin {
    * Note 1: you can get the cash drawer status of some models with cash drawer function by calling this interface.
    *
    * Note 2: this interface is only available for device models of S2, T2, and T2mini with versions above v4.0.0.
+   *
+   * @TODO
    */
   getDrawerStatus(): Promise<{ status: number }>;
 
@@ -357,6 +422,8 @@ export interface SunmiPrinterPlugin {
    * Get global font height and width status
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
+   *
+   * @TODO
    */
   getForcedDouble(): Promise<{ status: number }>;
 
@@ -364,6 +431,8 @@ export interface SunmiPrinterPlugin {
    * Get global font anti-white style enabled
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
+   *
+   * @TODO
    */
   isForcedAntiWhite(): Promise<{ status: boolean }>;
 
@@ -371,6 +440,8 @@ export interface SunmiPrinterPlugin {
    * Get global font bold style enabled
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
+   *
+   * @TODO
    */
   isForcedBold(): Promise<{ status: boolean }>;
 
@@ -378,6 +449,8 @@ export interface SunmiPrinterPlugin {
    * Get global font underline style enabled
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
+   *
+   * @TODO
    */
   isForcedUnderline(): Promise<{ status: boolean }>;
 
@@ -385,6 +458,8 @@ export interface SunmiPrinterPlugin {
    * Get global line height set value
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
+   *
+   * @TODO
    */
   getForcedRowHeight(): Promise<{ height: number }>;
 
@@ -392,11 +467,15 @@ export interface SunmiPrinterPlugin {
    * Get current font used
    *
    * Note: currently, these interfaces, except ‘get print density’ interface, are only available for handheld terminals of models V1, V1s, and P1 with versions above v3.2.0, and model P14g with versions above v1.2.0.
+   *
+   * @TODO
    */
   getFontName(): Promise<{ font: string }>;
 
   /**
    * Get print density
+   *
+   * @TODO
    */
   getPrinterDensity(): Promise<{ density: number }>;
 
@@ -406,6 +485,8 @@ export interface SunmiPrinterPlugin {
    * parameter: flag → 1. Initialization; 2. Wake up LCD; 3. LCD hibernation; 4. Clear screen
    *
    * Note: only available for desktop terminals of mini series with customer display function.
+   *
+   * @TODO
    */
   sendLCDCommand(options: { flag: number }): Promise<void>;
 
@@ -415,6 +496,8 @@ export interface SunmiPrinterPlugin {
    * string → the text to be displayed
    *
    * Note: only available for desktop terminals of mini series with customer display function, and it won’t be displayed if the text is too long.
+   *
+   * @TODO
    */
   sendLCDString(options: { text: string }): Promise<void>;
 
@@ -425,6 +508,8 @@ export interface SunmiPrinterPlugin {
    * bottomText → display the bottom text
    *
    * Note: only available for desktop terminals of mini series with customer display function, and it won’t be displayed if the text is too long.
+   *
+   * @TODO
    */
   sendLCDDoubleString(options: { top: string, bottom: string }): Promise<void>;
 
@@ -435,6 +520,8 @@ export interface SunmiPrinterPlugin {
    * align → The weight ratio of the area occupied by each line of text, and the size of array elements must be the same size as the text array
    *
    * Note: only available for desktop terminals of mini series with customer display function, with versions above v4.0.0. It won’t be displayed if the text is too long.
+   *
+   * @TODO
    */
   sendLCDMultiString(options: { text: string[], align: number[] }): Promise<void>;
 
@@ -446,6 +533,8 @@ export interface SunmiPrinterPlugin {
    * fill → whether to magnify the font to fill the display area
    *
    * Note: only available for desktop terminals of mini series with customer display function, with versions above v4.0.0. It won’t be displayed if the text is too long.
+   *
+   * @TODO
    */
   sendLCDFillString(options: { text: string, size: number, fill: boolean }): Promise<void>;
 
@@ -455,6 +544,8 @@ export interface SunmiPrinterPlugin {
    * bitmap → the image to be displayed
    *
    * Note: only available for desktop terminals of mini series with customer display function, and the customer display can only display the image with the maximum pixel of 128*40.
+   *
+   * @TODO
    */
   sendLCDBitmap(options: { bitmap: string }): Promise<void>;
 
@@ -472,11 +563,15 @@ export interface SunmiPrinterPlugin {
    * If you don’t need to print any more, you can implement labelOutput(), which can output the label to the paper cutting position, facilitating you to add other APIs according to needs to design your own label content.
    *
    * Note: You need to locate the label position every time before sending the printing content
+   *
+   * @TODO
    */
   labelLocate(): Promise<void>;
 
   /**
    * Output the label to the paper cutting position
+   *
+   * @TODO
    */
   labelOutput(): Promise<void>;
 
@@ -497,4 +592,27 @@ export interface SunmiPrinterPlugin {
   // sendRAWData(options: { data: string }): Promise<void>;
   // setMode(options: { bluetooth: boolean }): Promise<void>;
   // initPrinter(): Promise<void>;
+}
+
+
+export enum PrinterStatusEnum {
+  NORMAL_OPERATION = "NormalOperation",
+  UNDER_PREPARATION = "UnderPreparation",
+  ABNORMAL_COMMUNICATION = "AbnormalCommunication",
+  OUT_OF_PAPER = "OutOfPaper",
+  OVERHEATED = "Overheated",
+  COVER_IS_OPEN = "CoverIsOpen",
+  CUTTER_ERROR = "CutterError",
+  CUTTER_RECOVERED = "CutterRecovered",
+  BLACK_MARK_NOT_DETECTED = "BlackMarkNotDetected",
+  PRINTER_NOT_DETECTED = "PrinterNotDetected",
+  FIRMWARE_UPDATE_FAILED = "FirmwareUpdateFailed",
+  UNKNOWN = "Unknown",
+}
+
+export enum ServiceStatusEnum {
+  NO_PRINTER = "NoPrinter",
+  CHECK_PRINTER = "CheckPrinter",
+  FOUND_PRINTER = "FoundPrinter",
+  LOST_PRINTER = "LostPrinter",
 }

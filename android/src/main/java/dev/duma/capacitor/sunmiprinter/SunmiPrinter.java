@@ -3,12 +3,24 @@ package dev.duma.capacitor.sunmiprinter;
 import android.content.Context;
 import android.util.Log;
 
+import com.sunmi.peripheral.printer.InnerPrinterCallback;
+import com.sunmi.peripheral.printer.InnerPrinterException;
+import com.sunmi.peripheral.printer.InnerPrinterManager;
+import com.sunmi.peripheral.printer.SunmiPrinterService;
+
 import dev.duma.capacitor.sunmiprinter.helpers.utils.BluetoothUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.BytesUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.ESCUtil;
 import dev.duma.capacitor.sunmiprinter.helpers.utils.SunmiPrintHelper;
 
 public class SunmiPrinter {
+
+    public final SunmiPrintServiceConnector connector = new SunmiPrintServiceConnector();
+    public final SunmiCallbackHelper callbackHelper = new SunmiCallbackHelper();
+
+    public final SunmiPrinterInitializationAndSettings initializationAndSettings = new SunmiPrinterInitializationAndSettings(connector, callbackHelper);
+    public final SunmiPrinterGetDeviceAndPrinterInformation getDeviceAndPrinterInformation = new SunmiPrinterGetDeviceAndPrinterInformation(connector, callbackHelper);
+
 
     public void initPrinter() {
         if(BluetoothUtil.isBlueToothPrinter){
