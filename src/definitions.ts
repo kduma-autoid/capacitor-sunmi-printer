@@ -92,10 +92,13 @@ export interface SunmiPrinterPlugin {
 
   /**
    * Commands of printing ESC/POS format
-   *
-   * @TODO
    */
-  sendRAWData(): Promise<{ data: string }>;
+  sendRAWData(options: { data: string }): Promise<void>;
+
+  /**
+   * Commands of printing ESC/POS format encoded in Base64
+   */
+  sendRAWBase64Data(options: { data: string }): Promise<void>;
 
   /**
    * Set printer style
@@ -375,8 +378,6 @@ export interface SunmiPrinterPlugin {
    * Note: there’s some distance between printhead and cutter, which will be automatically complemented by calling the interface.
    *
    * Note: Only available for desktop terminals with cutter function.
-   *
-   * @TODO
    */
   cutPaper(): Promise<void>;
 
@@ -384,10 +385,8 @@ export interface SunmiPrinterPlugin {
    * Get the cutter’s cumulative cutting times
    *
    * Note: Only available for desktop terminals with cutter function.
-   *
-   * @TODO
    */
-  getCutPagerTimes(): Promise<{ times: number }>;
+  getCutPaperTimes(): Promise<{ times: number }>;
 
   /**
    * Open the cash drawer

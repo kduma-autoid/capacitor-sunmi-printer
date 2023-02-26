@@ -79,6 +79,13 @@ window.customElements.define(
           <button class="button" id="getPrintedLength">getPrintedLength()</button>
           <button class="button" id="getPrinterPaper">getPrinterPaper()</button>
           <hr>
+          <button class="button" id="sendRAWData">sendRAWData()</button>
+          <button class="button" id="sendRAWBase64Data">sendRAWBase64Data()</button>
+          <button class="button" id="sendRAWBase64DataLabel">sendRAWBase64Data(label)</button>
+          <hr>
+          <button class="button" id="cutPaper">cutPaper()</button>
+          <button class="button" id="getCutPaperTimes">getCutPaperTimes()</button>
+          <hr>
 <!--          <button class="button" id="getPrinterSerialNo">getPrinterSerialNo()</button>-->
 <!--          <button class="button" id="getDeviceModel">getDeviceModel()</button>-->
 <!--          <button class="button" id="getPrinterPaper">getPrinterPaper()</button>-->
@@ -238,6 +245,60 @@ window.customElements.define(
           }
       });
 
+      self.shadowRoot.querySelector('#sendRAWData').addEventListener('click', async function (e) {
+          const output = self.shadowRoot.querySelector('#output');
+          try {
+              const encodedData = "G0AbYQEdIRJ7e3BsYW4ubmFtZX19Ch0hERshABtFAUludGVybmV0IEFjY2VzcyBDYXJkCh0hABtFAAobYQBQbGFuIElEOiB7e3BsYW4uaWR9fQpOYW1lOiB7e3BsYW4ubmFtZX19CkRlc2NyaXB0aW9uOiB7e3BsYW4uZGVzY3JpcHRpb259fQpEZXZpY2VzOiB7e3BsYW4udXNlX2xpbWl0fX0KVGltZToge3twbGFuLnZhbGlkX21pbnV0ZXN9fQpEYXRhOiB7e3BsYW4uZGF0YV9xdW90YX19ClVwbG9hZDoge3twbGFuLnVwbG9hZF9zcGVlZH19CkRvd25sb2FkOiB7e3BsYW4uZG93bmxvYWRfc3BlZWR9fQobYQEKVG8gdXNlIGludGVybmV0LCBwbGVhc2UgY29ubmVjdAp0byBXaUZpIG5ldHdvcmsgbmFtZWQ6CgobRQEdQgEdIRF7e3dpZml9fQodIQAdQgAbRQAKd2hlbiB5b3Ugd2lsbCBiZSByZWRpcmVjdGVkIHRvCmNhcHRpdmUgcG9ydGFsIG9yIGxvZ2luIHNjcmVlbiwKZW50ZXIgeW91ciB2b3VjaGVyIGNvZGU6CgodIRIbRQEdQgF7e2NvZGV9fQodQgAbRQAbIQAKUGxlYXNlIGFjdGl2YXRlIHZvdWNoZXIgYmVmb3JlOgobRQF7e2V4cGlyZXN9fQobRQAKe3tpZH19CgoKHVZCAw==";
+              const data = base64_decode(encodedData);
+              const response = await SunmiPrinter.sendRAWData({ data: data });
+              output.innerHTML = "<b>sendRAWData():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+          } catch (e) {
+              output.innerHTML = "<b>sendRAWData() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+          }
+      });
+
+      self.shadowRoot.querySelector('#sendRAWBase64Data').addEventListener('click', async function (e) {
+          const output = self.shadowRoot.querySelector('#output');
+          try {
+              const encodedData = "G0AbYQEdIRJ7e3BsYW4ubmFtZX19Ch0hERshABtFAUludGVybmV0IEFjY2VzcyBDYXJkCh0hABtFAAobYQBQbGFuIElEOiB7e3BsYW4uaWR9fQpOYW1lOiB7e3BsYW4ubmFtZX19CkRlc2NyaXB0aW9uOiB7e3BsYW4uZGVzY3JpcHRpb259fQpEZXZpY2VzOiB7e3BsYW4udXNlX2xpbWl0fX0KVGltZToge3twbGFuLnZhbGlkX21pbnV0ZXN9fQpEYXRhOiB7e3BsYW4uZGF0YV9xdW90YX19ClVwbG9hZDoge3twbGFuLnVwbG9hZF9zcGVlZH19CkRvd25sb2FkOiB7e3BsYW4uZG93bmxvYWRfc3BlZWR9fQobYQEKVG8gdXNlIGludGVybmV0LCBwbGVhc2UgY29ubmVjdAp0byBXaUZpIG5ldHdvcmsgbmFtZWQ6CgobRQEdQgEdIRF7e3dpZml9fQodIQAdQgAbRQAKd2hlbiB5b3Ugd2lsbCBiZSByZWRpcmVjdGVkIHRvCmNhcHRpdmUgcG9ydGFsIG9yIGxvZ2luIHNjcmVlbiwKZW50ZXIgeW91ciB2b3VjaGVyIGNvZGU6CgodIRIbRQEdQgF7e2NvZGV9fQodQgAbRQAbIQAKUGxlYXNlIGFjdGl2YXRlIHZvdWNoZXIgYmVmb3JlOgobRQF7e2V4cGlyZXN9fQobRQAKe3tpZH19CgoKHVZCAw==";
+              const response = await SunmiPrinter.sendRAWBase64Data({ data: encodedData });
+              output.innerHTML = "<b>sendRAWBase64Data():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+          } catch (e) {
+              output.innerHTML = "<b>sendRAWBase64Data() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+          }
+      });
+
+      self.shadowRoot.querySelector('#sendRAWBase64DataLabel').addEventListener('click', async function (e) {
+          const output = self.shadowRoot.querySelector('#output');
+          try {
+              const encodedData = "G0AbYQEdIRFXaUZpIEFjY2VzcyBDb2RlChtFAR0hEHt7cGxhbi5uYW1lfX0KG0UAHSETe3tjb2RlfX0KHSEAG0UBe3tleHBpcmVzfX0KG0UA";
+              const response = await SunmiPrinter.sendRAWBase64Data({ data: encodedData });
+              output.innerHTML = "<b>sendRAWBase64Data(label):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+          } catch (e) {
+              output.innerHTML = "<b>sendRAWBase64Data(label) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+          }
+      });
+
+        self.shadowRoot.querySelector('#cutPaper').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.cutPaper();
+                output.innerHTML = "<b>cutPaper():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>cutPaper() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#getCutPaperTimes').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.getCutPaperTimes();
+                output.innerHTML = "<b>getCutPaperTimes():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>getCutPaperTimes() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
       // self.shadowRoot.querySelector('#sendTextToLcd').addEventListener('click', async function (e) {
       //     const output = self.shadowRoot.querySelector('#output');
       //     const response = await SunmiPrinter.sendTextToLcd({
@@ -278,22 +339,6 @@ window.customElements.define(
       //     output.innerHTML = "<b>disableLcd():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
       // });
       //
-      // self.shadowRoot.querySelector('#sendRAWData').addEventListener('click', async function (e) {
-      //     const output = self.shadowRoot.querySelector('#output');
-      //     await SunmiPrinter.initPrinter();
-      //     let response = await SunmiPrinter.sendRAWData({data: base64_decode("G0AbYQEdIRJ7e3BsYW4ubmFtZX19Ch0hERshABtFAUludGVybmV0IEFjY2VzcyBDYXJkCh0hABtFAAobYQBQbGFuIElEOiB7e3BsYW4uaWR9fQpOYW1lOiB7e3BsYW4ubmFtZX19CkRlc2NyaXB0aW9uOiB7e3BsYW4uZGVzY3JpcHRpb259fQpEZXZpY2VzOiB7e3BsYW4udXNlX2xpbWl0fX0KVGltZToge3twbGFuLnZhbGlkX21pbnV0ZXN9fQpEYXRhOiB7e3BsYW4uZGF0YV9xdW90YX19ClVwbG9hZDoge3twbGFuLnVwbG9hZF9zcGVlZH19CkRvd25sb2FkOiB7e3BsYW4uZG93bmxvYWRfc3BlZWR9fQobYQEKVG8gdXNlIGludGVybmV0LCBwbGVhc2UgY29ubmVjdAp0byBXaUZpIG5ldHdvcmsgbmFtZWQ6CgobRQEdQgEdIRF7e3dpZml9fQodIQAdQgAbRQAKd2hlbiB5b3Ugd2lsbCBiZSByZWRpcmVjdGVkIHRvCmNhcHRpdmUgcG9ydGFsIG9yIGxvZ2luIHNjcmVlbiwKZW50ZXIgeW91ciB2b3VjaGVyIGNvZGU6CgodIRIbRQEdQgF7e2NvZGV9fQodQgAbRQAbIQAKUGxlYXNlIGFjdGl2YXRlIHZvdWNoZXIgYmVmb3JlOgobRQF7e2V4cGlyZXN9fQobRQAKe3tpZH19CgoKHVZCAw==")});
-      //     output.innerHTML = "<b>sendRAWData():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-      // });
-      //
-      // self.shadowRoot.querySelector('#sendRAWDataLabel').addEventListener('click', async function (e) {
-      //     const output = self.shadowRoot.querySelector('#output');
-      //     await SunmiPrinter.initPrinter();
-      //     await SunmiPrinter.labelLocate();
-      //     let response = await SunmiPrinter.sendRAWData({data: base64_decode("G0AbYQEdIRFXaUZpIEFjY2VzcyBDb2RlChtFAR0hEHt7cGxhbi5uYW1lfX0KG0UAHSETe3tjb2RlfX0KHSEAG0UBe3tleHBpcmVzfX0KG0UA")});
-      //     await SunmiPrinter.labelOutput();
-      //     output.innerHTML = "<b>sendRAWDataLabel():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-      // });
-
       // self.shadowRoot.querySelector('#request').addEventListener('click', async function (e) {
       //     const output = self.shadowRoot.querySelector('#output');
       //

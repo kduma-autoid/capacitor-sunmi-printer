@@ -18,9 +18,31 @@ public class SunmiPrinter {
     public final SunmiPrintServiceConnector connector = new SunmiPrintServiceConnector();
     public final SunmiCallbackHelper callbackHelper = new SunmiCallbackHelper();
 
+    // 1.2.1 Printer initialization and setting
     public final SunmiPrinterInitializationAndSettings initializationAndSettings = new SunmiPrinterInitializationAndSettings(connector, callbackHelper);
+
+    // 1.2.2 Get device and printer information
     public final SunmiPrinterGetDeviceAndPrinterInformation getDeviceAndPrinterInformation = new SunmiPrinterGetDeviceAndPrinterInformation(connector, callbackHelper);
 
+    // 1.2.3 ESC/POS commands
+    public final SunmiPrinterEscPosCommands escPosCommands = new SunmiPrinterEscPosCommands(connector, callbackHelper);
+
+    // 1.2.4 Instruction for printer style setting interface
+    // 1.2.5 Change print mode
+    // 1.2.6 Text printing
+    // 1.2.7 Print a table
+    // 1.2.8 Print an image
+    // 1.2.9 Print a 1D/2D barcode
+    // 1.2.10 Transaction printing
+    // 1.2.11 Paper moving related
+
+    // 1.2.12 Cutter (paper cutting) related
+    public final SunmiPrinterCuttingRelated cuttingRelated = new SunmiPrinterCuttingRelated(connector, callbackHelper);
+
+    // 1.2.13 Cash drawer related
+    // 1.2.14 Get global attributes
+    // 1.2.15 Customer display interface description
+    // 1.2.16 Label printing instructions
 
     public void initPrinter() {
         if(BluetoothUtil.isBlueToothPrinter){

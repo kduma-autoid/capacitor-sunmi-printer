@@ -1,5 +1,7 @@
 package dev.duma.capacitor.sunmiprinter;
 
+import android.util.Base64;
+
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -55,6 +57,8 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
 
+    // 1.2.1 Printer initialization and setting
+
     @PluginMethod
     public void printerInit(PluginCall call) {
         try {
@@ -91,6 +95,8 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
 
+
+    // 1.2.2 Get device and printer information
 
     @PluginMethod
     public void getPrinterSerialNo(PluginCall call){
@@ -222,18 +228,156 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
 
+    // 1.2.3 ESC/POS commands
+
+    @PluginMethod
+    public void sendRAWData(PluginCall call) {
+        String value = call.getString("data");
+        assert value != null;
+
+        try {
+            implementation.escPosCommands.sendRAWData(
+                    value.getBytes(),
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Sending RAW data failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendRAWBase64Data(PluginCall call) {
+        String value = call.getString("data");
+        assert value != null;
+
+        try {
+            implementation.escPosCommands.sendRAWData(
+                    Base64.decode(value, Base64.DEFAULT),
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Sending RAW data failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+
+
+
+    // 1.2.4 Instruction for printer style setting interface
+
+
+
+
+    // 1.2.5 Change print mode
+
+
+
+
+    // 1.2.6 Text printing
+
+
+
+
+    // 1.2.7 Print a table
+
+
+
+
+    // 1.2.8 Print an image
+
+
+
+
+    // 1.2.9 Print a 1D/2D barcode
+
+
+
+
+    // 1.2.10 Transaction printing
+
+
+
+
+    // 1.2.11 Paper moving related
+
+
+
+
+    // 1.2.12 Cutter (paper cutting) related
+
+    @PluginMethod
+    public void cutPaper(PluginCall call) {
+        try {
+            implementation.cuttingRelated.cutPaper(
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Cutting paper failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getCutPaperTimes(PluginCall call){
+        try {
+            int times = implementation.cuttingRelated.getCutPaperTimes();
+
+            JSObject ret = new JSObject();
+            ret.put("times", times);
+            call.resolve(ret);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+
+
+
+    // 1.2.13 Cash drawer related
+
+
+
+
+    // 1.2.14 Get global attributes
+
+
+
+
+    // 1.2.15 Customer display interface description
+
+
+
+
+    // 1.2.16 Label printing instructions
 
 
 
 
 
-
+    // Old methods
 
     @Override
     public void load() {
         super.load();
 
-        implementation.init(this.getContext());
+//        implementation.init(this.getContext());
     }
 
     @PluginMethod
@@ -312,16 +456,6 @@ public class SunmiPrinterPlugin extends Plugin {
         JSObject ret = new JSObject();
         ret.put("model", implementation.getDeviceModel());
         call.resolve(ret);
-    }
-
-
-    @PluginMethod
-    public void sendRAWData(PluginCall call) {
-        String value = call.getString("data");
-
-        assert value != null;
-        implementation.sendRAWData(value.getBytes());
-        call.resolve();
     }
 
     @PluginMethod
