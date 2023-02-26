@@ -707,7 +707,81 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.7 Print a table
+    @PluginMethod
+    public void printColumnsText(PluginCall call) throws JSONException {
+        JSArray lines = call.getArray("lines");
 
+        String[] texts = new String[lines.length()];
+        int[] widths = new int[lines.length()];
+        int[] aligns = new int[lines.length()];
+
+        for (int i = 0; i < lines.length(); i++) {
+            JSONObject line = (JSONObject) lines.get(i);
+            texts[i] = line.getString("text");
+            widths[i] = line.getInt("width");
+            switch (line.getString("align")) {
+                default: case "left": aligns[i] = 0; break;
+                case "center": aligns[i] = 1; break;
+                case "right": aligns[i] = 2; break;
+            }
+        }
+
+        try {
+            implementation.tablePrinting.printColumnsText(
+                    texts,
+                    widths,
+                    aligns,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Opening drawer failed");
+                        }
+                    })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void printColumnsString(PluginCall call) throws JSONException {
+        JSArray lines = call.getArray("lines");
+
+        String[] texts = new String[lines.length()];
+        int[] proportions = new int[lines.length()];
+        int[] aligns = new int[lines.length()];
+
+        for (int i = 0; i < lines.length(); i++) {
+            JSONObject line = (JSONObject) lines.get(i);
+            texts[i] = line.getString("text");
+            proportions[i] = line.getInt("proportion");
+            switch (line.getString("align")) {
+                default: case "left": aligns[i] = 0; break;
+                case "center": aligns[i] = 1; break;
+                case "right": aligns[i] = 2; break;
+            }
+        }
+
+        try {
+            implementation.tablePrinting.printColumnsString(
+                    texts,
+                    proportions,
+                    aligns,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Opening drawer failed");
+                        }
+                    })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 

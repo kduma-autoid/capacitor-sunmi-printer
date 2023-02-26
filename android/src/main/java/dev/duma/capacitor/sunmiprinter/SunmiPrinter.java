@@ -15,6 +15,7 @@ import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInitializationAndSe
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInstructionForPrinterStyleSetting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterLabelPrintingInstructions;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterPaperMovingRelated;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTablePrinting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTextPrinting;
 
 public class SunmiPrinter {
@@ -41,6 +42,8 @@ public class SunmiPrinter {
     public final SunmiPrinterTextPrinting textPrinting = new SunmiPrinterTextPrinting(connector, callbackHelper, escPosCommands);
 
     // 1.2.7 Print a table
+    public final SunmiPrinterTablePrinting tablePrinting = new SunmiPrinterTablePrinting(connector, callbackHelper);
+
     // 1.2.8 Print an image
     // 1.2.9 Print a 1D/2D barcode
     // 1.2.10 Transaction printing

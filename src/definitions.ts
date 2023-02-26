@@ -356,11 +356,9 @@ export interface SunmiPrinterPlugin {
    *
    * Note: the array length of the above three parameters should be consistent. If the width of colsText[i] is larger than that of colsWidth[i], the text will be changed to another line, and Arabic characters are not supported.
    *
-   * @TODO
-   *
    * @see 1.2.7 Print a table
    */
-  printColumnsText(options: { colsTextArr: string[], colsWidthArr: number[], colsAlign: number[] }): Promise<void>;
+  printColumnsText(options: { lines: { text: string, width: number, align: AlignmentModeEnum }[] }): Promise<void>;
 
   /**
    * Print a column of a table, and you can specify the column width and alignment mode.
@@ -371,11 +369,9 @@ export interface SunmiPrinterPlugin {
    *
    * Note: the array length of the above three parameters should be consistent. If the width of colsText[i] is larger than that of colsWidth[i], the text will be changed to another line.
    *
-   * @TODO
-   *
    * @see 1.2.7 Print a table
    */
-  printColumnsString(options: { colsTextArr: string[], colsWidthArr: number[], colsAlign: number[] }): Promise<void>;
+  printColumnsString(options: { lines: { text: string, proportion: number, align: AlignmentModeEnum }[] }): Promise<void>;
 
   /**
    * Print an image

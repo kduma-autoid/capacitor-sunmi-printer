@@ -136,10 +136,12 @@ window.customElements.define(
           <button class="button" id="printTextWithFont">printTextWithFont()</button>
           <button class="button" id="printOriginalText">printOriginalText()</button>
           
-<!--          <hr>-->
-<!--          <strong>1.2.7 Print a table</strong>-->
-<!--          <br>-->
-<!--          -->
+          <hr>
+          <strong>1.2.7 Print a table</strong>
+          <br>
+          <button class="button" id="printColumnsText">printColumnsText()</button>
+          <button class="button" id="printColumnsString">printColumnsString()</button>
+          
 <!--          <hr>-->
 <!--          <strong>1.2.8 Print an image</strong>-->
 <!--          <br>-->
@@ -649,6 +651,27 @@ window.customElements.define(
         });
 
         // 1.2.7 Print a table
+        self.shadowRoot.querySelector('#printColumnsText').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.printColumnsText({ lines: [ { text: "Col 1", width: 10, align: AlignmentModeEnum.RIGHT }, { text: "Col 2", width: 15, align: AlignmentModeEnum.CENTER }, { text: "Col 3", width: 20, align: AlignmentModeEnum.LEFT } ] });
+                output.innerHTML = "<b>printColumnsText(Line 1, Line 2, Line 3):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>printColumnsText(Line 1, Line 2, Line 3) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#printColumnsString').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.printColumnsString({ lines: [ { text: "Col 1", proportion: 1, align: AlignmentModeEnum.RIGHT }, { text: "Col 2", proportion: 2, align: AlignmentModeEnum.CENTER }, { text: "Col 3", proportion: 3, align: AlignmentModeEnum.LEFT } ] });
+                output.innerHTML = "<b>printColumnsString(Line 1, Line 2, Line 3):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>printColumnsString(Line 1, Line 2, Line 3) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+
         // 1.2.8 Print an image
         // 1.2.9 Print a 1D/2D barcode
         // 1.2.10 Transaction printing
