@@ -793,6 +793,61 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.8 Print an image
+    @PluginMethod
+    public void printBitmap(PluginCall call) {
+        String encodedBitmap = call.getString("bitmap", "");
+        assert encodedBitmap != null;
+        byte[] decoded = Base64.decode(encodedBitmap.getBytes(), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+
+        try {
+            implementation.imagePrinting.printBitmap(
+                    bitmap,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Displaying bitmap failed");
+                        }
+                    })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void printBitmapCustom(PluginCall call) {
+        String encodedBitmap = call.getString("bitmap", "");
+        byte[] decoded = Base64.decode(encodedBitmap, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+
+        String type = call.getString("type", "Default");
+        int typeInt = 0;
+        switch (type) {
+            case "Default": typeInt = 0; break;
+            case "blackAndWhite": typeInt = 1; break;
+            case "Grayscale": typeInt = 2; break;
+        }
+
+        try {
+            implementation.imagePrinting.printBitmapCustom(
+                    bitmap,
+                    typeInt,
+                    implementation.callbackHelper.make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Displaying bitmap failed");
+                        }
+                    })
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 
@@ -923,18 +978,18 @@ public class SunmiPrinterPlugin extends Plugin {
     // 1.2.11 Paper moving related
     @PluginMethod
     public void lineWrap(PluginCall call) {
-        int lines = call.getInt("lines", 0);
+        int lines = call.getInt("lines", 1);
 
         try {
             implementation.paperMovingRelated.lineWrap(
-                    lines,
-                    implementation.callbackHelper.make(isSuccess -> {
-                        if (isSuccess) {
-                            call.resolve();
-                        } else {
-                            call.reject("Moving paper failed");
-                        }
-                    })
+                lines,
+                implementation.callbackHelper.make(isSuccess -> {
+                    if (isSuccess) {
+                        call.resolve();
+                    } else {
+                        call.reject("Moving paper failed");
+                    }
+                })
             );
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);

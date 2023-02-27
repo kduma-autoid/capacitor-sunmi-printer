@@ -788,7 +788,7 @@ Note: the maximum pixel size of the image should be less than 2.5 million pixels
 ### printBitmapCustom(...)
 
 ```typescript
-printBitmapCustom(options: { bitmap: string; type: number; }) => Promise<void>
+printBitmapCustom(options: { bitmap: string; type: BitmapPrintTypeEnum; }) => Promise<void>
 ```
 
 Print an image (2)
@@ -803,9 +803,9 @@ Note: the image resolution is less than 2 million pixels, and the width should b
 
 Versions supported: v3.2.0 above for P1; v1.2.0 above for P14g; v3.2.0 above for V1s; v1.0.0 above for V2; v2.4.0 above for T1; v1.0.5 above for T2, S2; v2.4.1 above for T1mini; v1.0.0 above for T2mini.
 
-| Param         | Type                                           |
-| ------------- | ---------------------------------------------- |
-| **`options`** | <code>{ bitmap: string; type: number; }</code> |
+| Param         | Type                                                                                           |
+| ------------- | ---------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ bitmap: string; type: <a href="#bitmapprinttypeenum">BitmapPrintTypeEnum</a>; }</code> |
 
 --------------------
 
@@ -928,16 +928,16 @@ Note: the printing content will be directly output after calling this method und
 ### lineWrap(...)
 
 ```typescript
-lineWrap(options: { lines: number; }) => Promise<void>
+lineWrap(options?: { lines?: number | undefined; } | undefined) => Promise<void>
 ```
 
 The printer moves the paper for n lines
 
 Note: forced linefeed is adopted, and the printer will move the paper for n lines after completing the previous printing.
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ lines: number; }</code> |
+| Param         | Type                             |
+| ------------- | -------------------------------- |
+| **`options`** | <code>{ lines?: number; }</code> |
 
 --------------------
 
@@ -1422,6 +1422,15 @@ Output the label to the paper cutting position
 | **`LEFT`**   | <code>"left"</code>   |
 | **`CENTER`** | <code>"center"</code> |
 | **`RIGHT`**  | <code>"right"</code>  |
+
+
+#### BitmapPrintTypeEnum
+
+| Members               | Value                        |
+| --------------------- | ---------------------------- |
+| **`DEFAULT`**         | <code>"Default"</code>       |
+| **`BLACK_AND_WHITE`** | <code>"blackAndWhite"</code> |
+| **`GRAYSCALE`**       | <code>"Grayscale"</code>     |
 
 
 #### BarcodeSymbologyEnum

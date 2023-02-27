@@ -378,8 +378,6 @@ export interface SunmiPrinterPlugin {
    *
    * Note: the maximum pixel size of the image should be less than 2.5 million pixels of width x height, and the width should be set according to the size of paper specification (384 pixels for 58mm paper, and 576 pixels for 80mm paper). If it exceeds the width of the paper, it will not be displayed.
    *
-   * @TODO
-   *
    * @see 1.2.8 Print an image
    */
   printBitmap(options: { bitmap: string }): Promise<void>;
@@ -397,11 +395,9 @@ export interface SunmiPrinterPlugin {
    *
    * Versions supported: v3.2.0 above for P1; v1.2.0 above for P14g; v3.2.0 above for V1s; v1.0.0 above for V2; v2.4.0 above for T1; v1.0.5 above for T2, S2; v2.4.1 above for T1mini; v1.0.0 above for T2mini.
    *
-   * @TODO
-   *
    * @see 1.2.8 Print an image
    */
-  printBitmapCustom(options: { bitmap: string, type: number }): Promise<void>;
+  printBitmapCustom(options: { bitmap: string, type: BitmapPrintTypeEnum }): Promise<void>;
 
   /**
    * Print a 1D barcode.
@@ -503,7 +499,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.11 Paper moving related
    */
-  lineWrap(options: { lines: number }): Promise<void>;
+  lineWrap(options?: { lines?: number }): Promise<void>;
 
   /**
    * Paper cutting
@@ -853,4 +849,10 @@ export enum Barcode2DSymbologyEnum {
   QR_CODE = "QR_CODE",
   PDF417 = "PDF417",
   DataMatrix = "DATA_MATRIX",
+}
+
+export enum BitmapPrintTypeEnum {
+  DEFAULT = "Default",
+  BLACK_AND_WHITE = "blackAndWhite",
+  GRAYSCALE = "Grayscale",
 }

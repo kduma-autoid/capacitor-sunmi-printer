@@ -13,6 +13,7 @@ import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterCuttingRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterEscPosCommands;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetDeviceAndPrinterInformation;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterGetGlobalAttributes;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterImagePrinting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInitializationAndSettings;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterInstructionForPrinterStyleSetting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterLabelPrintingInstructions;
@@ -47,7 +48,7 @@ public class SunmiPrinter {
     public final SunmiPrinterTablePrinting tablePrinting = new SunmiPrinterTablePrinting(connector, callbackHelper);
 
     // 1.2.8 Print an image
-
+    public final SunmiPrinterImagePrinting imagePrinting = new SunmiPrinterImagePrinting(connector, callbackHelper);
 
     // 1.2.9 Print a 1D/2D barcode
     public final SunmiPrinterBarcodePrinting barcodePrinting = new SunmiPrinterBarcodePrinting(connector, callbackHelper);
@@ -78,70 +79,6 @@ public class SunmiPrinter {
             BluetoothUtil.sendData(ESCUtil.init_printer());
         }else{
             SunmiPrintHelper.getInstance().initPrinter();
-        }
-    }
-
-    public boolean isLabelMode() {
-        return SunmiPrintHelper.getInstance().isLabelMode();
-    }
-
-    public void labelOutput() {
-        SunmiPrintHelper.getInstance().labelOutput();
-    }
-
-    public void labelLocate() {
-        SunmiPrintHelper.getInstance().labelLocate();
-    }
-
-    public void sendTextsToLcd() { //todo
-        SunmiPrintHelper.getInstance().sendTextsToLcd();
-    }
-
-    public void sendTextToLcd(String text, int size, boolean fill) {
-        SunmiPrintHelper.getInstance().sendTextToLcd(text, size, fill);
-    }
-
-    public void controlLcd(int flag) {
-        SunmiPrintHelper.getInstance().controlLcd(flag);
-    }
-
-    public void openCashBox() {
-        SunmiPrintHelper.getInstance().openCashBox();
-    }
-
-    public String getPrinterPaper() {
-        return SunmiPrintHelper.getInstance().getPrinterPaper();
-    }
-
-    public String getPrinterVersion() {
-        return SunmiPrintHelper.getInstance().getPrinterVersion();
-    }
-
-    public String getDeviceModel() {
-        return SunmiPrintHelper.getInstance().getDeviceModel();
-    }
-
-    public String getPrinterSerialNo() {
-        return SunmiPrintHelper.getInstance().getPrinterSerialNo();
-    }
-
-    public void sendRAWData(byte[] data) {
-        if(BluetoothUtil.isBlueToothPrinter){
-            BluetoothUtil.sendData(data);
-        }else{
-            SunmiPrintHelper.getInstance().sendRawData(data);
-        }
-    }
-
-    public void setMode(boolean bluetooth) {
-        BluetoothUtil.isBlueToothPrinter = bluetooth;
-    }
-
-    public void init(Context context) {
-        if(BluetoothUtil.isBlueToothPrinter){
-            BluetoothUtil.connectBlueTooth(context);
-        }else{
-            SunmiPrintHelper.getInstance().initSunmiPrinterService(context);
         }
     }
 }
