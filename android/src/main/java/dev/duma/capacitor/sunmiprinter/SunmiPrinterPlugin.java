@@ -1509,6 +1509,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void labelOutput(PluginCall call) {
         try {
             implementation.labelPrintingInstructions.labelOutput();
+            call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
