@@ -1,14 +1,17 @@
 import { SplashScreen } from '@capacitor/splash-screen';
-import { Camera } from '@capacitor/camera';
-import {SunmiPrinter} from "@kduma-autoid/capacitor-sunmi-printer";
 import base64_decode from "locutus/php/url/base64_decode";
 import {
-    AlignmentModeEnum, Barcode2DSymbologyEnum, BarcodeSymbologyEnum, BarcodeTextPositionEnum, BitmapPrintTypeEnum,
+    SunmiPrinter,
+    AlignmentModeEnum,
+    Barcode2DSymbologyEnum,
+    BarcodeSymbologyEnum,
+    BarcodeTextPositionEnum,
+    BitmapPrintTypeEnum,
     LcdBarcodeFormatEnum,
     LcdCommandEnum,
     PrinterStyleKeysEnum,
     PrinterStyleValuesEnum
-} from "../../../src";
+} from "@kduma-autoid/capacitor-sunmi-printer";
 
 window.customElements.define(
   'capacitor-welcome',
@@ -1061,81 +1064,6 @@ window.customElements.define(
                 output.innerHTML = "<b>labelOutput() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
-
-        // self.shadowRoot.querySelector('#sendTextToLcd').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     const response = await SunmiPrinter.sendTextToLcd({
-        //           text: "Hello World",
-        //           size: 30,
-        //           fill: false,
-        //     });
-        //     output.innerHTML = "<b>sendTextToLcd():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        // });
-        //
-        // self.shadowRoot.querySelector('#sendTextsToLcd').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     const response = await SunmiPrinter.sendTextsToLcd();
-        //     output.innerHTML = "<b>sendTextsToLcd():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        // });
-        //
-        // self.shadowRoot.querySelector('#initLcd').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     const response = await SunmiPrinter.initLcd();
-        //     output.innerHTML = "<b>initLcd():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        // });
-        //
-        // self.shadowRoot.querySelector('#enableLcd').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     const response = await SunmiPrinter.enableLcd();
-        //     output.innerHTML = "<b>enableLcd():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        // });
-        //
-        // self.shadowRoot.querySelector('#clearLcd').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     const response = await SunmiPrinter.clearLcd();
-        //     output.innerHTML = "<b>clearLcd():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        // });
-        //
-        // self.shadowRoot.querySelector('#disableLcd').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     const response = await SunmiPrinter.disableLcd();
-        //     output.innerHTML = "<b>disableLcd():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        // });
-        //
-        // self.shadowRoot.querySelector('#request').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //
-        //     try {
-        //         const request = await USBScale.requestPermission();
-        //         output.innerHTML = "<b>requestPermission():</b><br><pre><code>" + JSON.stringify(request, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        //     } catch (err) {
-        //         output.innerHTML = "<b>requestPermission() - EXCEPTION!:</b><br><pre><code>" + err.message + "</code></pre><hr>" + output.innerHTML;
-        //     }
-        // });
-        //
-        // self.shadowRoot.querySelector('#open').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     self.shadowRoot.querySelector('#weight').innerHTML = "- g";
-        //
-        //     try {
-        //         const request = await USBScale.open();
-        //         output.innerHTML = "<b>open():</b><br><pre><code>" + JSON.stringify(request, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        //     } catch (err) {
-        //         output.innerHTML = "<b>open() - EXCEPTION!:</b><br><pre><code>" + err.message + "</code></pre><hr>" + output.innerHTML;
-        //     }
-        // });
-        //
-        // self.shadowRoot.querySelector('#stop').addEventListener('click', async function (e) {
-        //     const output = self.shadowRoot.querySelector('#output');
-        //     self.shadowRoot.querySelector('#weight').innerHTML = "- g";
-        //
-        //     try {
-        //         const request = await USBScale.stop();
-        //         output.innerHTML = "<b>stop():</b><br><pre><code>" + JSON.stringify(request, null, 3) + "</code></pre><hr>" + output.innerHTML;
-        //     } catch (err) {
-        //         output.innerHTML = "<b>stop() - EXCEPTION!:</b><br><pre><code>" + err.message + "</code></pre><hr>" + output.innerHTML;
-        //     }
-        // });
     }
   }
 );
