@@ -60,6 +60,11 @@ npx cap sync
 * [`printBarCode(...)`](#printbarcode)
 * [`printQRCode(...)`](#printqrcode)
 * [`print2DCode(...)`](#print2dcode)
+* [`enterPrinterBuffer(...)`](#enterprinterbuffer)
+* [`exitPrinterBuffer(...)`](#exitprinterbuffer)
+* [`exitPrinterBufferWithCallback(...)`](#exitprinterbufferwithcallback)
+* [`commitPrinterBuffer()`](#commitprinterbuffer)
+* [`commitPrinterBufferWithCallback()`](#commitprinterbufferwithcallback)
 * [`lineWrap(...)`](#linewrap)
 * [`cutPaper()`](#cutpaper)
 * [`getCutPaperTimes()`](#getcutpapertimes)
@@ -921,6 +926,99 @@ Note: the printing content will be directly output after calling this method und
 | Param         | Type                                                                                                                                               |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ content: string; symbology: <a href="#barcode2dsymbologyenum">Barcode2DSymbologyEnum</a>; size: number; error_correction: number; }</code> |
+
+--------------------
+
+
+### enterPrinterBuffer(...)
+
+```typescript
+enterPrinterBuffer(options?: { clean?: boolean | undefined; } | undefined) => Promise<void>
+```
+
+Enable transaction printing mode
+
+clear → whether to clear the content in the buffer area
+- true → clear the content unsubmitted in the last transaction printing
+- false → not clear the content unsubmitted in the last transaction printing, which will be included in the next submission
+
+Note:
+1. After enabling transaction printing mode, the printer won’t print the data immediately under this mode, until you submit transaction or disable submitting transaction;
+2. Transaction printing mode is available for all devices except for V1 model.
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ clean?: boolean; }</code> |
+
+--------------------
+
+
+### exitPrinterBuffer(...)
+
+```typescript
+exitPrinterBuffer(options?: { commit?: boolean | undefined; } | undefined) => Promise<void>
+```
+
+Disable transaction printing mode
+
+commit → whether to print the content in the buffer area;
+- true → the printer will print all the contents in the transaction queue;
+- false → the printer will not print all the contents in the transaction queue, which will be saved for the next submission
+
+Note: transaction printing mode is available for all devices except for V1 model.
+
+| Param         | Type                               |
+| ------------- | ---------------------------------- |
+| **`options`** | <code>{ commit?: boolean; }</code> |
+
+--------------------
+
+
+### exitPrinterBufferWithCallback(...)
+
+```typescript
+exitPrinterBufferWithCallback(options?: { commit?: boolean | undefined; } | undefined) => Promise<void>
+```
+
+Disable transaction printing mode and call back result
+
+commit → whether to print the content in the buffer area;
+- true → the printer will print all the contents in the transaction queue;
+- false → the printer will not print all the contents in the transaction queue, which will be saved for the next submission
+
+Note: transaction printing mode is available for all devices except for V1 model.
+
+| Param         | Type                               |
+| ------------- | ---------------------------------- |
+| **`options`** | <code>{ commit?: boolean; }</code> |
+
+--------------------
+
+
+### commitPrinterBuffer()
+
+```typescript
+commitPrinterBuffer() => Promise<void>
+```
+
+Submit transaction printing
+
+Note:
+1. Submit all the contents in the transaction queue and print all. The printer remains in the transaction printing mode;
+2. Transaction printing mode is available for all devices except for V1 model.
+
+--------------------
+
+
+### commitPrinterBufferWithCallback()
+
+```typescript
+commitPrinterBufferWithCallback() => Promise<void>
+```
+
+Submit transaction printing and call back result
+
+Note: transaction printing mode is available for all devices except for V1 model.
 
 --------------------
 

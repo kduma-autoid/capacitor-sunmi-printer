@@ -490,7 +490,66 @@ export interface SunmiPrinterPlugin {
    */
   print2DCode(options: { content: string, symbology: Barcode2DSymbologyEnum, size: number, error_correction: number }): Promise<void>;
 
-  // TODO: Transaction Printing
+  /**
+   * Enable transaction printing mode
+   *
+   * clear → whether to clear the content in the buffer area
+   * - true → clear the content unsubmitted in the last transaction printing
+   * - false → not clear the content unsubmitted in the last transaction printing, which will be included in the next submission
+   *
+   * Note:
+   * 1. After enabling transaction printing mode, the printer won’t print the data immediately under this mode, until you submit transaction or disable submitting transaction;
+   * 2. Transaction printing mode is available for all devices except for V1 model.
+   *
+   * @see 1.2.10 Transaction printing
+   */
+  enterPrinterBuffer(options?: { clean?: boolean }): Promise<void>;
+
+  /**
+   * Disable transaction printing mode
+   *
+   * commit → whether to print the content in the buffer area;
+   * - true → the printer will print all the contents in the transaction queue;
+   * - false → the printer will not print all the contents in the transaction queue, which will be saved for the next submission
+   *
+   * Note: transaction printing mode is available for all devices except for V1 model.
+   *
+   * @see 1.2.10 Transaction printing
+   */
+  exitPrinterBuffer(options?: { commit?: boolean }): Promise<void>;
+
+  /**
+   * Disable transaction printing mode and call back result
+   *
+   * commit → whether to print the content in the buffer area;
+   * - true → the printer will print all the contents in the transaction queue;
+   * - false → the printer will not print all the contents in the transaction queue, which will be saved for the next submission
+   *
+   * Note: transaction printing mode is available for all devices except for V1 model.
+   *
+   * @see 1.2.10 Transaction printing
+   */
+  exitPrinterBufferWithCallback(options?: { commit?: boolean }): Promise<void>;
+
+  /**
+   * Submit transaction printing
+   *
+   * Note:
+   * 1. Submit all the contents in the transaction queue and print all. The printer remains in the transaction printing mode;
+   * 2. Transaction printing mode is available for all devices except for V1 model.
+   *
+   * @see 1.2.10 Transaction printing
+   */
+  commitPrinterBuffer(): Promise<void>;
+
+  /**
+   * Submit transaction printing and call back result
+   *
+   * Note: transaction printing mode is available for all devices except for V1 model.
+   *
+   * @see 1.2.10 Transaction printing
+   */
+  commitPrinterBufferWithCallback(): Promise<void>;
 
   /**
    * The printer moves the paper for n lines

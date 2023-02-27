@@ -159,9 +159,14 @@ window.customElements.define(
           <button class="button" id="print2DCode">print2DCode(PDF417)</button>
           <button class="button" id="print2DCodeDM">print2DCode(DataMatrix)</button>
           
-<!--          <hr>-->
-<!--          <strong>1.2.10 Transaction printing</strong>-->
-<!--          <br>-->
+          <hr>
+          <strong>1.2.10 Transaction printing</strong>
+          <br>
+          <button class="button" id="enterPrinterBuffer">enterPrinterBuffer()</button>
+          <button class="button" id="exitPrinterBuffer">exitPrinterBuffer()</button>
+          <button class="button" id="exitPrinterBufferWithCallback">exitPrinterBufferWithCallback()</button>
+          <button class="button" id="commitPrinterBuffer">commitPrinterBuffer()</button>
+          <button class="button" id="commitPrinterBufferWithCallback">commitPrinterBufferWithCallback()</button>
           
           <hr>
           <strong>1.2.11 Paper moving related</strong>
@@ -762,6 +767,55 @@ window.customElements.define(
 
 
         // 1.2.10 Transaction printing
+        self.shadowRoot.querySelector('#enterPrinterBuffer').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.enterPrinterBuffer({ clean: false });
+                output.innerHTML = "<b>enterPrinterBuffer(false):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>enterPrinterBuffer(false) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#exitPrinterBuffer').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.exitPrinterBuffer({ commit: true });
+                output.innerHTML = "<b>exitPrinterBuffer(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>exitPrinterBuffer(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#exitPrinterBufferWithCallback').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.exitPrinterBufferWithCallback({ commit: true });
+                output.innerHTML = "<b>exitPrinterBufferWithCallback(true):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>exitPrinterBufferWithCallback(true) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#commitPrinterBuffer').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.commitPrinterBuffer();
+                output.innerHTML = "<b>commitPrinterBuffer():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>commitPrinterBuffer() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#commitPrinterBufferWithCallback').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.commitPrinterBufferWithCallback();
+                output.innerHTML = "<b>commitPrinterBufferWithCallback():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>commitPrinterBufferWithCallback() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
 
 
         // 1.2.11 Paper moving related

@@ -971,6 +971,74 @@ public class SunmiPrinterPlugin extends Plugin {
 
 
     // 1.2.10 Transaction printing
+    @PluginMethod
+    public void enterPrinterBuffer(PluginCall call) {
+        try {
+            implementation.transactionPrinting.enterPrinterBuffer(
+                call.getBoolean("clean", false)
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void exitPrinterBuffer(PluginCall call) {
+        try {
+            implementation.transactionPrinting.exitPrinterBuffer(
+                call.getBoolean("commit", true)
+            );
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void exitPrinterBufferWithCallback(PluginCall call) {
+        try {
+            implementation.transactionPrinting.exitPrinterBufferWithCallback(
+                call.getBoolean("commit", true),
+                implementation.callbackHelper.makePrintResult((code, msg) -> {
+                    if (code == 0) {
+                        call.resolve();
+                    } else {
+                        call.reject(msg, String.valueOf(code));
+                    }
+                })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void commitPrinterBuffer(PluginCall call) {
+        try {
+            implementation.transactionPrinting.commitPrinterBuffer();
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void commitPrinterBufferWithCallback(PluginCall call) {
+        try {
+            implementation.transactionPrinting.commitPrinterBufferWithCallback(
+                implementation.callbackHelper.makePrintResult((code, msg) -> {
+                    if (code == 0) {
+                        call.resolve();
+                    } else {
+                        call.reject(msg, String.valueOf(code));
+                    }
+                })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
 
 
 

@@ -298,4 +298,24 @@ export class SunmiPrinterWeb extends WebPlugin implements SunmiPrinterPlugin {
   updatePrinterState(): Promise<{ status: PrinterStatusEnum; code: number }> {
     throw this.unimplemented('Not implemented on web.');
   }
+
+  commitPrinterBuffer(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  commitPrinterBufferWithCallback(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  enterPrinterBuffer(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  exitPrinterBuffer(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  exitPrinterBufferWithCallback(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
 }

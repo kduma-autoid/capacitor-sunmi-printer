@@ -20,9 +20,9 @@ import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterLabelPrintingInstru
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterPaperMovingRelated;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTablePrinting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTextPrinting;
+import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTransactionPrinting;
 
 public class SunmiPrinter {
-
     public final SunmiPrintServiceConnector connector = new SunmiPrintServiceConnector();
     public final SunmiCallbackHelper callbackHelper = new SunmiCallbackHelper();
 
@@ -54,7 +54,7 @@ public class SunmiPrinter {
     public final SunmiPrinterBarcodePrinting barcodePrinting = new SunmiPrinterBarcodePrinting(connector, callbackHelper);
 
     // 1.2.10 Transaction printing
-
+    public final SunmiPrinterTransactionPrinting transactionPrinting = new SunmiPrinterTransactionPrinting(connector, callbackHelper);
 
     // 1.2.11 Paper moving related
     public final SunmiPrinterPaperMovingRelated paperMovingRelated = new SunmiPrinterPaperMovingRelated(connector, callbackHelper);

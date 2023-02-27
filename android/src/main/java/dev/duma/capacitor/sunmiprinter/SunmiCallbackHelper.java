@@ -24,6 +24,10 @@ public class SunmiCallbackHelper {
         return new SimpleCallback(callback, onRaiseExceptionCallback);
     }
 
+    public SimpleCallback makePrintResult(onPrintResult callback) {
+        return new SimpleCallback(callback);
+    }
+
     public interface Callback {
         @NonNull
         InnerResultCallback getInnerResultCallback();
@@ -70,6 +74,10 @@ public class SunmiCallbackHelper {
             this.onRunResultCallback = onRunResultCallback;
             this.onReturnStringCallback = onReturnStringCallback;
             this.onRaiseExceptionCallback = onRaiseExceptionCallback;
+        }
+
+        public SimpleCallback(onPrintResult onPrintResultCallback) {
+            this.onPrintResultCallback = onPrintResultCallback;
         }
 
         public SimpleCallback(onRunResult onRunResultCallback, onPrintResult onPrintResultCallback) {
