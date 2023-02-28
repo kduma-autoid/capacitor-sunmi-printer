@@ -6,6 +6,9 @@
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
+    },
+    "SunmiPrinter": {
+      "bindOnLoad": false
     }
   }
 }
