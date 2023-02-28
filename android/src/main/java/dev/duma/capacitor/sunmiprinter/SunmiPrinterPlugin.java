@@ -31,7 +31,14 @@ public class SunmiPrinterPlugin extends Plugin {
     public void load() {
         super.load();
 
-        implementation.connector.bindService(getContext());
+        boolean bindOnLoad = getConfig().getBoolean("bindOnLoad", true);
+        if(bindOnLoad) {
+            try {
+                implementation.connector.bindService(getContext());
+            } catch (RuntimeException e) {
+                // ignore
+            }
+        }
     }
 
     @PluginMethod

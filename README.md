@@ -9,6 +9,26 @@ npm install @kduma-autoid/capacitor-sunmi-printer
 npx cap sync
 ```
 
+## Configuration
+
+You can disable auto binding of the service by setting `bindOnLoad` to `false` in the plugin configuration in `capacitor.config.ts`. 
+
+```typescript
+/// <reference types="@kduma-autoid/capacitor-sunmi-printer" />
+import { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: "com.company.app",
+  ...
+  plugins: {
+    SunmiPrinter: {
+      bindOnLoad: true
+    }
+  }
+}
+export default config;
+```
+
 ## API
 
 <docgen-index>
