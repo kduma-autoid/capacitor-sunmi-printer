@@ -1,0 +1,47 @@
+vars:
+  BUILD_NUMBER:
+    default: 4
+  VERSION_NAME:
+    default: 0.3.2
+  APP_NAME:
+    default: Sunmi Print plugin for Capacitor.js
+  SHORT_APP_NAME:
+    default: Sunmi Print Plugin
+  PACKAGE_NAME:
+    default: dev.duma.capacitor.sunmiprinter
+  EXAMPLE_PACKAGE_NAME:
+    default: dev.duma.capacitor.sunmiprinter.example
+
+
+platforms:
+  android:
+    versionName: $VERSION_NAME
+    versionCode: $BUILD_NUMBER
+    packageName: $EXAMPLE_PACKAGE_NAME
+    appName: $APP_NAME
+project:
+  json:
+    - file: package.json
+      set:
+        version: $VERSION_NAME
+        description: $APP_NAME
+    - file: ../package.json
+      set:
+        version: $VERSION_NAME
+  xml:
+    - file: android/app/src/main/res/values/strings.xml
+      target: resources/string[@name="app_name"]
+      replace: |
+        <string name="app_name">$APP_NAME</string>
+    - file: android/app/src/main/res/values/strings.xml
+      target: resources/string[@name="title_activity_main"]
+      replace: |
+        <string name="title_activity_main">$SHORT_APP_NAME</string>
+    - file: android/app/src/main/res/values/strings.xml
+      target: resources/string[@name="package_name"]
+      replace: |
+        <string name="package_name">$EXAMPLE_PACKAGE_NAME</string>
+    - file: android/app/src/main/res/values/strings.xml
+      target: resources/string[@name="custom_url_scheme"]
+      replace: |
+        <string name="custom_url_scheme">$EXAMPLE_PACKAGE_NAME</string>

@@ -1,0 +1,81 @@
+name: Build Example
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+env:
+  PACKAGE_NAME: dev.duma.capacitor.sunmiprinter.example
+
+jobs:
+  build-example:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: read
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get tag version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
+
+      - name: Prepare Keystore
+        run: |
+          echo "${{ secrets.KEY_STORE }}" > keystore.asc
+          gpg --decrypt --passphrase ${{ secrets.GPG_PASS }} --batch keystore.asc > example/android/app/release.keystore
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
+
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Install dependencies
+        run: npm ci && cd example && npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build example app
+        run: npm run build && cd example && npm run build:android
+
+      - name: Build APK
+        run: |
+          cd example
+          npx cap sync android
+          npx cap build android --keystorepath app/release.keystore --keystorealias ${{ secrets.KEY_STORE_ALIAS }} --keystorepass ${{ secrets.KEY_STORE_PASS }} --keystorealiaspass ${{ secrets.KEY_STORE_ALIAS_PASS }} --androidreleasetype APK
+          /usr/local/lib/android/sdk/build-tools/33.0.0/apksigner sign --ks android/app/release.keystore --ks-key-alias ${{ secrets.KEY_STORE_ALIAS }} --ks-pass "pass:${{ secrets.KEY_STORE_PASS }}" --key-pass "pass:${{ secrets.KEY_STORE_ALIAS_PASS }}" --v1-signing-enabled true --v2-signing-enabled true --out android/app/build/outputs/apk/release/app-release-signed-v1-v2.apk android/app/build/outputs/apk/release/app-release-unsigned.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: apk
+          path: example/android/app/build/outputs/apk/release/*
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Rename update file
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          mv example/android/app/build/outputs/apk/release/app-release-signed.apk example/android/app/build/outputs/apk/release/$PACKAGE_NAME-${{ env.RELEASE_VERSION }}.apk
+          mv example/android/app/build/outputs/apk/release/app-release-signed-v1-v2.apk example/android/app/build/outputs/apk/release/$PACKAGE_NAME-${{ env.RELEASE_VERSION }}-sunmi.apk
+          mv example/android/app/build/outputs/apk/release/app-release-unsigned.apk example/android/app/build/outputs/apk/release/$PACKAGE_NAME-${{ env.RELEASE_VERSION }}-unsigned.apk
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if:   startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: |
+            example/android/app/build/outputs/apk/release/*.apk

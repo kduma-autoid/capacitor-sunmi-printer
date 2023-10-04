@@ -9,4 +9,4 @@ include ':capacitor-splash-screen'
 project(':capacitor-splash-screen').projectDir = new File('../node_modules/@capacitor/splash-screen/android')
 
 include ':kduma-autoid-capacitor-sunmi-printer'
-project(':kduma-autoid-capacitor-sunmi-printer').projectDir = new File('../node_modules/@kduma-autoid/capacitor-sunmi-printer/android')
+project(':kduma-autoid-capacitor-sunmi-printer').projectDir = new File('../../android')

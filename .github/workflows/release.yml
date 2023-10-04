@@ -1,0 +1,21 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: read
+      actions: write
+
+    steps:
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          generate_release_notes: true
