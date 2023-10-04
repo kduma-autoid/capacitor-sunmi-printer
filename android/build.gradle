@@ -57,5 +57,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
     implementation('com.google.zxing:core:3.3.0')
-    implementation("com.sunmi:printerlibrary:1.0.19")
+    implementation("com.sunmi:printerlibrary:1.0.22")
 }
