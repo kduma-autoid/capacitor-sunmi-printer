@@ -25,6 +25,7 @@
     "@capacitor/ios": "^5.0.0",
     "@capacitor/splash-screen": "latest",
     "@kduma-autoid/capacitor-sunmi-printer": "file:..",
+    "@kduma-autoid/capacitor-webview-watchdog": "^0.0.2",
     "@trapezedev/configure": "^7.0.10",
     "locutus": "^2.0.16"
   },

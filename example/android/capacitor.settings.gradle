@@ -10,3 +10,6 @@ project(':capacitor-splash-screen').projectDir = new File('../node_modules/@capa
 
 include ':kduma-autoid-capacitor-sunmi-printer'
 project(':kduma-autoid-capacitor-sunmi-printer').projectDir = new File('../../android')
+
+include ':kduma-autoid-capacitor-webview-watchdog'
+project(':kduma-autoid-capacitor-webview-watchdog').projectDir = new File('../node_modules/@kduma-autoid/capacitor-webview-watchdog/android')

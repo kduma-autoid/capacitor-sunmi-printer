@@ -7,6 +7,9 @@
     "SplashScreen": {
       "launchShowDuration": 0
     },
+    "WebViewWatchDog": {
+      "launchFailedHelpUrl": "https://autoid.duma.sh/watchdog/error/no-web-view"
+    },
     "SunmiPrinter": {
       "bindOnLoad": false
     }
