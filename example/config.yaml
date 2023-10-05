@@ -6,7 +6,7 @@ vars:
   APP_NAME:
     default: Sunmi Print plugin for Capacitor.js
   SHORT_APP_NAME:
-    default: Sunmi Print Plugin
+    default: Print Plugin
   PACKAGE_NAME:
     default: dev.duma.capacitor.sunmiprinter
   EXAMPLE_PACKAGE_NAME:
