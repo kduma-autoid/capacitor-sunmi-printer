@@ -28,6 +28,7 @@ xcuserdata
 bin
 gen
 out
+dist
 
 # Gradle files
 .gradle
