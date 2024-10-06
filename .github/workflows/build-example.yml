@@ -59,7 +59,7 @@ jobs:
           /usr/local/lib/android/sdk/build-tools/33.0.0/apksigner sign --ks android/app/release.keystore --ks-key-alias ${{ secrets.KEY_STORE_ALIAS }} --ks-pass "pass:${{ secrets.KEY_STORE_PASS }}" --key-pass "pass:${{ secrets.KEY_STORE_ALIAS_PASS }}" --v1-signing-enabled true --v2-signing-enabled true --out android/app/build/outputs/apk/release/app-release-signed-v1-v2.apk android/app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Upload APK
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v4
         with:
           name: apk
           path: example/android/app/build/outputs/apk/release/*
