@@ -29,6 +29,51 @@ const config: CapacitorConfig = {
 export default config;
 ```
 
+## Example Usage
+
+You can interact with the printer in two ways:
+
+1. You can build the prints procedurally using method calls. It's ideal for smaller printouts and in new projects.
+2. Or you can print by sending commands from a subset of ESC/POS print language - it's ideal for larger documents, legacy applications or when receiving whole printouts from a remote server.
+
+### Example 1 - Printing using built-in methods
+```typescript
+SunmiPrinter.enterPrinterBuffer();
+
+SunmiPrinter.setFontSize({ size: 35 });
+SunmiPrinter.setBold({ enable: true });
+SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.LEFT });
+SunmiPrinter.printText({ text: "This is an\n" });
+
+SunmiPrinter.setFontSize({ size: 65 });
+SunmiPrinter.setBold({ enable: false });
+SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.CENTER });
+SunmiPrinter.setAntiWhitePrintStyle({ enable: true });
+SunmiPrinter.printText({ text: "EXAMPLE\n" });
+
+SunmiPrinter.setFontSize({ size: 30 });
+SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.RIGHT });
+SunmiPrinter.setAntiWhitePrintStyle({ enable: false });
+SunmiPrinter.printText({ text: "of a SunmiPrinter plugin\n" });
+
+SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.CENTER });
+SunmiPrinter.printBarCode({ content: "1234567890", symbology: BarcodeSymbologyEnum.CODE_128, height: 100, width: 2, text_position: BarcodeTextPositionEnum.BELOW });
+
+SunmiPrinter.lineWrap({lines: 3});
+
+SunmiPrinter.exitPrinterBuffer();
+```
+
+### Example 2 - Printing already prepared ESC/POS commands
+```typescript
+SunmiPrinter.enterPrinterBuffer();
+
+const escpos = "\u001b@\u001ba\u0001\u001d!\u0011Hello\n\u001bE\u0001\u001d!\u0010SunmiPrinter\n\u001bE\u0000\u001d!\u0013EXAMPLE\n\u001d!\u0000\u001bE\u0001plugin\n\n\n\n\u001bE\u0000";
+SunmiPrinter.sendRAWData({data: escpos});
+
+SunmiPrinter.exitPrinterBuffer();
+```
+
 ## API
 
 <docgen-index>

@@ -80,6 +80,12 @@ window.customElements.define(
           <button class="button" id="getServiceStatus">getServiceStatus()</button>
           
           <hr>
+          <strong>Examples from documentation</strong>
+          <br>
+          <button class="button" id="docsExample1">Example 1 - built-in</button>
+          <button class="button" id="docsExample2">Example 2 - ESC/POS</button>
+          
+          <hr>
           <strong>1.2.1 Printer initialization and setting</strong>
           <br>
           <button class="button" id="printerInit">printerInit()</button>
@@ -280,6 +286,52 @@ window.customElements.define(
                 output.innerHTML = "<b>getServiceStatus():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
             } catch (e) {
                 output.innerHTML = "<b>getServiceStatus() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#docsExample1').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                SunmiPrinter.enterPrinterBuffer();
+
+                SunmiPrinter.setFontSize({ size: 35 });
+                SunmiPrinter.setBold({ enable: true });
+                SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.LEFT });
+                SunmiPrinter.printText({ text: "This is an\n" });
+
+                SunmiPrinter.setFontSize({ size: 65 });
+                SunmiPrinter.setBold({ enable: false });
+                SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.CENTER });
+                SunmiPrinter.setAntiWhitePrintStyle({ enable: true });
+                SunmiPrinter.printText({ text: "EXAMPLE\n" });
+
+                SunmiPrinter.setFontSize({ size: 30 });
+                SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.RIGHT });
+                SunmiPrinter.setAntiWhitePrintStyle({ enable: false });
+                SunmiPrinter.printText({ text: "of a SunmiPrinter plugin\n" });
+
+                SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.CENTER });
+                SunmiPrinter.printBarCode({ content: "1234567890", symbology: BarcodeSymbologyEnum.CODE_128, height: 100, width: 2, text_position: BarcodeTextPositionEnum.BELOW });
+
+                SunmiPrinter.lineWrap({lines: 3});
+
+                SunmiPrinter.exitPrinterBuffer();
+            } catch (e) {
+                output.innerHTML = "<b>docsExample1 - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#docsExample2').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                SunmiPrinter.enterPrinterBuffer();
+
+                const escpos = "\u001b@\u001ba\u0001\u001d!\u0011Hello\n\u001bE\u0001\u001d!\u0010SunmiPrinter\n\u001bE\u0000\u001d!\u0013EXAMPLE\n\u001d!\u0000\u001bE\u0001plugin\n\n\n\n\u001bE\u0000";
+                SunmiPrinter.sendRAWData({data: escpos});
+
+                SunmiPrinter.exitPrinterBuffer();
+            } catch (e) {
+                output.innerHTML = "<b>docsExample2 - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
 
