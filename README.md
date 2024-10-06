@@ -157,6 +157,9 @@ SunmiPrinter.exitPrinterBuffer();
 * [`sendLCDBarcode(...)`](#sendlcdbarcode)
 * [`labelLocate()`](#labellocate)
 * [`labelOutput()`](#labeloutput)
+* [`addListener('onPrinterStatusUpdated', ...)`](#addlisteneronprinterstatusupdated-)
+* [`removeAllListeners()`](#removealllisteners)
+* [Interfaces](#interfaces)
 * [Enums](#enums)
 
 </docgen-index>
@@ -1509,6 +1512,45 @@ Output the label to the paper cutting position
 --------------------
 
 
+### addListener('onPrinterStatusUpdated', ...)
+
+```typescript
+addListener(eventName: 'onPrinterStatusUpdated', listenerFunc: (event: { status: PrinterStatusEventEnum; broadcast?: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+Listens for printer status changed events.
+
+| Param              | Type                                                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| **`eventName`**    | <code>'onPrinterStatusUpdated'</code>                                                                                          |
+| **`listenerFunc`** | <code>(event: { status: <a href="#printerstatuseventenum">PrinterStatusEventEnum</a>; broadcast?: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### removeAllListeners()
+
+```typescript
+removeAllListeners() => Promise<void>
+```
+
+Removes all listeners
+
+--------------------
+
+
+### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+
+
 ### Enums
 
 
@@ -1526,18 +1568,18 @@ Output the label to the paper cutting position
 
 | Members                       | Value                                |
 | ----------------------------- | ------------------------------------ |
-| **`NORMAL_OPERATION`**        | <code>"NormalOperation"</code>       |
-| **`UNDER_PREPARATION`**       | <code>"UnderPreparation"</code>      |
-| **`ABNORMAL_COMMUNICATION`**  | <code>"AbnormalCommunication"</code> |
-| **`OUT_OF_PAPER`**            | <code>"OutOfPaper"</code>            |
-| **`OVERHEATED`**              | <code>"Overheated"</code>            |
-| **`COVER_IS_OPEN`**           | <code>"CoverIsOpen"</code>           |
-| **`CUTTER_ERROR`**            | <code>"CutterError"</code>           |
-| **`CUTTER_RECOVERED`**        | <code>"CutterRecovered"</code>       |
-| **`BLACK_MARK_NOT_DETECTED`** | <code>"BlackMarkNotDetected"</code>  |
-| **`PRINTER_NOT_DETECTED`**    | <code>"PrinterNotDetected"</code>    |
-| **`FIRMWARE_UPDATE_FAILED`**  | <code>"FirmwareUpdateFailed"</code>  |
-| **`UNKNOWN`**                 | <code>"Unknown"</code>               |
+| **`NORMAL_OPERATION`**        | <code>'NormalOperation'</code>       |
+| **`UNDER_PREPARATION`**       | <code>'UnderPreparation'</code>      |
+| **`ABNORMAL_COMMUNICATION`**  | <code>'AbnormalCommunication'</code> |
+| **`OUT_OF_PAPER`**            | <code>'OutOfPaper'</code>            |
+| **`OVERHEATED`**              | <code>'Overheated'</code>            |
+| **`COVER_IS_OPEN`**           | <code>'CoverIsOpen'</code>           |
+| **`CUTTER_ERROR`**            | <code>'CutterError'</code>           |
+| **`CUTTER_RECOVERED`**        | <code>'CutterRecovered'</code>       |
+| **`BLACK_MARK_NOT_DETECTED`** | <code>'BlackMarkNotDetected'</code>  |
+| **`PRINTER_NOT_DETECTED`**    | <code>'PrinterNotDetected'</code>    |
+| **`FIRMWARE_UPDATE_FAILED`**  | <code>'FirmwareUpdateFailed'</code>  |
+| **`UNKNOWN`**                 | <code>'Unknown'</code>               |
 
 
 #### PrinterStyleKeysEnum
@@ -1654,5 +1696,25 @@ Output the label to the paper cutting position
 | **`CODE_93`**  | <code>"CODE_93"</code>  |
 | **`CODE_128`** | <code>"CODE_128"</code> |
 | **`QR_CODE`**  | <code>"QR_CODE"</code>  |
+
+
+#### PrinterStatusEventEnum
+
+| Members                       | Value                               | Description                                                                                                      |
+| ----------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **`UNDER_PREPARATION`**       | <code>"UnderPreparation"</code>     | Printer is under preparation. see `woyou.aidlservice.jiuv5.INIT_ACTION` in documentation.                        |
+| **`NORMAL_OPERATION`**        | <code>"NormalOperation"</code>      | Printing is ready. see `woyou.aidlservice.jiuv5.NORMAL_ACTION` in documentation.                                 |
+| **`PRINTING_ERROR`**          | <code>"PrintingError"</code>        | Printing error. see `woyou.aidlservice.jiuv5.ERROR_ACTION` in documentation.                                     |
+| **`OUT_OF_PAPER`**            | <code>"OutOfPaper"</code>           | Out of paper. see `woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION` in documentation.                                |
+| **`OVERHEATED`**              | <code>"Overheated"</code>           | Printhead is overheated. see `woyou.aidlservice.jiuv5.OVER_HEATING_ACITON` in documentation.                     |
+| **`NORMAL_HEAT`**             | <code>"NormalHeat"</code>           | Printhead temperature back to normal. see `woyou.aidlservice.jiuv5.NORMAL_HEATING_ACITON` in documentation.      |
+| **`COVER_IS_OPEN`**           | <code>"CoverIsOpen"</code>          | Cover open. see `woyou.aidlservice.jiuv5.COVER_OPEN_ACTION` in documentation.                                    |
+| **`COVER_ERROR`**             | <code>"CoverError"</code>           | Cover closing exception. see `woyou.aidlservice.jiuv5.COVER_ERROR_ACTION` in documentation.                      |
+| **`CUTTER_ERROR`**            | <code>"CutterError"</code>          | Cutter exception 1 – cutter stuck. see `woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_1` in documentation.          |
+| **`CUTTER_RECOVERED`**        | <code>"CutterRecovered"</code>      | Cutter exception 2 – cutter back to normal. see `woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_2` in documentation. |
+| **`FIRMWARE_UPDATING`**       | <code>"FirmwareUpdating"</code>     | Printer firmware updating. see `woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON` in documentation.              |
+| **`FIRMWARE_UPDATE_FAILED`**  | <code>"FirmwareUpdateFailed"</code> | Printer firmware updating failed. see `woyou.aidlservice.jiuv5.FIRMWARE_FAILURE_ACITON` in documentation.        |
+| **`PRINTER_NOT_DETECTED`**    | <code>"PrinterNotDetected"</code>   | Printer not detected. see `woyou.aidlservice.jiuv5.PRINTER_NON_EXISTENT_ACITON` in documentation.                |
+| **`BLACK_MARK_NOT_DETECTED`** | <code>"BlackMarkNotDetected"</code> | Black mark not detected. see `woyou.aidlservice.jiuv5.BLACKLABEL_NON_EXISTENT_ACITON` in documentation.          |
 
 </docgen-api>

@@ -10,6 +10,11 @@ import com.sunmi.peripheral.printer.InnerPrinterManager;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 
 public class SunmiPrintServiceConnector {
+    private final Context context;
+
+    public SunmiPrintServiceConnector(Context context) {
+        this.context = context;
+    }
 
     enum PrinterStatusEnum {
         NoPrinter(0x00000000),
@@ -46,7 +51,7 @@ public class SunmiPrintServiceConnector {
     /**
      * init sunmi print service
      */
-    public void bindService(Context context){
+    public void bindService(){
         try {
             boolean ret =  InnerPrinterManager.getInstance().bindService(context, innerPrinterCallback);
             if(!ret){
@@ -60,7 +65,7 @@ public class SunmiPrintServiceConnector {
     /**
      *  deInit sunmi print service
      */
-    public void unBindService(Context context){
+    public void unBindService(){
         try {
             if(sunmiPrinterService != null){
                 InnerPrinterManager.getInstance().unBindService(context, innerPrinterCallback);

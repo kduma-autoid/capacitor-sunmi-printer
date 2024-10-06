@@ -259,6 +259,11 @@ window.customElements.define(
     connectedCallback() {
         const self = this;
 
+        SunmiPrinter.addListener('onPrinterStatusUpdated', (event) => {
+            const output = self.shadowRoot.querySelector('#output');
+            output.innerHTML = "<b>onPrinterStatusUpdated:</b><br><pre><code>" + JSON.stringify(event, null, 3) + "</code></pre><hr>" + output.innerHTML;
+        });
+
         self.shadowRoot.querySelector('#bindService').addEventListener('click', async function (e) {
             const output = self.shadowRoot.querySelector('#output');
             try {
