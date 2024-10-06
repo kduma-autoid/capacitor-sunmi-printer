@@ -1,6 +1,6 @@
 {
   "name": "capacitor-app",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Sunmi Print plugin for Capacitor.js",
   "main": "index.js",
   "keywords": [
