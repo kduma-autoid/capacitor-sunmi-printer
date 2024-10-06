@@ -11,7 +11,7 @@
       "launchFailedHelpUrl": "https://autoid.duma.sh/watchdog/error/no-web-view"
     },
     "SunmiPrinter": {
-      "bindOnLoad": false
+      "bindOnLoad": true
     }
   }
 }
