@@ -1,5 +1,4 @@
 /// <reference types="@capacitor/cli" />
-
 declare module '@capacitor/cli' {
   export interface PluginsConfig {
     SunmiPrinterPlugin?: {
@@ -13,6 +12,9 @@ declare module '@capacitor/cli' {
   }
 }
 
+
+// eslint-disable-next-line import/first
+import type { PluginListenerHandle } from '@capacitor/core';
 
 
 export interface SunmiPrinterPlugin {
@@ -822,22 +824,135 @@ export interface SunmiPrinterPlugin {
    * @see 1.2.16 Label printing instructions
    */
   labelOutput(): Promise<void>;
+
+  /**
+   * Listens for printer status changed events.
+   */
+  addListener(
+    eventName: 'onPrinterStatusUpdated',
+    listenerFunc: (event: { status: PrinterStatusEventEnum, broadcast?: string }) => void,
+  ): Promise<PluginListenerHandle>;
+
+  /**
+   * Removes all listeners
+   */
+  removeAllListeners(): Promise<void>;
 }
 
-
 export enum PrinterStatusEnum {
-  NORMAL_OPERATION = "NormalOperation",
+  NORMAL_OPERATION = 'NormalOperation',
+  UNDER_PREPARATION = 'UnderPreparation',
+  ABNORMAL_COMMUNICATION = 'AbnormalCommunication',
+  OUT_OF_PAPER = 'OutOfPaper',
+  OVERHEATED = 'Overheated',
+  COVER_IS_OPEN = 'CoverIsOpen',
+  CUTTER_ERROR = 'CutterError',
+  CUTTER_RECOVERED = 'CutterRecovered',
+  BLACK_MARK_NOT_DETECTED = 'BlackMarkNotDetected',
+  PRINTER_NOT_DETECTED = 'PrinterNotDetected',
+  FIRMWARE_UPDATE_FAILED = 'FirmwareUpdateFailed',
+  UNKNOWN = 'Unknown',
+}
+
+export enum PrinterStatusEventEnum {
+
+  /**
+   * Printer is under preparation.
+   *
+   * see `woyou.aidlservice.jiuv5.INIT_ACTION` in documentation.
+   */
   UNDER_PREPARATION = "UnderPreparation",
-  ABNORMAL_COMMUNICATION = "AbnormalCommunication",
+
+  /**
+   * Printing is ready.
+   *
+   * see `woyou.aidlservice.jiuv5.NORMAL_ACTION` in documentation.
+   */
+  NORMAL_OPERATION = "NormalOperation",
+
+  /**
+   * Printing error.
+   *
+   * see `woyou.aidlservice.jiuv5.ERROR_ACTION` in documentation.
+   */
+  PRINTING_ERROR = "PrintingError",
+
+  /**
+   * Out of paper.
+   *
+   * see `woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION` in documentation.
+   */
   OUT_OF_PAPER = "OutOfPaper",
+
+  /**
+   * Printhead is overheated.
+   *
+   * see `woyou.aidlservice.jiuv5.OVER_HEATING_ACITON` in documentation.
+   */
   OVERHEATED = "Overheated",
+
+  /**
+   * Printhead temperature back to normal.
+   *
+   * see `woyou.aidlservice.jiuv5.NORMAL_HEATING_ACITON` in documentation.
+   */
+  NORMAL_HEAT = "NormalHeat",
+
+  /**
+   * Cover open.
+   *
+   * see `woyou.aidlservice.jiuv5.COVER_OPEN_ACTION` in documentation.
+   */
   COVER_IS_OPEN = "CoverIsOpen",
+
+  /**
+   * Cover closing exception.
+   *
+   * see `woyou.aidlservice.jiuv5.COVER_ERROR_ACTION` in documentation.
+   */
+  COVER_ERROR = "CoverError",
+
+  /**
+   * Cutter exception 1 – cutter stuck.
+   *
+   * see `woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_1` in documentation.
+   */
   CUTTER_ERROR = "CutterError",
+
+  /**
+   * Cutter exception 2 – cutter back to normal.
+   *
+   * see `woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_2` in documentation.
+   */
   CUTTER_RECOVERED = "CutterRecovered",
-  BLACK_MARK_NOT_DETECTED = "BlackMarkNotDetected",
-  PRINTER_NOT_DETECTED = "PrinterNotDetected",
+
+  /**
+   * Printer firmware updating.
+   *
+   * see `woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON` in documentation.
+   */
+  FIRMWARE_UPDATING = "FirmwareUpdating",
+
+  /**
+   * Printer firmware updating failed.
+   *
+   * see `woyou.aidlservice.jiuv5.FIRMWARE_FAILURE_ACITON` in documentation.
+   */
   FIRMWARE_UPDATE_FAILED = "FirmwareUpdateFailed",
-  UNKNOWN = "Unknown",
+
+  /**
+   * Printer not detected.
+   *
+   * see `woyou.aidlservice.jiuv5.PRINTER_NON_EXISTENT_ACITON` in documentation.
+   */
+  PRINTER_NOT_DETECTED = "PrinterNotDetected",
+
+  /**
+   * Black mark not detected.
+   *
+   * see `woyou.aidlservice.jiuv5.BLACKLABEL_NON_EXISTENT_ACITON` in documentation.
+   */
+  BLACK_MARK_NOT_DETECTED = "BlackMarkNotDetected",
 }
 
 export enum ServiceStatusEnum {

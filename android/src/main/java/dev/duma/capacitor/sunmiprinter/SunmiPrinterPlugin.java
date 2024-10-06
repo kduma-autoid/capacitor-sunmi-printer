@@ -2,7 +2,6 @@ package dev.duma.capacitor.sunmiprinter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.RemoteException;
 import android.util.Base64;
 
 import com.getcapacitor.JSArray;
@@ -11,8 +10,6 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-import com.google.zxing.BarcodeFormat;
-import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.sunmi.peripheral.printer.WoyouConsts;
 
 import org.json.JSONException;
@@ -20,21 +17,164 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import dev.duma.android.sunmi.printerstatusbroadcastreceiver.IPrinterStatusBroadcastReceiver.PrinterStatusCallback;
 import dev.duma.capacitor.sunmiprinter.internals.AsciiBitmapConverter;
 import dev.duma.capacitor.sunmiprinter.internals.BarcodeUtil;
 
 @CapacitorPlugin(name = "SunmiPrinter")
 public class SunmiPrinterPlugin extends Plugin {
-    private final SunmiPrinter implementation = new SunmiPrinter();
+    private final PrinterStatusCallback statusCallback = new PrinterStatusCallback() {
+        @Override
+        public void onInit() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "UnderPreparation");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.INIT_ACTION");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onNormal() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "NormalOperation");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.NORMAL_ACTION");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onError() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "PrintingError");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.ERROR_ACTION");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onOutOfPaper() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "OutOfPaper");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onOverheating() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "Overheated");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.OVER_HEATING_ACITON");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onNormalHeating() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "NormalHeat");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.NORMAL_HEATING_ACITON");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onCoverOpen() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "CoverIsOpen");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.COVER_OPEN_ACTION");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onCoverError() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "CoverError");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.COVER_ERROR_ACTION");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onCutterStuck() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "CutterError");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_1");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onCutterError() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "CutterRecovered");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_2");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onFirmwareUpdate() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "FirmwareUpdating");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onFirmwareFailure() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "FirmwareUpdateFailed");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.FIRMWARE_FAILURE_ACITON");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onPrinterUndetected() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "PrinterNotDetected");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.PRINTER_NON_EXISTENT_ACITON");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+
+        @Override
+        public void onBlackMarkUndetected() {
+            JSObject ret = new JSObject();
+
+            ret.put("status", "BlackMarkNotDetected");
+            ret.put("broadcast", "woyou.aidlservice.jiuv5.BLACKLABEL_NON_EXISTENT_ACITON");
+
+            notifyListeners("onPrinterStatusUpdated", ret);
+        }
+    };
+
+    private SunmiPrinter implementation;
 
     @Override
     public void load() {
-        super.load();
+        implementation = new SunmiPrinter(getContext(), statusCallback);
 
         boolean bindOnLoad = getConfig().getBoolean("bindOnLoad", true);
         if(bindOnLoad) {
             try {
-                implementation.connector.bindService(getContext());
+                implementation.register();
             } catch (RuntimeException e) {
                 // ignore
             }
@@ -44,7 +184,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void bindService(PluginCall call) {
         try {
-            implementation.connector.bindService(getContext());
+            implementation.register();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -54,7 +194,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void unBindService(PluginCall call) {
         try {
-            implementation.connector.unBindService(getContext());
+            implementation.unregister();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -63,7 +203,7 @@ public class SunmiPrinterPlugin extends Plugin {
 
     @PluginMethod
     public void getServiceStatus(PluginCall call) {
-        SunmiPrintServiceConnector.PrinterStatusEnum status = implementation.connector.getPrinterStatus();
+        SunmiPrintServiceConnector.PrinterStatusEnum status = implementation.getConnector().getPrinterStatus();
         JSObject ret = new JSObject();
         switch (status) {
             case NoPrinter:
@@ -89,8 +229,8 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void printerInit(PluginCall call) {
         try {
-            implementation.initializationAndSettings.printerInit(
-                implementation.callbackHelper.make(isSuccess -> {
+            implementation.getInitializationAndSettings().printerInit(
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                         call.resolve();
                     } else {
@@ -106,8 +246,8 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void printerSelfChecking(PluginCall call) {
         try {
-            implementation.initializationAndSettings.printerSelfChecking(
-                implementation.callbackHelper.make(isSuccess -> {
+            implementation.getInitializationAndSettings().printerSelfChecking(
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                         call.resolve();
                     } else {
@@ -127,7 +267,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrinterSerialNo(PluginCall call){
         try {
-            String serial_number = implementation.getDeviceAndPrinterInformation.getPrinterSerialNo();
+            String serial_number = implementation.getGetDeviceAndPrinterInformation().getPrinterSerialNo();
 
             JSObject ret = new JSObject();
             ret.put("serial_number", serial_number);
@@ -140,7 +280,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrinterModel(PluginCall call){
         try {
-            String model = implementation.getDeviceAndPrinterInformation.getPrinterModel();
+            String model = implementation.getGetDeviceAndPrinterInformation().getPrinterModel();
 
             JSObject ret = new JSObject();
             ret.put("model", model);
@@ -153,7 +293,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrinterVersion(PluginCall call){
         try {
-            String version = implementation.getDeviceAndPrinterInformation.getPrinterVersion();
+            String version = implementation.getGetDeviceAndPrinterInformation().getPrinterVersion();
 
             JSObject ret = new JSObject();
             ret.put("version", version);
@@ -166,7 +306,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getDeviceName(PluginCall call){
         try {
-            String name = implementation.getDeviceAndPrinterInformation.getDeviceName();
+            String name = implementation.getGetDeviceAndPrinterInformation().getDeviceName();
 
             JSObject ret = new JSObject();
             ret.put("name", name);
@@ -179,7 +319,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void updatePrinterState(PluginCall call){
         try {
-            int status = implementation.getDeviceAndPrinterInformation.updatePrinterState();
+            int status = implementation.getGetDeviceAndPrinterInformation().updatePrinterState();
 
             String statusString = "";
             switch (status) {
@@ -209,7 +349,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getServiceVersion(PluginCall call){
         try {
-            String version = implementation.getDeviceAndPrinterInformation.getServiceVersion();
+            String version = implementation.getGetDeviceAndPrinterInformation().getServiceVersion();
 
             JSObject ret = new JSObject();
             ret.put("version", version);
@@ -222,8 +362,8 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrintedLength(PluginCall call){
         try {
-            implementation.getDeviceAndPrinterInformation.getPrintedLength(
-                implementation.callbackHelper.make(isSuccess -> {
+            implementation.getGetDeviceAndPrinterInformation().getPrintedLength(
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (!isSuccess) {
                         call.reject("Getting printed length failed");
                     }
@@ -241,7 +381,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrinterPaper(PluginCall call){
         try {
-            int paper = implementation.getDeviceAndPrinterInformation.getPrinterPaper();
+            int paper = implementation.getGetDeviceAndPrinterInformation().getPrinterPaper();
 
             JSObject ret = new JSObject();
             ret.put("paper", paper);
@@ -261,9 +401,9 @@ public class SunmiPrinterPlugin extends Plugin {
         assert value != null;
 
         try {
-            implementation.escPosCommands.sendRAWData(
+            implementation.getEscPosCommands().sendRAWData(
                     value.getBytes(),
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -282,9 +422,9 @@ public class SunmiPrinterPlugin extends Plugin {
         assert value != null;
 
         try {
-            implementation.escPosCommands.sendRAWData(
+            implementation.getEscPosCommands().sendRAWData(
                     Base64.decode(value, Base64.DEFAULT),
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -333,7 +473,7 @@ public class SunmiPrinterPlugin extends Plugin {
                 default: valueId = Integer.parseInt(value); break;
             }
 
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(keyId, valueId);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(keyId, valueId);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -345,7 +485,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setDoubleWidthPrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_DOUBLE_WIDTH, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_DOUBLE_WIDTH, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -357,7 +497,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setDoubleHeightPrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_DOUBLE_HEIGHT, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_DOUBLE_HEIGHT, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -369,7 +509,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setBoldPrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_BOLD, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_BOLD, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -381,7 +521,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setUnderlinePrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_UNDERLINE, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_UNDERLINE, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -393,7 +533,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setAntiWhitePrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_ANTI_WHITE, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_ANTI_WHITE, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -405,7 +545,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setStrikethroughPrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_STRIKETHROUGH, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_STRIKETHROUGH, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -417,7 +557,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setItalicPrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_ILALIC, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_ILALIC, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -429,7 +569,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setInvertPrintStyle(PluginCall call){
         try {
             boolean enable = call.getBoolean("enable", true);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.ENABLE_INVERT, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.ENABLE_INVERT, enable ? WoyouConsts.ENABLE : WoyouConsts.DISABLE);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -441,7 +581,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setTextRightSpacingPrintStyle(PluginCall call){
         try {
             int value = call.getInt("value", 0);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_TEXT_RIGHT_SPACING, value);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.SET_TEXT_RIGHT_SPACING, value);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -453,7 +593,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setRelativePositionPrintStyle(PluginCall call){
         try {
             int value = call.getInt("value", 0);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_RELATIVE_POSITION, value);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.SET_RELATIVE_POSITION, value);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -465,7 +605,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setAbsolutePositionPrintStyle(PluginCall call){
         try {
             int value = call.getInt("value", 0);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_ABSOLUATE_POSITION, value);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.SET_ABSOLUATE_POSITION, value);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -477,7 +617,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setLineSpacingPrintStyle(PluginCall call){
         try {
             int value = call.getInt("value", 0);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_LINE_SPACING, value);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.SET_LINE_SPACING, value);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -489,7 +629,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setLeftSpacingPrintStyle(PluginCall call){
         try {
             int value = call.getInt("value", 0);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_LEFT_SPACING, value);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.SET_LEFT_SPACING, value);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -501,7 +641,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void setStrikethroughStylePrintStyle(PluginCall call){
         try {
             int value = call.getInt("value", 0);
-            implementation.instructionForPrinterStyleSetting.setPrinterStyle(WoyouConsts.SET_STRIKETHROUGH_STYLE, value);
+            implementation.getInstructionForPrinterStyleSetting().setPrinterStyle(WoyouConsts.SET_STRIKETHROUGH_STYLE, value);
 
             call.resolve();
         } catch (RuntimeException e) {
@@ -516,7 +656,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrinterMode(PluginCall call){
         try {
-            int mode = implementation.changePrintMode.getPrinterMode();
+            int mode = implementation.getChangePrintMode().getPrinterMode();
 
             String modeString = "";
             switch (mode) {
@@ -539,7 +679,7 @@ public class SunmiPrinterPlugin extends Plugin {
     public void isLabelMode(PluginCall call){
         try {
             JSObject ret = new JSObject();
-            ret.put("label_mode", implementation.changePrintMode.getPrinterMode() == 2);
+            ret.put("label_mode", implementation.getChangePrintMode().getPrinterMode() == 2);
             call.resolve(ret);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -549,7 +689,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrinterBBMDistance(PluginCall call){
         try {
-            int distance = implementation.changePrintMode.getPrinterBBMDistance();
+            int distance = implementation.getChangePrintMode().getPrinterBBMDistance();
 
             JSObject ret = new JSObject();
             ret.put("distance", distance);
@@ -574,9 +714,9 @@ public class SunmiPrinterPlugin extends Plugin {
         }
 
         try {
-            implementation.textPrinting.setAlignment(
+            implementation.getTextPrinting().setAlignment(
                     alignmentInt,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -594,9 +734,9 @@ public class SunmiPrinterPlugin extends Plugin {
         String typeface = call.getString("typeface");
 
         try {
-            implementation.textPrinting.setFontName(
+            implementation.getTextPrinting().setFontName(
                     typeface,
-                    implementation.callbackHelper.makeWithException(isSuccess -> {
+                    implementation.getCallbackHelper().makeWithException(isSuccess -> {
                             if (isSuccess) {
                                 call.resolve();
                             } else {
@@ -617,9 +757,9 @@ public class SunmiPrinterPlugin extends Plugin {
         int size = call.getInt("size", 0);
 
         try {
-            implementation.textPrinting.setFontSize(
+            implementation.getTextPrinting().setFontSize(
                     size,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -637,9 +777,9 @@ public class SunmiPrinterPlugin extends Plugin {
         boolean enable = call.getBoolean("enable", true);
 
         try {
-            implementation.textPrinting.setBold(
+            implementation.getTextPrinting().setBold(
                     enable,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -657,9 +797,9 @@ public class SunmiPrinterPlugin extends Plugin {
         String text = call.getString("text");
 
         try {
-            implementation.textPrinting.printText(
+            implementation.getTextPrinting().printText(
                     text,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -679,11 +819,11 @@ public class SunmiPrinterPlugin extends Plugin {
         int size = call.getInt("size", 0);
 
         try {
-            implementation.textPrinting.printTextWithFont(
+            implementation.getTextPrinting().printTextWithFont(
                     text,
                     typeface,
                     size,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -701,9 +841,9 @@ public class SunmiPrinterPlugin extends Plugin {
         String text = call.getString("text");
 
         try {
-            implementation.textPrinting.printOriginalText(
+            implementation.getTextPrinting().printOriginalText(
                     text,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -740,11 +880,11 @@ public class SunmiPrinterPlugin extends Plugin {
         }
 
         try {
-            implementation.tablePrinting.printColumnsText(
+            implementation.getTablePrinting().printColumnsText(
                     texts,
                     widths,
                     aligns,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -778,11 +918,11 @@ public class SunmiPrinterPlugin extends Plugin {
         }
 
         try {
-            implementation.tablePrinting.printColumnsString(
+            implementation.getTablePrinting().printColumnsString(
                     texts,
                     proportions,
                     aligns,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -808,9 +948,9 @@ public class SunmiPrinterPlugin extends Plugin {
         Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
 
         try {
-            implementation.imagePrinting.printBitmap(
+            implementation.getImagePrinting().printBitmap(
                     bitmap,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -839,10 +979,10 @@ public class SunmiPrinterPlugin extends Plugin {
         }
 
         try {
-            implementation.imagePrinting.printBitmapCustom(
+            implementation.getImagePrinting().printBitmapCustom(
                     bitmap,
                     typeInt,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -892,13 +1032,13 @@ public class SunmiPrinterPlugin extends Plugin {
         int width = call.getInt("width");
 
         try {
-            implementation.barcodePrinting.printBarCode(
+            implementation.getBarcodePrinting().printBarCode(
                     content,
                     symbologyInt,
                     height,
                     width,
                     textPositionInt,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -920,11 +1060,11 @@ public class SunmiPrinterPlugin extends Plugin {
         int error_correction = call.getInt("error_correction", 3);
 
         try {
-            implementation.barcodePrinting.printQRCode(
+            implementation.getBarcodePrinting().printQRCode(
                     content,
                     size,
                     error_correction,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -955,12 +1095,12 @@ public class SunmiPrinterPlugin extends Plugin {
         int error_correction = call.getInt("error_correction");
 
         try {
-            implementation.barcodePrinting.print2DCode(
+            implementation.getBarcodePrinting().print2DCode(
                     content,
                     symbologyInt,
                     size,
                     error_correction,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -981,7 +1121,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void enterPrinterBuffer(PluginCall call) {
         try {
-            implementation.transactionPrinting.enterPrinterBuffer(
+            implementation.getTransactionPrinting().enterPrinterBuffer(
                 call.getBoolean("clean", false)
             );
             call.resolve();
@@ -993,7 +1133,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void exitPrinterBuffer(PluginCall call) {
         try {
-            implementation.transactionPrinting.exitPrinterBuffer(
+            implementation.getTransactionPrinting().exitPrinterBuffer(
                 call.getBoolean("commit", true)
             );
             call.resolve();
@@ -1005,9 +1145,9 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void exitPrinterBufferWithCallback(PluginCall call) {
         try {
-            implementation.transactionPrinting.exitPrinterBufferWithCallback(
+            implementation.getTransactionPrinting().exitPrinterBufferWithCallback(
                 call.getBoolean("commit", true),
-                implementation.callbackHelper.makePrintResult((code, msg) -> {
+                implementation.getCallbackHelper().makePrintResult((code, msg) -> {
                     if (code == 0) {
                         call.resolve();
                     } else {
@@ -1023,7 +1163,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void commitPrinterBuffer(PluginCall call) {
         try {
-            implementation.transactionPrinting.commitPrinterBuffer();
+            implementation.getTransactionPrinting().commitPrinterBuffer();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -1033,8 +1173,8 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void commitPrinterBufferWithCallback(PluginCall call) {
         try {
-            implementation.transactionPrinting.commitPrinterBufferWithCallback(
-                implementation.callbackHelper.makePrintResult((code, msg) -> {
+            implementation.getTransactionPrinting().commitPrinterBufferWithCallback(
+                implementation.getCallbackHelper().makePrintResult((code, msg) -> {
                     if (code == 0) {
                         call.resolve();
                     } else {
@@ -1056,9 +1196,9 @@ public class SunmiPrinterPlugin extends Plugin {
         int lines = call.getInt("lines", 1);
 
         try {
-            implementation.paperMovingRelated.lineWrap(
+            implementation.getPaperMovingRelated().lineWrap(
                 lines,
-                implementation.callbackHelper.make(isSuccess -> {
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                         call.resolve();
                     } else {
@@ -1078,8 +1218,8 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void cutPaper(PluginCall call) {
         try {
-            implementation.cuttingRelated.cutPaper(
-                    implementation.callbackHelper.make(isSuccess -> {
+            implementation.getCuttingRelated().cutPaper(
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -1095,7 +1235,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getCutPaperTimes(PluginCall call){
         try {
-            int times = implementation.cuttingRelated.getCutPaperTimes();
+            int times = implementation.getCuttingRelated().getCutPaperTimes();
 
             JSObject ret = new JSObject();
             ret.put("times", times);
@@ -1112,8 +1252,8 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void openDrawer(PluginCall call) {
         try {
-            implementation.cashDrawerRelated.openDrawer(
-                implementation.callbackHelper.makeWithException(isSuccess -> {
+            implementation.getCashDrawerRelated().openDrawer(
+                implementation.getCallbackHelper().makeWithException(isSuccess -> {
                     // ToDo Check why this callback is not called
                     if (isSuccess) {
                         // call.resolve();
@@ -1133,7 +1273,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getOpenDrawerTimes(PluginCall call){
         try {
-            int times = implementation.cashDrawerRelated.getOpenDrawerTimes();
+            int times = implementation.getCashDrawerRelated().getOpenDrawerTimes();
 
             JSObject ret = new JSObject();
             ret.put("times", times);
@@ -1146,7 +1286,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getDrawerStatus(PluginCall call){
         try {
-            boolean opened = implementation.cashDrawerRelated.getDrawerStatus();
+            boolean opened = implementation.getCashDrawerRelated().getDrawerStatus();
 
             JSObject ret = new JSObject();
             ret.put("opened", opened);
@@ -1163,7 +1303,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getForcedDouble(PluginCall call) {
         try {
-            int status = implementation.getGlobalAttributes.getForcedDouble();
+            int status = implementation.getGetGlobalAttributes().getForcedDouble();
 
             JSObject ret = new JSObject();
             ret.put("status", status);
@@ -1176,7 +1316,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void isForcedAntiWhite(PluginCall call) {
         try {
-            boolean status = implementation.getGlobalAttributes.isForcedAntiWhite();
+            boolean status = implementation.getGetGlobalAttributes().isForcedAntiWhite();
 
             JSObject ret = new JSObject();
             ret.put("status", status);
@@ -1189,7 +1329,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void isForcedBold(PluginCall call) {
         try {
-            boolean status = implementation.getGlobalAttributes.isForcedBold();
+            boolean status = implementation.getGetGlobalAttributes().isForcedBold();
 
             JSObject ret = new JSObject();
             ret.put("status", status);
@@ -1202,7 +1342,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void isForcedUnderline(PluginCall call) {
         try {
-            boolean status = implementation.getGlobalAttributes.isForcedUnderline();
+            boolean status = implementation.getGetGlobalAttributes().isForcedUnderline();
 
             JSObject ret = new JSObject();
             ret.put("status", status);
@@ -1215,7 +1355,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getForcedRowHeight(PluginCall call) {
         try {
-            int height = implementation.getGlobalAttributes.getForcedRowHeight();
+            int height = implementation.getGetGlobalAttributes().getForcedRowHeight();
 
             JSObject ret = new JSObject();
             ret.put("height", height);
@@ -1228,7 +1368,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getFontName(PluginCall call) {
         try {
-            int font = implementation.getGlobalAttributes.getFontName();
+            int font = implementation.getGetGlobalAttributes().getFontName();
 
             JSObject ret = new JSObject();
             ret.put("font", font);
@@ -1241,7 +1381,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void getPrinterDensity(PluginCall call) {
         try {
-            int density = implementation.getGlobalAttributes.getPrinterDensity();
+            int density = implementation.getGetGlobalAttributes().getPrinterDensity();
 
             JSObject ret = new JSObject();
             ret.put("density", density);
@@ -1267,7 +1407,7 @@ public class SunmiPrinterPlugin extends Plugin {
         }
 
         try {
-            implementation.customerDisplay.sendLCDCommand(flagInt);
+            implementation.getCustomerDisplay().sendLCDCommand(flagInt);
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -1277,7 +1417,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void sendLCDInitializationCommand(PluginCall call) {
         try {
-            implementation.customerDisplay.sendLCDCommand(1);
+            implementation.getCustomerDisplay().sendLCDCommand(1);
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -1287,7 +1427,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void sendLCDWakeUpCommand(PluginCall call) {
         try {
-            implementation.customerDisplay.sendLCDCommand(2);
+            implementation.getCustomerDisplay().sendLCDCommand(2);
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -1297,7 +1437,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void sendLCDHibernateCommand(PluginCall call) {
         try {
-            implementation.customerDisplay.sendLCDCommand(3);
+            implementation.getCustomerDisplay().sendLCDCommand(3);
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -1307,7 +1447,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void sendLCDClearCommand(PluginCall call) {
         try {
-            implementation.customerDisplay.sendLCDCommand(4);
+            implementation.getCustomerDisplay().sendLCDCommand(4);
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -1319,9 +1459,9 @@ public class SunmiPrinterPlugin extends Plugin {
         String text = call.getString("text", "");
 
         try {
-            implementation.customerDisplay.sendLCDString(
+            implementation.getCustomerDisplay().sendLCDString(
                 text,
-                implementation.callbackHelper.make(isSuccess -> {
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                          call.resolve();
                     } else {
@@ -1341,10 +1481,10 @@ public class SunmiPrinterPlugin extends Plugin {
         String bottom = call.getString("bottom", "");
 
         try {
-            implementation.customerDisplay.sendLCDDoubleString(
+            implementation.getCustomerDisplay().sendLCDDoubleString(
                 top,
                 bottom,
-                implementation.callbackHelper.make(isSuccess -> {
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                          call.resolve();
                     } else {
@@ -1372,10 +1512,10 @@ public class SunmiPrinterPlugin extends Plugin {
         }
 
         try {
-            implementation.customerDisplay.sendLCDMultiString(
+            implementation.getCustomerDisplay().sendLCDMultiString(
                 texts,
                 proportions,
-                implementation.callbackHelper.make(isSuccess -> {
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                          call.resolve();
                     } else {
@@ -1396,11 +1536,11 @@ public class SunmiPrinterPlugin extends Plugin {
         boolean fill = call.getBoolean("fill", true);
 
         try {
-            implementation.customerDisplay.sendLCDFillString(
+            implementation.getCustomerDisplay().sendLCDFillString(
                 text,
                 size,
                 fill,
-                implementation.callbackHelper.make(isSuccess -> {
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                          call.resolve();
                     } else {
@@ -1421,9 +1561,9 @@ public class SunmiPrinterPlugin extends Plugin {
         Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
 
         try {
-            implementation.customerDisplay.sendLCDBitmap(
+            implementation.getCustomerDisplay().sendLCDBitmap(
                 bitmap,
-                implementation.callbackHelper.make(isSuccess -> {
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                          call.resolve();
                     } else {
@@ -1444,9 +1584,9 @@ public class SunmiPrinterPlugin extends Plugin {
         Bitmap bitmap = AsciiBitmapConverter.decode(encodedBitmap);
 
         try {
-            implementation.customerDisplay.sendLCDBitmap(
+            implementation.getCustomerDisplay().sendLCDBitmap(
                 bitmap,
-                implementation.callbackHelper.make(isSuccess -> {
+                implementation.getCallbackHelper().make(isSuccess -> {
                     if (isSuccess) {
                          call.resolve();
                     } else {
@@ -1482,9 +1622,9 @@ public class SunmiPrinterPlugin extends Plugin {
         Bitmap bitmap = BarcodeUtil.generateBitmap(content.trim(), formatInt, 128, 40);
 
         try {
-            implementation.customerDisplay.sendLCDBitmap(
+            implementation.getCustomerDisplay().sendLCDBitmap(
                     bitmap,
-                    implementation.callbackHelper.make(isSuccess -> {
+                    implementation.getCallbackHelper().make(isSuccess -> {
                         if (isSuccess) {
                             call.resolve();
                         } else {
@@ -1505,7 +1645,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void labelLocate(PluginCall call) {
         try {
-            implementation.labelPrintingInstructions.labelLocate();
+            implementation.getLabelPrintingInstructions().labelLocate();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
@@ -1515,7 +1655,7 @@ public class SunmiPrinterPlugin extends Plugin {
     @PluginMethod
     public void labelOutput(PluginCall call) {
         try {
-            implementation.labelPrintingInstructions.labelOutput();
+            implementation.getLabelPrintingInstructions().labelOutput();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
