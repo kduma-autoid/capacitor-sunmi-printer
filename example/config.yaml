@@ -1,8 +1,8 @@
 vars:
   BUILD_NUMBER:
-    default: 13
+    default: 14
   VERSION_NAME:
-    default: 0.5.4
+    default: 0.5.5
   APP_NAME:
     default: Sunmi Print plugin for Capacitor.js
   SHORT_APP_NAME:
