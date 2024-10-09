@@ -12,7 +12,7 @@ import {
     PrinterStyleKeysEnum,
     PrinterStyleValuesEnum
 } from "@kduma-autoid/capacitor-sunmi-printer";
-// import {WebViewWatchDog} from "@kduma-autoid/capacitor-webview-watchdog";
+import {WebViewWatchDog} from "@kduma-autoid/capacitor-webview-watchdog";
 
 window.customElements.define(
   'capacitor-welcome',
@@ -21,7 +21,7 @@ window.customElements.define(
       super();
 
       SplashScreen.hide();
-      //  WebViewWatchDog.ping();
+      WebViewWatchDog.ping();
 
       const root = this.attachShadow({ mode: 'open' });
 

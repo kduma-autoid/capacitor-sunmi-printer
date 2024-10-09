@@ -12,6 +12,7 @@ dependencies {
     implementation project(':capacitor-camera')
     implementation project(':capacitor-splash-screen')
     implementation project(':kduma-autoid-capacitor-sunmi-printer')
+    implementation project(':kduma-autoid-capacitor-webview-watchdog')
 
 }
 
