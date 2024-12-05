@@ -230,6 +230,22 @@ window.customElements.define(
           <button class="button" id="labelOutput">labelOutput()</button>
           
           
+          <hr>
+          <strong>Other Functions</strong>
+          <br>
+          <button class="button" id="SetPrintingAreaWidth0">SetPrintingAreaWidth(0)</button>
+          <button class="button" id="SetPrintingAreaWidth50">SetPrintingAreaWidth(50)</button>
+          <button class="button" id="SetPrintingAreaWidth150">SetPrintingAreaWidth(150)</button>
+          <button class="button" id="SetPrintingAreaWidth350">SetPrintingAreaWidth(350)</button>
+          <button class="button" id="SetPrintingAreaWidth588">SetPrintingAreaWidth(588)</button>
+          <br>
+          <button class="button" id="SetLeftMargin0">SetLeftMargin(0)</button>
+          <button class="button" id="SetLeftMargin50">SetLeftMargin(50)</button>
+          <button class="button" id="SetLeftMargin150">SetLeftMargin(150)</button>
+          <button class="button" id="SetLeftMargin350">SetLeftMargin(350)</button>
+          
+          
+          
 <!--          <button class="button" id="getPrinterSerialNo">getPrinterSerialNo()</button>-->
 <!--          <button class="button" id="getDeviceModel">getDeviceModel()</button>-->
 <!--          <button class="button" id="getPrinterPaper">getPrinterPaper()</button>-->
@@ -318,7 +334,7 @@ window.customElements.define(
                 SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.CENTER });
                 SunmiPrinter.printBarCode({ content: "1234567890", symbology: BarcodeSymbologyEnum.CODE_128, height: 100, width: 2, text_position: BarcodeTextPositionEnum.BELOW });
 
-                SunmiPrinter.lineWrap({lines: 3});
+                SunmiPrinter.cutPaper();
 
                 SunmiPrinter.exitPrinterBuffer();
             } catch (e) {
@@ -1175,6 +1191,96 @@ window.customElements.define(
                 output.innerHTML = "<b>labelOutput():</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
             } catch (e) {
                 output.innerHTML = "<b>labelOutput() - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetPrintingAreaWidth0').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetPrintingAreaWidth({width: 0});
+                output.innerHTML = "<b>SetPrintingAreaWidth(0):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetPrintingAreaWidth(0) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetPrintingAreaWidth50').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetPrintingAreaWidth({width: 50});
+                output.innerHTML = "<b>SetPrintingAreaWidth(50):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetPrintingAreaWidth(50) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetPrintingAreaWidth150').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetPrintingAreaWidth({width: 150});
+                output.innerHTML = "<b>SetPrintingAreaWidth(150):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetPrintingAreaWidth(150) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetPrintingAreaWidth350').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetPrintingAreaWidth({width: 350});
+                output.innerHTML = "<b>SetPrintingAreaWidth(350):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetPrintingAreaWidth(350) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetPrintingAreaWidth588').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetPrintingAreaWidth({width: 588});
+                output.innerHTML = "<b>SetPrintingAreaWidth(588):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetPrintingAreaWidth(588) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetLeftMargin0').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetLeftMargin({width: 0});
+                output.innerHTML = "<b>SetLeftMargin(0):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetLeftMargin(0) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetLeftMargin50').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetLeftMargin({width: 50});
+                output.innerHTML = "<b>SetLeftMargin(50):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetLeftMargin(50) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetLeftMargin150').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetLeftMargin({width: 150});
+                output.innerHTML = "<b>SetLeftMargin(150):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetLeftMargin(150) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            }
+        });
+
+        self.shadowRoot.querySelector('#SetLeftMargin350').addEventListener('click', async function (e) {
+            const output = self.shadowRoot.querySelector('#output');
+            try {
+                const response = await SunmiPrinter.SetLeftMargin({width: 350});
+                output.innerHTML = "<b>SetLeftMargin(350):</b><br><pre><code>" + JSON.stringify(response, null, 3) + "</code></pre><hr>" + output.innerHTML;
+            } catch (e) {
+                output.innerHTML = "<b>SetLeftMargin(350) - ERROR:</b><br><pre><code>" + JSON.stringify(e.message, null, 3) + "</code></pre><hr>" + output.innerHTML;
             }
         });
     }

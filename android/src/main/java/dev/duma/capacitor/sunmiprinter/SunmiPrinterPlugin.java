@@ -649,6 +649,44 @@ public class SunmiPrinterPlugin extends Plugin {
         }
     }
 
+    @PluginMethod
+    public void SetLeftMargin(PluginCall call){
+        try {
+            int width = call.getInt("width", 0);
+            implementation.getInstructionForPrinterStyleSetting().SetLeftMargin(
+                    width,
+                    implementation.getCallbackHelper().make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Printing text failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void SetPrintingAreaWidth(PluginCall call){
+        try {
+            int width = call.getInt("width", 588);
+            implementation.getInstructionForPrinterStyleSetting().SetPrintingAreaWidth(
+                    width,
+                    implementation.getCallbackHelper().make(isSuccess -> {
+                        if (isSuccess) {
+                            call.resolve();
+                        } else {
+                            call.reject("Printing text failed");
+                        }
+                    })
+            );
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
 
 
 

@@ -59,7 +59,7 @@ SunmiPrinter.printText({ text: "of a SunmiPrinter plugin\n" });
 SunmiPrinter.setAlignment({ alignment: AlignmentModeEnum.CENTER });
 SunmiPrinter.printBarCode({ content: "1234567890", symbology: BarcodeSymbologyEnum.CODE_128, height: 100, width: 2, text_position: BarcodeTextPositionEnum.BELOW });
 
-SunmiPrinter.lineWrap({lines: 3});
+SunmiPrinter.cutPaper(); // or SunmiPrinter.lineWrap({lines: 3});
 
 SunmiPrinter.exitPrinterBuffer();
 ```
@@ -108,6 +108,8 @@ SunmiPrinter.exitPrinterBuffer();
 * [`setLineSpacingPrintStyle(...)`](#setlinespacingprintstyle)
 * [`setLeftSpacingPrintStyle(...)`](#setleftspacingprintstyle)
 * [`setStrikethroughStylePrintStyle(...)`](#setstrikethroughstyleprintstyle)
+* [`SetLeftMargin(...)`](#setleftmargin)
+* [`SetPrintingAreaWidth(...)`](#setprintingareawidth)
 * [`getPrinterMode()`](#getprintermode)
 * [`isLabelMode()`](#islabelmode)
 * [`getPrinterBBMDistance()`](#getprinterbbmdistance)
@@ -615,6 +617,36 @@ Sets strikethrough style print style
 | Param         | Type                            |
 | ------------- | ------------------------------- |
 | **`options`** | <code>{ value: number; }</code> |
+
+--------------------
+
+
+### SetLeftMargin(...)
+
+```typescript
+SetLeftMargin(options: { width: number; }) => Promise<void>
+```
+
+Sets the left margin
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ width: number; }</code> |
+
+--------------------
+
+
+### SetPrintingAreaWidth(...)
+
+```typescript
+SetPrintingAreaWidth(options: { width: number; }) => Promise<void>
+```
+
+Set printing area width
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ width: number; }</code> |
 
 --------------------
 

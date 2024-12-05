@@ -51,7 +51,7 @@ public class SunmiPrinter {
         this.initializationAndSettings = new SunmiPrinterInitializationAndSettings(connector, callbackHelper); // 1.2.1 Printer initialization and setting
         this.getDeviceAndPrinterInformation = new SunmiPrinterGetDeviceAndPrinterInformation(connector, callbackHelper); // 1.2.2 Get device and printer information
         this.escPosCommands = new SunmiPrinterEscPosCommands(connector, callbackHelper); // 1.2.3 ESC/POS commands
-        this.instructionForPrinterStyleSetting = new SunmiPrinterInstructionForPrinterStyleSetting(connector, callbackHelper); // 1.2.4 Instruction for printer style setting interface
+        this.instructionForPrinterStyleSetting = new SunmiPrinterInstructionForPrinterStyleSetting(connector, callbackHelper, escPosCommands); // 1.2.4 Instruction for printer style setting interface
         this.changePrintMode = new SunmiPrinterChangePrintMode(connector, callbackHelper); // 1.2.5 Change print mode
         this.textPrinting = new SunmiPrinterTextPrinting(connector, callbackHelper, escPosCommands);// 1.2.6 Text printing
         this.tablePrinting = new SunmiPrinterTablePrinting(connector, callbackHelper); // 1.2.7 Print a table
