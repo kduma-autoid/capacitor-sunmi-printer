@@ -3,6 +3,12 @@ import { WebPlugin } from '@capacitor/core';
 import type { SunmiPrinterPlugin ,PrinterModeEnum, PrinterStatusEnum, ServiceStatusEnum } from './definitions';
 
 export class SunmiPrinterWeb extends WebPlugin implements SunmiPrinterPlugin {
+  SetLeftMargin(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+  SetPrintingAreaWidth(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
   bindService(): Promise<void> {
     throw this.unimplemented('Not implemented on web.');
   }

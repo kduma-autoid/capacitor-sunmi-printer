@@ -259,6 +259,16 @@ export interface SunmiPrinterPlugin {
   setStrikethroughStylePrintStyle(options: { value: number }): Promise<void>;
 
   /**
+   * Sets the left margin
+   */
+  SetLeftMargin(options: { width: number }): Promise<void>;
+
+  /**
+   * Set printing area width
+   */
+  SetPrintingAreaWidth(options: { width: number }): Promise<void>;
+
+  /**
    * Get printer mode
    *
    * Return value:
