@@ -1,13 +1,12 @@
 package dev.duma.capacitor.sunmiprinter;
 
 import android.os.RemoteException;
-
 import androidx.annotation.NonNull;
-
 import com.sunmi.peripheral.printer.InnerLcdCallback;
 import com.sunmi.peripheral.printer.InnerResultCallback;
 
 public class SunmiCallbackHelper {
+
     public SimpleCallback make(onRunResult callback) {
         return new SimpleCallback(callback);
     }
@@ -31,6 +30,7 @@ public class SunmiCallbackHelper {
     public interface Callback {
         @NonNull
         InnerResultCallback getInnerResultCallback();
+
         InnerLcdCallback getInnerLcdCallback();
     }
 
@@ -51,6 +51,7 @@ public class SunmiCallbackHelper {
     }
 
     public static class SimpleCallback implements Callback {
+
         private onRunResult onRunResultCallback = null;
         private onReturnString onReturnStringCallback = null;
         private onRaiseException onRaiseExceptionCallback = null;
@@ -70,7 +71,11 @@ public class SunmiCallbackHelper {
             this.onReturnStringCallback = onReturnStringCallback;
         }
 
-        public SimpleCallback(onRunResult onRunResultCallback, onReturnString onReturnStringCallback, onRaiseException onRaiseExceptionCallback) {
+        public SimpleCallback(
+            onRunResult onRunResultCallback,
+            onReturnString onReturnStringCallback,
+            onRaiseException onRaiseExceptionCallback
+        ) {
             this.onRunResultCallback = onRunResultCallback;
             this.onReturnStringCallback = onReturnStringCallback;
             this.onRaiseExceptionCallback = onRaiseExceptionCallback;
@@ -85,7 +90,11 @@ public class SunmiCallbackHelper {
             this.onPrintResultCallback = onPrintResultCallback;
         }
 
-        public SimpleCallback(onRunResult onRunResultCallback, onPrintResult onPrintResultCallback, onRaiseException onRaiseExceptionCallback) {
+        public SimpleCallback(
+            onRunResult onRunResultCallback,
+            onPrintResult onPrintResultCallback,
+            onRaiseException onRaiseExceptionCallback
+        ) {
             this.onRunResultCallback = onRunResultCallback;
             this.onRaiseExceptionCallback = onRaiseExceptionCallback;
             this.onPrintResultCallback = onPrintResultCallback;
@@ -97,26 +106,22 @@ public class SunmiCallbackHelper {
             return new InnerResultCallback() {
                 @Override
                 public void onRunResult(boolean isSuccess) throws RemoteException {
-                    if(onRunResultCallback != null)
-                        onRunResultCallback.run(isSuccess);
+                    if (onRunResultCallback != null) onRunResultCallback.run(isSuccess);
                 }
 
                 @Override
                 public void onReturnString(String result) throws RemoteException {
-                    if(onReturnStringCallback != null)
-                        onReturnStringCallback.run(result);
+                    if (onReturnStringCallback != null) onReturnStringCallback.run(result);
                 }
 
                 @Override
                 public void onRaiseException(int code, String msg) throws RemoteException {
-                    if(onRaiseExceptionCallback != null)
-                        onRaiseExceptionCallback.run(code, msg);
+                    if (onRaiseExceptionCallback != null) onRaiseExceptionCallback.run(code, msg);
                 }
 
                 @Override
                 public void onPrintResult(int code, String msg) throws RemoteException {
-                    if(onPrintResultCallback != null)
-                        onPrintResultCallback.run(code, msg);
+                    if (onPrintResultCallback != null) onPrintResultCallback.run(code, msg);
                 }
             };
         }
@@ -126,8 +131,7 @@ public class SunmiCallbackHelper {
             return new InnerLcdCallback() {
                 @Override
                 public void onRunResult(boolean show) throws RemoteException {
-                    if(onRunResultCallback != null)
-                        onRunResultCallback.run(show);
+                    if (onRunResultCallback != null) onRunResultCallback.run(show);
                 }
             };
         }

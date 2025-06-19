@@ -1,6 +1,6 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { SunmiPrinterPlugin ,PrinterModeEnum, PrinterStatusEnum, ServiceStatusEnum } from './definitions';
+import type { SunmiPrinterPlugin, PrinterModeEnum, PrinterStatusEnum, ServiceStatusEnum } from './definitions';
 
 export class SunmiPrinterWeb extends WebPlugin implements SunmiPrinterPlugin {
   SetLeftMargin(): Promise<void> {

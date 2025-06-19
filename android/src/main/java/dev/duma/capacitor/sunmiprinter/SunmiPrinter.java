@@ -1,7 +1,6 @@
 package dev.duma.capacitor.sunmiprinter;
 
 import android.content.Context;
-
 import dev.duma.android.sunmi.printerstatusbroadcastreceiver.IPrinterStatusBroadcastReceiver;
 import dev.duma.android.sunmi.printerstatusbroadcastreceiver.IPrinterStatusBroadcastReceiver.PrinterStatusCallback;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterBarcodePrinting;
@@ -22,6 +21,7 @@ import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTextPrinting;
 import dev.duma.capacitor.sunmiprinter.internals.SunmiPrinterTransactionPrinting;
 
 public class SunmiPrinter {
+
     private final SunmiCallbackHelper callbackHelper = new SunmiCallbackHelper();
 
     private final SunmiPrintServiceConnector connector;
@@ -51,9 +51,13 @@ public class SunmiPrinter {
         this.initializationAndSettings = new SunmiPrinterInitializationAndSettings(connector, callbackHelper); // 1.2.1 Printer initialization and setting
         this.getDeviceAndPrinterInformation = new SunmiPrinterGetDeviceAndPrinterInformation(connector, callbackHelper); // 1.2.2 Get device and printer information
         this.escPosCommands = new SunmiPrinterEscPosCommands(connector, callbackHelper); // 1.2.3 ESC/POS commands
-        this.instructionForPrinterStyleSetting = new SunmiPrinterInstructionForPrinterStyleSetting(connector, callbackHelper, escPosCommands); // 1.2.4 Instruction for printer style setting interface
+        this.instructionForPrinterStyleSetting = new SunmiPrinterInstructionForPrinterStyleSetting(
+            connector,
+            callbackHelper,
+            escPosCommands
+        ); // 1.2.4 Instruction for printer style setting interface
         this.changePrintMode = new SunmiPrinterChangePrintMode(connector, callbackHelper); // 1.2.5 Change print mode
-        this.textPrinting = new SunmiPrinterTextPrinting(connector, callbackHelper, escPosCommands);// 1.2.6 Text printing
+        this.textPrinting = new SunmiPrinterTextPrinting(connector, callbackHelper, escPosCommands); // 1.2.6 Text printing
         this.tablePrinting = new SunmiPrinterTablePrinting(connector, callbackHelper); // 1.2.7 Print a table
         this.imagePrinting = new SunmiPrinterImagePrinting(connector, callbackHelper); // 1.2.8 Print an image
         this.barcodePrinting = new SunmiPrinterBarcodePrinting(connector, callbackHelper); // 1.2.9 Print a 1D/2D barcode

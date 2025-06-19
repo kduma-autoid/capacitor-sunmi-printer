@@ -1,24 +1,21 @@
 package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.graphics.Bitmap;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class BarcodeUtil {
+
     public static Bitmap generateBitmap(String content, int format, int width, int height) {
-        if(content == null || content.equals(""))
-            return null;
+        if (content == null || content.equals("")) return null;
         BarcodeFormat barcodeFormat;
-        switch (format){
+        switch (format) {
             case 0:
                 barcodeFormat = BarcodeFormat.UPC_A;
                 break;
@@ -56,7 +53,7 @@ public class BarcodeUtil {
         }
         MultiFormatWriter qrCodeWriter = new MultiFormatWriter();
         Map<EncodeHintType, Object> hints = new HashMap<>();
-//        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        //        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         hints.put(EncodeHintType.MARGIN, 0);
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         try {

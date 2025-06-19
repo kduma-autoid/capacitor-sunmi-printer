@@ -1,13 +1,12 @@
 package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.os.RemoteException;
-
 import com.sunmi.peripheral.printer.SunmiPrinterService;
-
 import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
 import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterTransactionPrinting {
+
     private final SunmiPrintServiceConnector connector;
     private final SunmiCallbackHelper callbackHelper;
 
@@ -18,7 +17,7 @@ public class SunmiPrinterTransactionPrinting {
 
     public void enterPrinterBuffer(boolean clean) throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -31,7 +30,7 @@ public class SunmiPrinterTransactionPrinting {
 
     public void exitPrinterBuffer(boolean commit) throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -44,7 +43,7 @@ public class SunmiPrinterTransactionPrinting {
 
     public void exitPrinterBufferWithCallback(boolean commit, SunmiCallbackHelper.Callback callback) throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -57,7 +56,7 @@ public class SunmiPrinterTransactionPrinting {
 
     public void commitPrinterBuffer() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -70,7 +69,7 @@ public class SunmiPrinterTransactionPrinting {
 
     public void commitPrinterBufferWithCallback(SunmiCallbackHelper.Callback callback) throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 

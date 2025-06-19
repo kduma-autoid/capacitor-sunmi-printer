@@ -5,10 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-
 import java.util.Objects;
 
 public class PrinterStatusBroadcastReceiver implements IPrinterStatusBroadcastReceiver {
+
     private final Context context;
 
     private final PrinterStatusCallback callback;
@@ -70,5 +70,4 @@ public class PrinterStatusBroadcastReceiver implements IPrinterStatusBroadcastRe
             e.printStackTrace();
         }
     }
-
 }
