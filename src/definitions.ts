@@ -12,10 +12,8 @@ declare module '@capacitor/cli' {
   }
 }
 
-
 // eslint-disable-next-line import/first
 import type { PluginListenerHandle } from '@capacitor/core';
-
 
 export interface SunmiPrinterPlugin {
   /**
@@ -98,7 +96,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.2 Get device and printer information
    */
-  updatePrinterState(): Promise<{ status: PrinterStatusEnum, code: number }>;
+  updatePrinterState(): Promise<{ status: PrinterStatusEnum; code: number }>;
 
   /**
    * Get the printing service version no.
@@ -158,7 +156,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.4 Instruction for printer style setting interface
    */
-  setPrinterStyle(options: { key: PrinterStyleKeysEnum, value: number|PrinterStyleValuesEnum }): Promise<void>;
+  setPrinterStyle(options: { key: PrinterStyleKeysEnum; value: number | PrinterStyleValuesEnum }): Promise<void>;
 
   /**
    * Sets double-width print style
@@ -281,7 +279,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.5 Change print mode
    */
-  getPrinterMode(): Promise<{ mode: PrinterModeEnum, code: number }>;
+  getPrinterMode(): Promise<{ mode: PrinterModeEnum; code: number }>;
 
   /**
    * Checks whether the printer is in label mode
@@ -363,7 +361,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.6 Text printing
    */
-  printTextWithFont(options: { text: string, typeface: string, size: number }): Promise<void>;
+  printTextWithFont(options: { text: string; typeface: string; size: number }): Promise<void>;
 
   /**
    * Print vector font.
@@ -387,7 +385,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.7 Print a table
    */
-  printColumnsText(options: { lines: { text: string, width: number, align: AlignmentModeEnum }[] }): Promise<void>;
+  printColumnsText(options: { lines: { text: string; width: number; align: AlignmentModeEnum }[] }): Promise<void>;
 
   /**
    * Print a column of a table, and you can specify the column width and alignment mode.
@@ -400,7 +398,9 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.7 Print a table
    */
-  printColumnsString(options: { lines: { text: string, proportion: number, align: AlignmentModeEnum }[] }): Promise<void>;
+  printColumnsString(options: {
+    lines: { text: string; proportion: number; align: AlignmentModeEnum }[];
+  }): Promise<void>;
 
   /**
    * Print an image
@@ -426,7 +426,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.8 Print an image
    */
-  printBitmapCustom(options: { bitmap: string, type: BitmapPrintTypeEnum }): Promise<void>;
+  printBitmapCustom(options: { bitmap: string; type: BitmapPrintTypeEnum }): Promise<void>;
 
   /**
    * Print a 1D barcode.
@@ -477,7 +477,13 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.9 Print a 1D/2D barcode
    */
-  printBarCode(options: { content: string, symbology: BarcodeSymbologyEnum, height: number, width: number, text_position: BarcodeTextPositionEnum }): Promise<void>;
+  printBarCode(options: {
+    content: string;
+    symbology: BarcodeSymbologyEnum;
+    height: number;
+    width: number;
+    text_position: BarcodeTextPositionEnum;
+  }): Promise<void>;
 
   /**
    * Print a QR code.
@@ -494,7 +500,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.9 Print a 1D/2D barcode
    */
-  printQRCode(options: { content: string, size: number, error_correction?: number }): Promise<void>;
+  printQRCode(options: { content: string; size: number; error_correction?: number }): Promise<void>;
 
   /**
    * Print a 2D barcode.
@@ -517,7 +523,12 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.9 Print a 1D/2D barcode
    */
-  print2DCode(options: { content: string, symbology: Barcode2DSymbologyEnum, size: number, error_correction: number }): Promise<void>;
+  print2DCode(options: {
+    content: string;
+    symbology: Barcode2DSymbologyEnum;
+    size: number;
+    error_correction: number;
+  }): Promise<void>;
 
   /**
    * Enable transaction printing mode
@@ -759,7 +770,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.15 Customer display interface description
    */
-  sendLCDDoubleString(options: { top: string, bottom: string }): Promise<void>;
+  sendLCDDoubleString(options: { top: string; bottom: string }): Promise<void>;
 
   /**
    * Send multiple lines text, and each line’s content will be automatically sized based on its weight
@@ -771,7 +782,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.15 Customer display interface description
    */
-  sendLCDMultiString(options: { lines: { text: string, proportion: number }[] }): Promise<void>;
+  sendLCDMultiString(options: { lines: { text: string; proportion: number }[] }): Promise<void>;
 
   /**
    * Send single line text (font size and filling method can be customized for the text)
@@ -784,7 +795,7 @@ export interface SunmiPrinterPlugin {
    *
    * @see 1.2.15 Customer display interface description
    */
-  sendLCDFillString(options: { text: string, size: number, fill: boolean }): Promise<void>;
+  sendLCDFillString(options: { text: string; size: number; fill: boolean }): Promise<void>;
 
   /**
    * Send bitmap image
@@ -807,7 +818,7 @@ export interface SunmiPrinterPlugin {
   /**
    * Prints barcode on the customer display
    */
-  sendLCDBarcode(options: { content: string, format?: LcdBarcodeFormatEnum }): Promise<void>;
+  sendLCDBarcode(options: { content: string; format?: LcdBarcodeFormatEnum }): Promise<void>;
 
   /**
    * Locate the next label
@@ -840,7 +851,7 @@ export interface SunmiPrinterPlugin {
    */
   addListener(
     eventName: 'onPrinterStatusUpdated',
-    listenerFunc: (event: { status: PrinterStatusEventEnum, broadcast?: string }) => void,
+    listenerFunc: (event: { status: PrinterStatusEventEnum; broadcast?: string }) => void,
   ): Promise<PluginListenerHandle>;
 
   /**
@@ -865,195 +876,194 @@ export enum PrinterStatusEnum {
 }
 
 export enum PrinterStatusEventEnum {
-
   /**
    * Printer is under preparation.
    *
    * see `woyou.aidlservice.jiuv5.INIT_ACTION` in documentation.
    */
-  UNDER_PREPARATION = "UnderPreparation",
+  UNDER_PREPARATION = 'UnderPreparation',
 
   /**
    * Printing is ready.
    *
    * see `woyou.aidlservice.jiuv5.NORMAL_ACTION` in documentation.
    */
-  NORMAL_OPERATION = "NormalOperation",
+  NORMAL_OPERATION = 'NormalOperation',
 
   /**
    * Printing error.
    *
    * see `woyou.aidlservice.jiuv5.ERROR_ACTION` in documentation.
    */
-  PRINTING_ERROR = "PrintingError",
+  PRINTING_ERROR = 'PrintingError',
 
   /**
    * Out of paper.
    *
    * see `woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION` in documentation.
    */
-  OUT_OF_PAPER = "OutOfPaper",
+  OUT_OF_PAPER = 'OutOfPaper',
 
   /**
    * Printhead is overheated.
    *
    * see `woyou.aidlservice.jiuv5.OVER_HEATING_ACITON` in documentation.
    */
-  OVERHEATED = "Overheated",
+  OVERHEATED = 'Overheated',
 
   /**
    * Printhead temperature back to normal.
    *
    * see `woyou.aidlservice.jiuv5.NORMAL_HEATING_ACITON` in documentation.
    */
-  NORMAL_HEAT = "NormalHeat",
+  NORMAL_HEAT = 'NormalHeat',
 
   /**
    * Cover open.
    *
    * see `woyou.aidlservice.jiuv5.COVER_OPEN_ACTION` in documentation.
    */
-  COVER_IS_OPEN = "CoverIsOpen",
+  COVER_IS_OPEN = 'CoverIsOpen',
 
   /**
    * Cover closing exception.
    *
    * see `woyou.aidlservice.jiuv5.COVER_ERROR_ACTION` in documentation.
    */
-  COVER_ERROR = "CoverError",
+  COVER_ERROR = 'CoverError',
 
   /**
    * Cutter exception 1 – cutter stuck.
    *
    * see `woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_1` in documentation.
    */
-  CUTTER_ERROR = "CutterError",
+  CUTTER_ERROR = 'CutterError',
 
   /**
    * Cutter exception 2 – cutter back to normal.
    *
    * see `woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_2` in documentation.
    */
-  CUTTER_RECOVERED = "CutterRecovered",
+  CUTTER_RECOVERED = 'CutterRecovered',
 
   /**
    * Printer firmware updating.
    *
    * see `woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON` in documentation.
    */
-  FIRMWARE_UPDATING = "FirmwareUpdating",
+  FIRMWARE_UPDATING = 'FirmwareUpdating',
 
   /**
    * Printer firmware updating failed.
    *
    * see `woyou.aidlservice.jiuv5.FIRMWARE_FAILURE_ACITON` in documentation.
    */
-  FIRMWARE_UPDATE_FAILED = "FirmwareUpdateFailed",
+  FIRMWARE_UPDATE_FAILED = 'FirmwareUpdateFailed',
 
   /**
    * Printer not detected.
    *
    * see `woyou.aidlservice.jiuv5.PRINTER_NON_EXISTENT_ACITON` in documentation.
    */
-  PRINTER_NOT_DETECTED = "PrinterNotDetected",
+  PRINTER_NOT_DETECTED = 'PrinterNotDetected',
 
   /**
    * Black mark not detected.
    *
    * see `woyou.aidlservice.jiuv5.BLACKLABEL_NON_EXISTENT_ACITON` in documentation.
    */
-  BLACK_MARK_NOT_DETECTED = "BlackMarkNotDetected",
+  BLACK_MARK_NOT_DETECTED = 'BlackMarkNotDetected',
 }
 
 export enum ServiceStatusEnum {
-  NO_PRINTER = "NoPrinter",
-  CHECK_PRINTER = "CheckPrinter",
-  FOUND_PRINTER = "FoundPrinter",
-  LOST_PRINTER = "LostPrinter",
+  NO_PRINTER = 'NoPrinter',
+  CHECK_PRINTER = 'CheckPrinter',
+  FOUND_PRINTER = 'FoundPrinter',
+  LOST_PRINTER = 'LostPrinter',
 }
 
 export enum AlignmentModeEnum {
-  LEFT = "left",
-  CENTER = "center",
-  RIGHT = "right",
+  LEFT = 'left',
+  CENTER = 'center',
+  RIGHT = 'right',
 }
 
 export enum PrinterModeEnum {
-  GENERAL = "General",
-  BLACK_MARK = "BlackMark",
-  LABEL = "Label",
-  UNKNOWN = "Unknown",
+  GENERAL = 'General',
+  BLACK_MARK = 'BlackMark',
+  LABEL = 'Label',
+  UNKNOWN = 'Unknown',
 }
 
 export enum PrinterStyleKeysEnum {
-  ENABLE_DOUBLE_WIDTH = "EnableDoubleWidth",
-  ENABLE_DOUBLE_HEIGHT = "EnableDoubleHeight",
-  ENABLE_BOLD = "EnableBold",
-  ENABLE_UNDERLINE = "EnableUnderline",
-  ENABLE_ANTI_WHITE = "EnableAntiWhite",
-  ENABLE_STRIKETHROUGH = "EnableStrikethrough",
-  ENABLE_ITALIC = "EnableItalic",
-  ENABLE_INVERT = "EnableInvert",
-  SET_TEXT_RIGHT_SPACING = "SetTextRightSpacing",
-  SET_RELATIVE_POSITION = "SetRelativePosition",
-  SET_ABSOLUTE_POSITION = "SetAbsolutePosition",
-  SET_LINE_SPACING = "SetLineSpacing",
-  SET_LEFT_SPACING = "SetLeftSpacing",
-  SET_STRIKETHROUGH_STYLE = "SetStrikethroughStyle",
+  ENABLE_DOUBLE_WIDTH = 'EnableDoubleWidth',
+  ENABLE_DOUBLE_HEIGHT = 'EnableDoubleHeight',
+  ENABLE_BOLD = 'EnableBold',
+  ENABLE_UNDERLINE = 'EnableUnderline',
+  ENABLE_ANTI_WHITE = 'EnableAntiWhite',
+  ENABLE_STRIKETHROUGH = 'EnableStrikethrough',
+  ENABLE_ITALIC = 'EnableItalic',
+  ENABLE_INVERT = 'EnableInvert',
+  SET_TEXT_RIGHT_SPACING = 'SetTextRightSpacing',
+  SET_RELATIVE_POSITION = 'SetRelativePosition',
+  SET_ABSOLUTE_POSITION = 'SetAbsolutePosition',
+  SET_LINE_SPACING = 'SetLineSpacing',
+  SET_LEFT_SPACING = 'SetLeftSpacing',
+  SET_STRIKETHROUGH_STYLE = 'SetStrikethroughStyle',
 }
 
 export enum PrinterStyleValuesEnum {
-  ENABLE = "Enable",
-  DISABLE = "Disable",
+  ENABLE = 'Enable',
+  DISABLE = 'Disable',
 }
 
 export enum LcdCommandEnum {
-  INITIALIZATION = "Initialization",
-  WAKE_UP = "WakeUp",
-  HIBERNATE = "Hibernate",
-  CLEAR = "Clear",
+  INITIALIZATION = 'Initialization',
+  WAKE_UP = 'WakeUp',
+  HIBERNATE = 'Hibernate',
+  CLEAR = 'Clear',
 }
 
 export enum LcdBarcodeFormatEnum {
-  UPC_A = "UPC_A",
-  UPC_E = "UPC_E",
-  EAN_13 = "EAN_13",
-  EAN_8 = "EAN_8",
-  CODE_39 = "CODE_39",
-  ITF = "ITF",
-  CODABAR = "CODABAR",
-  CODE_93 = "CODE_93",
-  CODE_128 = "CODE_128",
-  QR_CODE = "QR_CODE",
+  UPC_A = 'UPC_A',
+  UPC_E = 'UPC_E',
+  EAN_13 = 'EAN_13',
+  EAN_8 = 'EAN_8',
+  CODE_39 = 'CODE_39',
+  ITF = 'ITF',
+  CODABAR = 'CODABAR',
+  CODE_93 = 'CODE_93',
+  CODE_128 = 'CODE_128',
+  QR_CODE = 'QR_CODE',
 }
 
 export enum BarcodeSymbologyEnum {
-  UPC_A = "UPC_A",
-  UPC_E = "UPC_E",
-  EAN_13 = "EAN_13",
-  EAN_8 = "EAN_8",
-  CODE_39 = "CODE_39",
-  ITF = "ITF",
-  CODABAR = "CODABAR",
-  CODE_93 = "CODE_93",
-  CODE_128 = "CODE_128",
+  UPC_A = 'UPC_A',
+  UPC_E = 'UPC_E',
+  EAN_13 = 'EAN_13',
+  EAN_8 = 'EAN_8',
+  CODE_39 = 'CODE_39',
+  ITF = 'ITF',
+  CODABAR = 'CODABAR',
+  CODE_93 = 'CODE_93',
+  CODE_128 = 'CODE_128',
 }
 
 export enum BarcodeTextPositionEnum {
-  NO_TEXT = "NoText",
-  ABOVE = "Above",
-  BELOW = "Below",
-  ABOVE_AND_BELOW = "AboveAndBelow",
+  NO_TEXT = 'NoText',
+  ABOVE = 'Above',
+  BELOW = 'Below',
+  ABOVE_AND_BELOW = 'AboveAndBelow',
 }
 
 export enum Barcode2DSymbologyEnum {
-  QR_CODE = "QR_CODE",
-  PDF417 = "PDF417",
-  DataMatrix = "DATA_MATRIX",
+  QR_CODE = 'QR_CODE',
+  PDF417 = 'PDF417',
+  DataMatrix = 'DATA_MATRIX',
 }
 
 export enum BitmapPrintTypeEnum {
-  DEFAULT = "Default",
-  BLACK_AND_WHITE = "blackAndWhite",
-  GRAYSCALE = "Grayscale",
+  DEFAULT = 'Default',
+  BLACK_AND_WHITE = 'blackAndWhite',
+  GRAYSCALE = 'Grayscale',
 }

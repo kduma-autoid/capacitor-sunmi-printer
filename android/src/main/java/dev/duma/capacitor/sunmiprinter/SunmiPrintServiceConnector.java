@@ -1,15 +1,14 @@
 package dev.duma.capacitor.sunmiprinter;
 
 import android.content.Context;
-
 import androidx.annotation.Nullable;
-
 import com.sunmi.peripheral.printer.InnerPrinterCallback;
 import com.sunmi.peripheral.printer.InnerPrinterException;
 import com.sunmi.peripheral.printer.InnerPrinterManager;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 
 public class SunmiPrintServiceConnector {
+
     private final Context context;
 
     public SunmiPrintServiceConnector(Context context) {
@@ -51,10 +50,10 @@ public class SunmiPrintServiceConnector {
     /**
      * init sunmi print service
      */
-    public void bindService(){
+    public void bindService() {
         try {
-            boolean ret =  InnerPrinterManager.getInstance().bindService(context, innerPrinterCallback);
-            if(!ret){
+            boolean ret = InnerPrinterManager.getInstance().bindService(context, innerPrinterCallback);
+            if (!ret) {
                 printerStatus = PrinterStatusEnum.NoPrinter;
             }
         } catch (InnerPrinterException e) {
@@ -65,9 +64,9 @@ public class SunmiPrintServiceConnector {
     /**
      *  deInit sunmi print service
      */
-    public void unBindService(){
+    public void unBindService() {
         try {
-            if(sunmiPrinterService != null){
+            if (sunmiPrinterService != null) {
                 InnerPrinterManager.getInstance().unBindService(context, innerPrinterCallback);
                 sunmiPrinterService = null;
                 printerStatus = PrinterStatusEnum.LostPrinter;
@@ -81,7 +80,7 @@ public class SunmiPrintServiceConnector {
      * Check the printer connection,
      * like some devices do not have a printer but need to be connected to the cash drawer through a print service
      */
-    private void checkSunmiPrinterService(SunmiPrinterService service){
+    private void checkSunmiPrinterService(SunmiPrinterService service) {
         boolean ret = false;
         try {
             ret = InnerPrinterManager.getInstance().hasPrinter(service);
@@ -91,7 +90,6 @@ public class SunmiPrintServiceConnector {
 
         printerStatus = ret ? PrinterStatusEnum.FoundPrinter : PrinterStatusEnum.NoPrinter;
     }
-
 
     public PrinterStatusEnum getPrinterStatus() {
         return printerStatus;

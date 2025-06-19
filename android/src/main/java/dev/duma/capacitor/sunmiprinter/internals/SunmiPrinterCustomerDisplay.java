@@ -2,13 +2,12 @@ package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.graphics.Bitmap;
 import android.os.RemoteException;
-
 import com.sunmi.peripheral.printer.SunmiPrinterService;
-
 import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
 import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterCustomerDisplay {
+
     private final SunmiPrintServiceConnector connector;
     private final SunmiCallbackHelper callbackHelper;
 
@@ -19,7 +18,7 @@ public class SunmiPrinterCustomerDisplay {
 
     public void sendLCDCommand(int flag) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -32,7 +31,7 @@ public class SunmiPrinterCustomerDisplay {
 
     public void sendLCDString(String string, SunmiCallbackHelper.Callback callback) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -45,7 +44,7 @@ public class SunmiPrinterCustomerDisplay {
 
     public void sendLCDDoubleString(String topText, String bottomText, SunmiCallbackHelper.Callback callback) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -58,7 +57,7 @@ public class SunmiPrinterCustomerDisplay {
 
     public void sendLCDMultiString(String[] text, int[] align, SunmiCallbackHelper.Callback callback) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -71,7 +70,7 @@ public class SunmiPrinterCustomerDisplay {
 
     public void sendLCDFillString(String string, int size, boolean fill, SunmiCallbackHelper.Callback callback) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -84,7 +83,7 @@ public class SunmiPrinterCustomerDisplay {
 
     public void sendLCDBitmap(Bitmap bitmap, SunmiCallbackHelper.Callback callback) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -94,5 +93,4 @@ public class SunmiPrinterCustomerDisplay {
             throw new RuntimeException(e);
         }
     }
-
 }

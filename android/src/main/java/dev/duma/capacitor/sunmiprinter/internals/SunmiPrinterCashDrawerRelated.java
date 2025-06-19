@@ -1,13 +1,12 @@
 package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.os.RemoteException;
-
 import com.sunmi.peripheral.printer.SunmiPrinterService;
-
 import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
 import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterCashDrawerRelated {
+
     private final SunmiPrintServiceConnector connector;
     private final SunmiCallbackHelper callbackHelper;
 
@@ -18,7 +17,7 @@ public class SunmiPrinterCashDrawerRelated {
 
     public void openDrawer(SunmiCallbackHelper.Callback callback) throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -31,7 +30,7 @@ public class SunmiPrinterCashDrawerRelated {
 
     public int getOpenDrawerTimes() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -44,7 +43,7 @@ public class SunmiPrinterCashDrawerRelated {
 
     public boolean getDrawerStatus() throws RuntimeException {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 

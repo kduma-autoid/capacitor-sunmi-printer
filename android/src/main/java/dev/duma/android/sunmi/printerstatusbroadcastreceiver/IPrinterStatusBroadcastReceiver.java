@@ -2,7 +2,6 @@ package dev.duma.android.sunmi.printerstatusbroadcastreceiver;
 
 import android.content.Context;
 
-
 public interface IPrinterStatusBroadcastReceiver {
     void register();
 
@@ -25,9 +24,9 @@ public interface IPrinterStatusBroadcastReceiver {
         void onBlackMarkUndetected();
     }
 
-    class Factory
-    {
-        static public IPrinterStatusBroadcastReceiver make(Context context, PrinterStatusCallback callback) {
+    class Factory {
+
+        public static IPrinterStatusBroadcastReceiver make(Context context, PrinterStatusCallback callback) {
             return new PrinterStatusBroadcastReceiver(context, callback);
         }
     }

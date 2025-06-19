@@ -1,10 +1,10 @@
 package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.graphics.Bitmap;
-
 import androidx.core.util.Pair;
 
 public class AsciiBitmapConverter {
+
     public static Bitmap decode(String encodedBitmap) {
         boolean[][] arr = AsciiBitmapConverter.toArray(encodedBitmap);
         Pair<Integer, Integer> size = AsciiBitmapConverter.getSize(arr);

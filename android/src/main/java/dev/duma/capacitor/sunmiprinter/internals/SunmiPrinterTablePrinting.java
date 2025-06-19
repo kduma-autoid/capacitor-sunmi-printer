@@ -1,13 +1,12 @@
 package dev.duma.capacitor.sunmiprinter.internals;
 
 import android.os.RemoteException;
-
 import com.sunmi.peripheral.printer.SunmiPrinterService;
-
 import dev.duma.capacitor.sunmiprinter.SunmiCallbackHelper;
 import dev.duma.capacitor.sunmiprinter.SunmiPrintServiceConnector;
 
 public class SunmiPrinterTablePrinting {
+
     private final SunmiPrintServiceConnector connector;
     private final SunmiCallbackHelper callbackHelper;
 
@@ -18,7 +17,7 @@ public class SunmiPrinterTablePrinting {
 
     public void printColumnsText(String[] colsTextArr, int[] colsWidthArr, int[] colsAlign, SunmiCallbackHelper.Callback callback) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
@@ -31,7 +30,7 @@ public class SunmiPrinterTablePrinting {
 
     public void printColumnsString(String[] colsTextArr, int[] colsWidthArr, int[] colsAlign, SunmiCallbackHelper.Callback callback) {
         SunmiPrinterService service = connector.getService();
-        if(service == null) {
+        if (service == null) {
             throw new RuntimeException("Printer service is not initialized");
         }
 
