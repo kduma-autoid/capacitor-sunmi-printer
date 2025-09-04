@@ -2,6 +2,8 @@
 
 Adapter for printing on internal printers of Sunmi POS devices
 
+Check full documentation here: [opensource.duma.sh/libraries/capacitor/sunmi-printer](https://opensource.duma.sh/libraries/capacitor/sunmi-printer)
+
 ## Install
 
 ```bash
