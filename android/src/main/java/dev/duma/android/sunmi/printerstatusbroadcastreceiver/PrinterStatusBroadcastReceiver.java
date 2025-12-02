@@ -1,10 +1,11 @@
 package dev.duma.android.sunmi.printerstatusbroadcastreceiver;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
+import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
 
@@ -41,7 +42,6 @@ public class PrinterStatusBroadcastReceiver implements IPrinterStatusBroadcastRe
     }
 
     @Override
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     public void register() {
         IntentFilter filter = new IntentFilter();
         filter.addAction("woyou.aidlservice.jiuv5.INIT_ACTION");
@@ -59,7 +59,7 @@ public class PrinterStatusBroadcastReceiver implements IPrinterStatusBroadcastRe
         filter.addAction("woyou.aidlservice.jiuv5.PRINTER_NON_EXISTENT_ACITON");
         filter.addAction("woyou.aidlservice.jiuv5.BLACKLABEL_NON_EXISTENT_ACITON");
 
-        context.registerReceiver(receiver, filter);
+        ContextCompat.registerReceiver(context, receiver, filter, ContextCompat.RECEIVER_EXPORTED);
     }
 
     @Override
